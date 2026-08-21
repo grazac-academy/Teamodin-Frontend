@@ -1,0 +1,118 @@
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  width: 100%;
+}
+
+.input-group__label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.input-group__required {
+  color: var(--danger);
+}
+
+.input-group__wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-group__input {
+  width: 100%;
+  padding: var(--spacing-md) var(--spacing-lg);
+  padding-left: var(--spacing-lg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-family: var(--font-family);
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  transition: all var(--transition-fast);
+}
+
+.input-group__input::placeholder {
+  color: var(--text-muted);
+}
+
+.input-group__input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(83, 52, 255, 0.1);
+}
+
+.input-group__input:disabled {
+  background-color: var(--neutral-50);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+.input-group__input--error {
+  border-color: var(--danger);
+}
+
+.input-group__input--error:focus {
+  box-shadow: 0 0 0 3px rgba(194, 48, 48, 0.1);
+}
+
+/* Icons */
+.input-group__icon-left {
+  position: absolute;
+  left: var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.input-group__input:focus ~ .input-group__icon-left,
+.input-group__input:not(:placeholder-shown) ~ .input-group__icon-left {
+  color: var(--primary);
+}
+
+/* Password Toggle */
+.input-group__password-toggle {
+  position: absolute;
+  right: var(--spacing-lg);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: var(--font-size-lg);
+  padding: 0;
+  display: flex;
+  align-items: center;
+  color: var(--text-secondary);
+  transition: color var(--transition-fast);
+}
+
+.input-group__password-toggle:hover {
+  color: var(--text-primary);
+}
+
+/* Check Mark */
+.input-group__check {
+  position: absolute;
+  right: var(--spacing-lg);
+  color: var(--success);
+  font-weight: bold;
+  font-size: var(--font-size-lg);
+}
+
+/* Helper Text */
+.input-group__hint {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.input-group__error {
+  font-size: var(--font-size-xs);
+  color: var(--danger);
+  margin: 0;
+}
