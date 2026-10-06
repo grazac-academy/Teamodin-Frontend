@@ -1,67 +1,100 @@
-/* HR-Stack Design Tokens */
+/* HR-Stack Design Tokens — values extracted from the HR-STACK Figma file */
 
 :root {
-  /* Primary Colors */
-  --primary: #5334FF;
-  --primary-light: #E8E4FF;
-  --primary-dark: #3D1FB5;
+  /* Brand / Primary */
+  --primary: #534AB7;
+  --primary-deep: #3C3489;
+  --primary-200: #AFA9EC;
+  --primary-150: #CECBF6;
+  --primary-100: #DAD7FB;
+  --primary-50: #EEEDFE;
 
-  /* Secondary Colors */
-  --success: #2D9876;
-  --success-light: #D6F3E8;
-  --success-dark: #1A5A48;
+  /* Success */
+  --success: #1D9E75;
+  --success-dark: #085041;
+  --success-light: #E1F5EE;
 
-  --warning: #D2941E;
-  --warning-light: #FFF3E0;
-  --warning-dark: #8B5C0F;
+  /* Accent green (badges / positive pills) */
+  --accent-green: #3B6D11;
+  --accent-green-light: #EAF3DE;
 
-  --danger: #C23030;
-  --danger-light: #FBE8E8;
-  --danger-dark: #7A1E1E;
+  /* Warning */
+  --warning: #BA7517;
+  --warning-dark: #854F0B;
+  --warning-light: #FAEEDA;
 
-  /* Neutral Colors */
+  /* Danger */
+  --danger: #A32D2D;
+  --danger-strong: #E24B4A;
+  --danger-soft: #F09595;
+  --danger-light: #FCEBEB;
+  --danger-surface: #FAECE7;
+  --danger-dark: #712B13;
+
+  /* Neutrals */
   --neutral-0: #FFFFFF;
-  --neutral-50: #F5F5F5;
-  --neutral-100: #E8E8E8;
-  --neutral-200: #D1D1D1;
-  --neutral-300: #B9B9B9;
-  --neutral-400: #888780;
-  --neutral-500: #5F5E5A;
-  --neutral-600: #444441;
-  --neutral-700: #2C2C2A;
-  --neutral-800: #0B0B0B;
+  --neutral-50: #F7F6F2;
+  --neutral-100: #F5F4EF;
+  --neutral-150: #EFEDE6;
+  --neutral-200: #EDECEA;
+  --neutral-300: #E3E2DA;
+  --neutral-350: #E2E0D9;
+  --neutral-400: #9E9C96;
+  --neutral-500: #888780;
+  --neutral-600: #6B6A65;
+  --neutral-700: #5F5E5A;
+  --neutral-800: #1A1917;
+  --neutral-900: #17110D;
+
+  /* Slate (footer / outlines) */
+  --slate: #435664;
 
   /* Backgrounds */
   --bg-primary: #FFFFFF;
-  --bg-secondary: #F5F5F5;
-  --bg-tertiary: #E8E8E8;
-  --bg-dark-primary: #2C2C2A;
+  --bg-secondary: #F7F6F2;
+  --bg-tertiary: #EFEDE6;
+  --bg-muted: #F5F4EF;
+  --bg-dark: #3C3489;
+  --bg-footer: #435664;
 
-  /* Text Colors */
-  --text-primary: #0B0B0B;
-  --text-secondary: #5F5E5A;
+  /* Text */
+  --text-primary: #1A1917;
+  --text-ink: #17110D;
+  --text-secondary: #6B6A65;
+  --text-tertiary: #5F5E5A;
   --text-muted: #888780;
-  --text-light: #B9B9B9;
+  --text-light: #9E9C96;
+  --text-on-dark: #FFFFFF;
 
   /* Borders */
-  --border-color: #D1D1D1;
-  --border-color-light: #E8E8E8;
+  --border-color: #E2E0D9;
+  --border-color-light: #EDECEA;
+  --border-color-strong: #E3E2DA;
 
   /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --shadow-sm: 0 1px 2px rgba(26, 25, 23, 0.05);
+  --shadow-md: 0 4px 6px rgba(26, 25, 23, 0.08);
+  --shadow-lg: 0 10px 15px rgba(26, 25, 23, 0.1);
 
   /* Typography */
-  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+    'Helvetica Neue', sans-serif;
   --font-mono: 'Courier New', monospace;
 
+  --font-size-3xs: 10px;
+  --font-size-2xs: 11px;
   --font-size-xs: 12px;
-  --font-size-sm: 14px;
-  --font-size-base: 16px;
-  --font-size-lg: 18px;
-  --font-size-xl: 22px;
-  --font-size-2xl: 28px;
+  --font-size-sm: 13px;
+  --font-size-base: 14px;
+  --font-size-md: 15px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
+  --font-size-2xl: 20px;
+  --font-size-3xl: 22px;
+  --font-size-4xl: 24px;
+  --font-size-5xl: 26px;
+  --font-size-6xl: 36px;
+  --font-size-display: 48px;
 
   --font-weight-regular: 400;
   --font-weight-medium: 500;
@@ -76,12 +109,22 @@
   --spacing-xl: 24px;
   --spacing-2xl: 32px;
   --spacing-3xl: 48px;
+  --spacing-4xl: 80px;
 
-  /* Border Radius */
-  --radius-sm: 4px;
+  /* Radii */
+  --radius-xs: 4px;
+  --radius-sm: 7px;
   --radius-md: 8px;
   --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-pill: 30px;
   --radius-full: 9999px;
+
+  /* Layout */
+  --page-max-width: 1440px;
+  --page-gutter: 120px;
+  --content-width: 1200px;
 
   /* Transitions */
   --transition-fast: 150ms ease-in-out;
@@ -103,6 +146,8 @@ body {
   color: var(--text-primary);
   background-color: var(--bg-primary);
   line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
@@ -112,7 +157,7 @@ a {
 }
 
 a:hover {
-  color: var(--primary-dark);
+  color: var(--primary-deep);
 }
 
 button {
@@ -126,7 +171,13 @@ select {
   font-family: var(--font-family);
 }
 
-/* Scrollbar Styling */
+/* Shared focus ring for keyboard users */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;

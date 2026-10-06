@@ -1,0 +1,99 @@
+import React from 'react';
+import {
+  Users,
+  CalendarCheck,
+  ListChecks,
+  Repeat,
+  HeartPulse,
+  BarChart3,
+  Check,
+} from 'lucide-react';
+
+const FEATURES = [
+  {
+    Icon: Users,
+    iconBg: '#EEEDFE',
+    iconColor: 'var(--primary)',
+    title: 'Employee directory',
+    desc: 'Searchable profiles with role, department, manager, and join date. CSV import for bulk setup. Org chart included.',
+    tag: 'Searchable by name, role, or department',
+  },
+  {
+    Icon: CalendarCheck,
+    iconBg: '#E1F5EE',
+    iconColor: 'var(--success)',
+    title: 'Leave management',
+    desc: 'Live balance shown before submission. Public holiday auto-check. Team calendar context for managers before approving.',
+    tag: 'One-click approve or decline',
+  },
+  {
+    Icon: ListChecks,
+    iconBg: '#FAEEDA',
+    iconColor: 'var(--warning-dark)',
+    title: 'Onboarding workflows',
+    desc: 'Tasks grouped by week and assigned to specific owners — the new hire, IT, or their manager. Nudge button for overdue items.',
+    tag: 'Nothing falls through the cracks',
+  },
+  {
+    Icon: Repeat,
+    iconBg: '#FAECE7',
+    iconColor: 'var(--danger-dark)',
+    title: 'Performance check-ins',
+    desc: 'Quarterly cycles with both a self-assessment and manager review in the same flow. History visible to both parties.',
+    tag: 'Structured, not open-ended',
+  },
+  {
+    Icon: HeartPulse,
+    iconBg: '#E6F1FB',
+    iconColor: 'var(--slate)',
+    title: 'Pulse surveys',
+    desc: 'NPS-style 0–10 scale. Responses stay anonymous until at least 5 people have answered — protecting individual privacy in small teams.',
+    tag: 'Privacy-first by design',
+  },
+  {
+    Icon: BarChart3,
+    iconBg: '#EAF3DE',
+    iconColor: 'var(--accent-green)',
+    title: 'Analytics dashboard',
+    desc: 'Headcount trends, 90-day attrition, leave utilisation, and eNPS tracked over time. All in one view, no exports needed.',
+    tag: 'Real decisions from real data',
+  },
+];
+
+const Features = () => {
+  return (
+    <section className="lp-features">
+      <div className="lp-features__inner">
+        <header className="lp-features__head">
+          <span className="lp-eyebrow">What you get</span>
+          <h2 className="lp-features__title">Everything your People Ops team needs</h2>
+          <p className="lp-features__lede">
+            Each module is designed to answer one specific question in under five
+            seconds.
+          </p>
+        </header>
+
+        <ul className="lp-features__grid">
+          {FEATURES.map(({ Icon, iconBg, iconColor, title, desc, tag }) => (
+            <li key={title} className="lp-feature">
+              <span
+                className="lp-feature__icon"
+                style={{ background: iconBg, color: iconColor }}
+              >
+                <Icon size={22} strokeWidth={2} aria-hidden="true" />
+              </span>
+              <h3 className="lp-feature__title">{title}</h3>
+              <p className="lp-feature__desc">{desc}</p>
+              <p className="lp-feature__tag">
+                <Check size={13} strokeWidth={2.5} aria-hidden="true" />
+                {tag}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+};
+
+export default Features;

@@ -5,7 +5,7 @@ import './styles/theme.css';
 import './App.css';
 
 // Pages
-import LandingPage from './pages/LandingPage';
+import LandingPage from './pages/landing/LandingPage';
 import SignInPage from './pages/auth/SignInPage';
 import SignUpPage from './pages/auth/SignUpPage';
 import OTPVerifyPage from './pages/auth/OTPVerifyPage';
