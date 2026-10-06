@@ -37,9 +37,7 @@ const Hero = () => {
         </span>
 
         <h1 className="lp-hero__title">
-          Your HR Operating System
-          <br />
-          without the bloat
+          Your HR <em>Operating System</em> without the bloat
         </h1>
 
         <p className="lp-hero__microcopy">
