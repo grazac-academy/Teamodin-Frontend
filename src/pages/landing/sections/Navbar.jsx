@@ -36,7 +36,7 @@ const Navbar = () => {
 
         <div className="lp-nav__end">
           <Link to="/sign-in" className="lp-nav__cta">
-            sign in
+            Sign in
           </Link>
           <button 
             className="lp-nav__mobile-toggle"
@@ -66,7 +66,7 @@ const Navbar = () => {
               className="lp-nav__mobile-cta"
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              sign in
+              Sign in
             </Link>
           </nav>
         </div>
