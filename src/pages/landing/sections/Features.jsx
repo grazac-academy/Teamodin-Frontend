@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import {
   Users,
   CalendarCheck,
@@ -60,22 +61,46 @@ const FEATURES = [
   },
 ];
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+};
+
 const Features = () => {
   return (
     <section className="lp-features">
-      <div className="lp-features__inner">
+      <motion.div 
+        className="lp-features__inner"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-50px" }}
+        variants={containerVariants}
+      >
         <header className="lp-features__head">
-          <span className="lp-eyebrow">What you get</span>
-          <h2 className="lp-features__title">Everything your People Ops team needs</h2>
-          <p className="lp-features__lede">
+          <motion.span className="lp-eyebrow" variants={cardVariants}>What you get</motion.span>
+          <motion.h2 className="lp-features__title" variants={cardVariants}>Everything your People Ops team needs</motion.h2>
+          <motion.p className="lp-features__lede" variants={cardVariants}>
             Each module is designed to answer one specific question in under five
             seconds.
-          </p>
+          </motion.p>
         </header>
 
-        <ul className="lp-features__grid">
+        <motion.ul className="lp-features__grid" variants={containerVariants}>
           {FEATURES.map(({ Icon, iconBg, iconColor, title, desc, tag }) => (
-            <li key={title} className="lp-feature">
+            <motion.li 
+              key={title} 
+              className="lp-feature"
+              variants={cardVariants}
+              whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)" }}
+            >
               <span
                 className="lp-feature__icon"
                 style={{ background: iconBg, color: iconColor }}
@@ -88,10 +113,10 @@ const Features = () => {
                 <Check size={13} strokeWidth={2.5} aria-hidden="true" />
                 {tag}
               </p>
-            </li>
+            </motion.li>
           ))}
-        </ul>
-      </div>
+        </motion.ul>
+      </motion.div>
     </section>
   );
 };

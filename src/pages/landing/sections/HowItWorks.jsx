@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
 const STEPS = [
   {
@@ -23,27 +24,54 @@ const STEPS = [
   },
 ];
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2
+    }
+  }
+};
+
+const stepVariants = {
+  hidden: { opacity: 0, x: -30 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.5 } }
+};
+
 const HowItWorks = () => {
   return (
     <section className="lp-how" id="how-it-works">
-      <div className="lp-how__inner">
+      <motion.div 
+        className="lp-how__inner"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={containerVariants}
+      >
         <header className="lp-how__head">
-          <span className="lp-eyebrow">How it works</span>
-          <h2 className="lp-how__title">From zero to running in under 15 minutes</h2>
+          <motion.span className="lp-eyebrow" variants={stepVariants}>How it works</motion.span>
+          <motion.h2 className="lp-how__title" variants={stepVariants}>From zero to running in under 15 minutes</motion.h2>
         </header>
 
-        <ol className="lp-how__steps">
+        <motion.ol className="lp-how__steps" variants={containerVariants}>
           {STEPS.map((step) => (
-            <li key={step.num} className="lp-how__step">
+            <motion.li 
+              key={step.num} 
+              className="lp-how__step"
+              variants={stepVariants}
+              whileHover={{ scale: 1.05, y: -5 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
               <span className="lp-how__num" aria-hidden="true">
                 {step.num}
               </span>
               <h3 className="lp-how__step-title">{step.title}</h3>
               <p className="lp-how__step-desc">{step.desc}</p>
-            </li>
+            </motion.li>
           ))}
-        </ol>
-      </div>
+        </motion.ol>
+      </motion.div>
     </section>
   );
 };

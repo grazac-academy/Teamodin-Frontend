@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { AlertTriangle, MessageSquare, TrendingDown } from 'lucide-react';
 import { CalendarCheck, ListChecks, Users, Repeat, BarChart3, HeartPulse } from 'lucide-react';
 import probsImage from '../../../assets/probs.png';
@@ -57,23 +58,47 @@ const MODULES = [
   },
 ];
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15 }
+  }
+};
+
+const fadeUpVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+};
+
 const ValueGrid = () => {
   return (
     <section className="lp-value" id="features">
       {/* ---- the problem ---- */}
-      <div className="lp-value__row">
+      <motion.div 
+        className="lp-value__row"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={containerVariants}
+      >
         <div className="lp-value__col">
-          <span className="lp-eyebrow lp-eyebrow--ruled">The problem</span>
-          <h2 className="lp-value__title">African SMBs hit a wall at 30 people</h2>
-          <p className="lp-value__lede">
+          <motion.span className="lp-eyebrow lp-eyebrow--ruled" variants={fadeUpVariants}>The problem</motion.span>
+          <motion.h2 className="lp-value__title" variants={fadeUpVariants}>African SMBs hit a wall at 30 people</motion.h2>
+          <motion.p className="lp-value__lede" variants={fadeUpVariants}>
             The tools that exist — BambooHR, Workday — were built for American
             compliance, bundled with payroll nobody in this market asked for, and
             priced for enterprise budgets.
-          </p>
+          </motion.p>
 
-          <ul className="lp-value__points">
+          <motion.ul className="lp-value__points" variants={containerVariants}>
             {PROBLEMS.map(({ Icon, tone, title, desc }) => (
-              <li key={title} className="lp-value__point">
+              <motion.li 
+                key={title} 
+                className="lp-value__point" 
+                variants={fadeUpVariants}
+                whileHover={{ x: 10 }}
+              >
                 <span className={`lp-value__point-icon lp-value__point-icon--${tone}`}>
                   <Icon size={17} strokeWidth={2} aria-hidden="true" />
                 </span>
@@ -81,44 +106,61 @@ const ValueGrid = () => {
                   <h3 className="lp-value__point-title">{title}</h3>
                   <p className="lp-value__point-desc">{desc}</p>
                 </div>
-              </li>
+              </motion.li>
             ))}
-          </ul>
+          </motion.ul>
         </div>
 
-        <figure className="lp-value__media">
+        <motion.figure 
+          className="lp-value__media" 
+          variants={fadeUpVariants}
+          animate={{ y: [0, -10, 0] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        >
           <img src={probsImage} alt="" className="lp-value__media-img" />
           <figcaption className="lp-value__media-caption">
             The old way — scattered, invisible, manual
           </figcaption>
-        </figure>
-      </div>
+        </motion.figure>
+      </motion.div>
 
       {/* ---- the solution ---- */}
-      <div className="lp-value__row lp-value__row--solution">
+      <motion.div 
+        className="lp-value__row lp-value__row--solution"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={containerVariants}
+      >
         <div className="lp-value__col lp-value__col--solution">
-          <span className="lp-eyebrow lp-eyebrow--ruled">The solution</span>
-          <h2 className="lp-value__title">
+          <motion.span className="lp-eyebrow lp-eyebrow--ruled" variants={fadeUpVariants}>The solution</motion.span>
+          <motion.h2 className="lp-value__title" variants={fadeUpVariants}>
             Five focused modules.
             <br />
             Nothing you didn&apos;t ask for.
-          </h2>
-          <p className="lp-value__lede">
+          </motion.h2>
+          <motion.p className="lp-value__lede" variants={fadeUpVariants}>
             HRStack was built to do five things really well, not fifteen things
             poorly. No payroll. No recruiting. No time tracking.
-          </p>
+          </motion.p>
         </div>
 
-        <ul className="lp-modules">
+        <motion.ul className="lp-modules" variants={containerVariants}>
           {MODULES.map(({ Icon, title, desc }) => (
-            <li key={title} className="lp-module">
+            <motion.li 
+              key={title} 
+              className="lp-module" 
+              variants={fadeUpVariants}
+              whileHover={{ scale: 1.05, y: -5, rotate: -1 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
               <Icon size={20} strokeWidth={2} className="lp-module__icon" aria-hidden="true" />
               <h3 className="lp-module__title">{title}</h3>
               <p className="lp-module__desc">{desc}</p>
-            </li>
+            </motion.li>
           ))}
-        </ul>
-      </div>
+        </motion.ul>
+      </motion.div>
     </section>
   );
 };

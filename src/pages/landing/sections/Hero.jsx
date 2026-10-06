@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const AVATARS = [
   { initials: 'AO', bg: 'var(--primary-50)', color: 'var(--primary-deep)' },
@@ -15,11 +16,43 @@ const STATS = [
   { value: '8 weeks', label: 'MVP timeline' },
 ];
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.2
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+};
+
 const Hero = () => {
   return (
     <section className="lp-hero">
-      <div className="lp-hero__inner">
-        <span className="lp-hero__badge">
+      <motion.div 
+        className="lp-hero__inner"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.span 
+          className="lp-hero__badge"
+          variants={itemVariants}
+          animate={{
+            y: [0, -5, 0],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        >
           <svg
             className="lp-hero__badge-icon"
             viewBox="0 0 14 16"
@@ -34,51 +67,58 @@ const Hero = () => {
             />
           </svg>
           Built for African SMBs
-        </span>
+        </motion.span>
 
-        <h1 className="lp-hero__title">
+        <motion.h1 className="lp-hero__title" variants={itemVariants}>
           Your HR <em>Operating System</em> without the bloat
-        </h1>
+        </motion.h1>
 
-        <p className="lp-hero__microcopy">
+        <motion.p className="lp-hero__microcopy" variants={itemVariants}>
           One Admin creates the workspace — teammates join by invite only.
-        </p>
+        </motion.p>
 
-        <div className="lp-hero__ctas">
+        <motion.div className="lp-hero__ctas" variants={itemVariants}>
           <Link to="/sign-up" className="lp-hero__cta lp-hero__cta--primary">
             Set up your workspace
           </Link>
           <a href="#how-it-works" className="lp-hero__cta lp-hero__cta--ghost">
             See how it works
           </a>
-        </div>
+        </motion.div>
 
-        <div className="lp-hero__social">
+        <motion.div className="lp-hero__social" variants={itemVariants}>
           <ul className="lp-hero__avatars">
-            {AVATARS.map((avatar) => (
-              <li
+            {AVATARS.map((avatar, i) => (
+              <motion.li
                 key={avatar.initials}
                 className="lp-hero__avatar"
                 style={{ background: avatar.bg, color: avatar.color }}
+                whileHover={{ y: -5, scale: 1.1, zIndex: 10 }}
               >
                 {avatar.initials}
-              </li>
+              </motion.li>
             ))}
           </ul>
           <span className="lp-hero__social-text">
             Teams in Nigeria, Kenya &amp; Ghana already on HRStack
           </span>
-        </div>
+        </motion.div>
 
-        <dl className="lp-hero__stats">
-          {STATS.map((stat) => (
-            <div key={stat.label} className="lp-hero__stat">
+        <motion.dl className="lp-hero__stats" variants={itemVariants}>
+          {STATS.map((stat, i) => (
+            <motion.div 
+              key={stat.label} 
+              className="lp-hero__stat"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.6 + i * 0.1, duration: 0.4 }}
+            >
               <dt className="lp-hero__stat-value">{stat.value}</dt>
               <dd className="lp-hero__stat-label">{stat.label}</dd>
-            </div>
+            </motion.div>
           ))}
-        </dl>
-      </div>
+        </motion.dl>
+      </motion.div>
     </section>
   );
 };
