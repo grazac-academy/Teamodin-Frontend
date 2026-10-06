@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
 
 const NAV_LINKS = [
   { label: 'Features', href: '#features' },
@@ -11,6 +12,8 @@ const NAV_LINKS = [
 ];
 
 const Navbar = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
     <header className="lp-nav">
       <div className="lp-nav__inner">
@@ -31,10 +34,43 @@ const Navbar = () => {
           </nav>
         </div>
 
-        <Link to="/sign-in" className="lp-nav__cta">
-          sign in
-        </Link>
+        <div className="lp-nav__end">
+          <Link to="/sign-in" className="lp-nav__cta">
+            sign in
+          </Link>
+          <button 
+            className="lp-nav__mobile-toggle"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
+
+      {isMobileMenuOpen && (
+        <div className="lp-nav__mobile-menu">
+          <nav className="lp-nav__mobile-links">
+            {NAV_LINKS.map((link) => (
+              <a 
+                key={link.href} 
+                href={link.href} 
+                className="lp-nav__mobile-link"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {link.label}
+              </a>
+            ))}
+            <Link 
+              to="/sign-in" 
+              className="lp-nav__mobile-cta"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              sign in
+            </Link>
+          </nav>
+        </div>
+      )}
     </header>
   );
 };
