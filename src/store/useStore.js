@@ -69,3 +69,4 @@ export const useStore = create((set) => ({
   // Replace all employees (e.g. bulk CSV import)
   setEmployees: (newEmployees) => set({ employees: newEmployees })
 }));
+

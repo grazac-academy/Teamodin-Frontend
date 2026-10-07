@@ -28,6 +28,15 @@ const QUOTES = [
     name: 'David Bello',
     role: 'Engineering Manager · Acme Technologies',
   },
+  {
+    quote:
+      'HRStack has revolutionized the way we handle frontend tasks and team collaboration. It is truly a game changer for developers.',
+    initials: 'SS',
+    bg: 'var(--primary-100)',
+    color: 'var(--primary-deep)',
+    name: 'Solomon Samuel',
+    role: 'Frontend Developer · Team Odin',
+  },
 ];
 
 const Testimonials = () => {

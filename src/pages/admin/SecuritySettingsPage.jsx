@@ -37,8 +37,13 @@ const SecuritySettingsPage = () => {
           
           @media (max-width: 640px) {
             .session-row { flex-direction: column; align-items: flex-start; gap: 12px; }
-            .session-action { align-self: flex-start; }
-            .password-header { flex-direction: column; align-items: flex-start !important; gap: 16px; }
+            .session-action { align-self: flex-start; width: 100%; }
+            .session-action button { width: 100%; }
+            .password-header { flex-direction: column; align-items: flex-start !important; gap: 16px; width: 100%; }
+            .password-header a { width: 100%; }
+            .password-header button { width: 100%; }
+            .settings-tabs { margin-bottom: 24px; padding-bottom: 4px; }
+            .card-section { padding: 16px; }
           }
         `}
       </style>

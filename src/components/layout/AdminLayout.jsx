@@ -155,7 +155,7 @@ const AdminLayout = ({ children, title, subtitle }) => {
             </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             
             {/* Search */}
             <div style={{ position: 'relative', display: isTablet ? 'none' : 'block' }}>

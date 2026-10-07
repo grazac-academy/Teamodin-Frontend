@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import AdminLayout from '../../components/layout/AdminLayout';
-import { Search, Plus } from 'lucide-react';
+import { Search, Plus, Download, Upload, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const initialEmployees = [
   { id: 1, initials: 'KO', name: 'Kunle Obi', role: 'Software Engineer · Engineering', status: 'Active', statusColor: '#10b981', statusBg: '#d1fae5', 
@@ -48,6 +48,16 @@ const EmployeeDirectoryPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isAdding, setIsAdding] = useState(false);
   const fileInputRef = useRef(null);
+  
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+
+  const handleImportCSVClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
 
   const handleImportCSV = (e) => {
     const file = e.target.files[0];
@@ -97,18 +107,52 @@ const EmployeeDirectoryPage = () => {
     });
   };
 
+  const handleExportCSV = () => {
+    const csvData = employees.map(emp => ({
+      name: emp.name,
+      email: emp.email,
+      department: emp.dept,
+      title: emp.title,
+      manager: emp.manager,
+      startDate: emp.startDate,
+      type: emp.type,
+      location: emp.location,
+      status: emp.status
+    }));
+    
+    const csv = Papa.unparse(csvData);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'employees_export.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success('Exported employees to CSV!');
+  };
+
   const selectedEmp = employees.find(e => e.id === selectedId) || employees[0];
 
-  const filteredEmployees = employees.filter(emp => {
-    const matchesSearch = emp.name.toLowerCase().includes(searchQuery.toLowerCase()) || emp.role.toLowerCase().includes(searchQuery.toLowerCase());
-    if (!matchesSearch) return false;
-    
-    if (filter === 'All') return true;
-    if (filter === 'Active') return emp.status === 'Active';
-    if (filter === 'New hire') return emp.status === 'New hire';
-    if (filter === 'Inactive') return emp.status === 'Inactive';
-    return true;
-  });
+  const filteredEmployees = useMemo(() => {
+    return employees.filter(emp => {
+      const matchesSearch = emp.name.toLowerCase().includes(searchQuery.toLowerCase()) || emp.role.toLowerCase().includes(searchQuery.toLowerCase());
+      if (!matchesSearch) return false;
+      
+      if (filter === 'All') return true;
+      if (filter === 'Active') return emp.status === 'Active';
+      if (filter === 'New hire') return emp.status === 'New hire';
+      if (filter === 'Inactive') return emp.status === 'Inactive';
+      return true;
+    });
+  }, [employees, searchQuery, filter]);
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredEmployees.length / itemsPerPage);
+  const paginatedEmployees = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    return filteredEmployees.slice(start, start + itemsPerPage);
+  }, [filteredEmployees, currentPage, itemsPerPage]);
 
   const handleDeactivate = () => {
     if (!selectedEmp) return;
@@ -205,8 +249,18 @@ const EmployeeDirectoryPage = () => {
                   style={{ width: '100%', padding: '10px 16px 10px 36px', borderRadius: '8px', border: '1px solid #e5e7eb', backgroundColor: '#f9fafb', outline: 'none', fontSize: '14px', boxSizing: 'border-box' }}
                 />
               </div>
-              <button style={{ padding: '10px 16px', backgroundColor: 'white', color: '#534ab7', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer', whiteSpace: 'nowrap', transition: 'all 0.2s' }}>
-                Import CSV
+              <input 
+                type="file" 
+                accept=".csv" 
+                ref={fileInputRef} 
+                onChange={handleImportCSV} 
+                style={{ display: 'none' }} 
+              />
+              <button onClick={handleExportCSV} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '10px 16px', backgroundColor: 'white', color: '#534ab7', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer', whiteSpace: 'nowrap', transition: 'all 0.2s' }}>
+                <Download size={16} /> Export
+              </button>
+              <button onClick={handleImportCSVClick} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '10px 16px', backgroundColor: 'white', color: '#534ab7', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer', whiteSpace: 'nowrap', transition: 'all 0.2s' }}>
+                <Upload size={16} /> Import
               </button>
               <button 
                 onClick={handleAddDemoEmployee}
@@ -226,35 +280,60 @@ const EmployeeDirectoryPage = () => {
             </div>
           </div>
 
-          <div style={{ flex: 1, overflowY: 'auto', padding: '12px' }}>
-            <AnimatePresence>
-              {filteredEmployees.map(emp => (
-                <motion.div 
-                  key={emp.id}
-                  initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }}
-                  className={`emp-list-item ${selectedId === emp.id ? 'selected' : ''}`}
-                  onClick={() => setSelectedId(emp.id)}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', overflow: 'hidden' }}>
-                    <div style={{ width: '36px', height: '36px', borderRadius: '50%', backgroundColor: emp.statusBg, color: emp.statusColor, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: '600', flexShrink: 0 }}>
-                      {emp.initials}
+          <div style={{ flex: 1, overflowY: 'auto', padding: '12px', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ flex: 1 }}>
+              <AnimatePresence>
+                {paginatedEmployees.map(emp => (
+                  <motion.div 
+                    key={emp.id}
+                    initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }}
+                    className={`emp-list-item ${selectedId === emp.id ? 'selected' : ''}`}
+                    onClick={() => setSelectedId(emp.id)}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', overflow: 'hidden' }}>
+                      <div style={{ width: '36px', height: '36px', borderRadius: '50%', backgroundColor: emp.statusBg, color: emp.statusColor, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: '600', flexShrink: 0 }}>
+                        {emp.initials}
+                      </div>
+                      <div style={{ minWidth: 0 }}>
+                        <p style={{ fontSize: '14px', fontWeight: '600', color: selectedId === emp.id ? '#111827' : '#374151', margin: '0 0 2px 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{emp.name}</p>
+                        <p style={{ fontSize: '12px', color: '#6b7280', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{emp.role}</p>
+                      </div>
                     </div>
-                    <div style={{ minWidth: 0 }}>
-                      <p style={{ fontSize: '14px', fontWeight: '600', color: selectedId === emp.id ? '#111827' : '#374151', margin: '0 0 2px 0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{emp.name}</p>
-                      <p style={{ fontSize: '12px', color: '#6b7280', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{emp.role}</p>
-                    </div>
+                    <span style={{ backgroundColor: emp.statusBg, color: emp.statusColor, padding: '4px 8px', borderRadius: '12px', fontSize: '11px', fontWeight: '600', whiteSpace: 'nowrap', flexShrink: 0, marginLeft: '8px' }}>
+                      {emp.status}
+                    </span>
+                  </motion.div>
+                ))}
+                {filteredEmployees.length === 0 && (
+                  <div style={{ padding: '24px', textAlign: 'center', color: '#6b7280', fontSize: '14px' }}>
+                    No employees found.
                   </div>
-                  <span style={{ backgroundColor: emp.statusBg, color: emp.statusColor, padding: '4px 8px', borderRadius: '12px', fontSize: '11px', fontWeight: '600', whiteSpace: 'nowrap', flexShrink: 0, marginLeft: '8px' }}>
-                    {emp.status}
-                  </span>
-                </motion.div>
-              ))}
-              {filteredEmployees.length === 0 && (
-                <div style={{ padding: '24px', textAlign: 'center', color: '#6b7280', fontSize: '14px' }}>
-                  No employees found.
-                </div>
-              )}
-            </AnimatePresence>
+                )}
+              </AnimatePresence>
+            </div>
+            
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 12px', borderTop: '1px solid #f3f4f6', marginTop: 'auto' }}>
+                <button 
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '6px 12px', backgroundColor: 'white', color: currentPage === 1 ? '#9ca3af' : '#4b5563', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '13px', fontWeight: '500', cursor: currentPage === 1 ? 'not-allowed' : 'pointer' }}
+                >
+                  <ChevronLeft size={16} /> Prev
+                </button>
+                <span style={{ fontSize: '13px', color: '#6b7280', fontWeight: '500' }}>
+                  Page {currentPage} of {totalPages}
+                </span>
+                <button 
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '6px 12px', backgroundColor: 'white', color: currentPage === totalPages ? '#9ca3af' : '#4b5563', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '13px', fontWeight: '500', cursor: currentPage === totalPages ? 'not-allowed' : 'pointer' }}
+                >
+                  Next <ChevronRight size={16} />
+                </button>
+              </div>
+            )}
           </div>
         </div>
 

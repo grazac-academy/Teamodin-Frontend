@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import AdminLayout from '../../components/layout/AdminLayout';
+import { useStore } from '../../store/useStore';
 
 // Mock Data
 const stats = [
@@ -50,6 +51,7 @@ const itemVariants = {
 
 const AdminDashboard = () => {
   const [leaves, setLeaves] = useState(initialPendingLeaves);
+  const { employees, pendingInvites } = useStore();
 
   const handleApprove = (id) => {
     setLeaves(leaves.filter(l => l.id !== id));
@@ -59,11 +61,13 @@ const AdminDashboard = () => {
   let greeting = 'Good morning';
   if (currentHour >= 12 && currentHour < 17) {
     greeting = 'Good afternoon';
-  } else if (currentHour >= 17) {
+  } else if (currentHour >= 17 && currentHour < 21) {
     greeting = 'Good evening';
+  } else if (currentHour >= 21) {
+    greeting = 'Good night';
   }
 
-  const currentDate = new Date().toLocaleDateString('en-GB', {
+  const currentDate = new Date().toLocaleDateString(undefined, {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
@@ -124,15 +128,15 @@ const AdminDashboard = () => {
         {/* Stats Row */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '24px' }}>
           <motion.div variants={itemVariants} className="stat-card">
-            <h3 style={{ fontSize: '32px', fontWeight: '700', color: '#111827', margin: '0 0 8px 0' }}>142</h3>
+            <h3 style={{ fontSize: '32px', fontWeight: '700', color: '#111827', margin: '0 0 8px 0' }}>{employees.length}</h3>
             <p style={{ fontSize: '13px', fontWeight: '600', color: '#4b5563', margin: '0 0 4px 0' }}>Total Employees</p>
-            <p style={{ fontSize: '12px', color: '#10b981', margin: 0, fontWeight: '500' }}>+4 this month</p>
+            <p style={{ fontSize: '12px', color: '#10b981', margin: 0, fontWeight: '500' }}>Active directory</p>
           </motion.div>
           
           <motion.div variants={itemVariants} className="stat-card">
-            <h3 style={{ fontSize: '32px', fontWeight: '700', color: '#f59e0b', margin: '0 0 8px 0' }}>{leaves.length}</h3>
-            <p style={{ fontSize: '13px', fontWeight: '600', color: '#4b5563', margin: '0 0 4px 0' }}>Pending Leaves</p>
-            <p style={{ fontSize: '12px', color: '#f59e0b', margin: 0, fontWeight: '500' }}>Needs attention</p>
+            <h3 style={{ fontSize: '32px', fontWeight: '700', color: '#534ab7', margin: '0 0 8px 0' }}>{pendingInvites.length}</h3>
+            <p style={{ fontSize: '13px', fontWeight: '600', color: '#4b5563', margin: '0 0 4px 0' }}>Pending Invites</p>
+            <p style={{ fontSize: '12px', color: '#534ab7', margin: 0, fontWeight: '500' }}>Awaiting response</p>
           </motion.div>
 
           {stats.slice(1).map((stat, i) => (
