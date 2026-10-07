@@ -10,10 +10,10 @@ const AVATARS = [
 ];
 
 const STATS = [
-  { value: '30–200', label: 'Employees' },
+  { value: '30 – 200', label: 'Employees' },
   { value: '5', label: 'Core modules' },
   { value: '99.9%', label: 'Uptime' },
-  { value: '8 weeks', label: 'MVP timeline' },
+  { value: '8 weeks', label: 'MVP Timeline' },
 ];
 
 const containerVariants = {

@@ -397,3 +397,61 @@
     display: none;
   }
 }
+
+/* Custom Auth Layout Overrides for Mobile */
+.auth-container-mobile {
+  display: flex;
+  width: 100%;
+  max-width: 1000px;
+  min-height: 650px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.auth-panel-left {
+  flex: 1;
+  padding: 48px 56px;
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-panel-right {
+  flex: 1;
+  background-color: #383287;
+  padding: 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Specific right panel for profile setup */
+.auth-panel-right-profile {
+  width: 340px;
+  background-color: #383287;
+  padding: 48px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .auth-container-mobile {
+    flex-direction: column;
+    min-height: auto;
+  }
+  
+  .auth-panel-left {
+    padding: 24px !important;
+  }
+  
+  .auth-panel-right, .auth-panel-right-profile {
+    display: none !important;
+  }
+
+  /* Make auth screen padding smaller on mobile */
+  .auth-wrapper {
+    padding: 24px !important;
+  }
+}
