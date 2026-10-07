@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import AdminLayout from '../../components/layout/AdminLayout';
 
 const CheckInsPage = () => {
+  const [rating, setRating] = useState(4);
+  const [isSaved, setIsSaved] = useState(false);
+
+  const handleSave = () => {
+    setIsSaved(true);
+    setTimeout(() => setIsSaved(false), 3000);
+  };
+
   return (
     <AdminLayout>
       <style>
@@ -27,6 +35,7 @@ const CheckInsPage = () => {
           .btn-back:hover { background: #f9fafb; }
           .btn-save { flex: 1; padding: 12px; background: #4f46e5; color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
           .btn-save:hover { background: #4338ca; }
+          .btn-save.saved { background: #10b981; }
         `}
       </style>
       <div className="checkins-container">
@@ -81,23 +90,30 @@ const CheckInsPage = () => {
                 {/* Q3 (Rating) */}
                 <div>
                   <label className="form-label" style={{ marginBottom: '12px' }}>How would you rate your overall performance this quarter?</label>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    {[1, 2, 3, 4, 5].map((num) => (
-                      <button 
-                        key={num}
-                        className={`rating-btn ${num === 4 ? 'active' : ''}`}
-                      >
-                        {num}
-                      </button>
-                    ))}
-                    <span style={{ fontSize: '14px', color: '#6b7280', marginLeft: '12px' }}>4 = Strong performance</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                      {[1, 2, 3, 4, 5].map((num) => (
+                        <button 
+                          key={num}
+                          onClick={() => setRating(num)}
+                          className={`rating-btn ${num === rating ? 'active' : ''}`}
+                        >
+                          {num}
+                        </button>
+                      ))}
+                    </div>
+                    <span style={{ fontSize: '14px', color: '#6b7280', marginLeft: '0px' }}>
+                      {rating === 1 ? '1 = Needs improvement' : rating === 2 ? '2 = Below expectations' : rating === 3 ? '3 = Meets expectations' : rating === 4 ? '4 = Strong performance' : '5 = Outstanding'}
+                    </span>
                   </div>
                 </div>
 
                 {/* Actions */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px', paddingTop: '16px', borderTop: '1px solid #f3f4f6' }}>
                   <button className="btn-back">← Back</button>
-                  <button className="btn-save">Save & continue →</button>
+                  <button className={`btn-save ${isSaved ? 'saved' : ''}`} onClick={handleSave}>
+                    {isSaved ? '✓ Saved' : 'Save & continue →'}
+                  </button>
                 </div>
 
               </div>

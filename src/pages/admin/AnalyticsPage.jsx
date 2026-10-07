@@ -1,9 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import AdminLayout from '../../components/layout/AdminLayout';
 import { ArrowUpRight, ArrowDownRight, Download, Calendar } from 'lucide-react';
 
 const AnalyticsPage = () => {
+  const [eNPSTimeframe, setENPSTimeframe] = useState('Quarterly');
+  const [isExporting, setIsExporting] = useState(false);
+
+  const handleExport = () => {
+    setIsExporting(true);
+    setTimeout(() => setIsExporting(false), 2000);
+  };
+
   return (
     <AdminLayout>
       <style>
@@ -19,6 +27,7 @@ const AnalyticsPage = () => {
           .date-picker { display: flex; align-items: center; background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 8px 12px; font-size: 14px; color: #4b5563; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
           .btn-export { display: flex; align-items: center; padding: 8px 16px; background: white; border: 1px solid #e5e7eb; color: #374151; border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 14px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: background 0.2s; }
           .btn-export:hover { background: #f9fafb; }
+          .btn-export.exporting { background: #eef2ff; color: #4338ca; border-color: #c7d2fe; }
           .kpi-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
           @media (min-width: 768px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
           @media (min-width: 1024px) { .kpi-grid { grid-template-columns: repeat(4, 1fr); } }
@@ -67,7 +76,7 @@ const AnalyticsPage = () => {
           .onboarding-track { height: 6px; width: 100%; background: #f3f4f6; border-radius: 9999px; overflow: hidden; }
           .toggle-group { display: flex; background: #f9fafb; padding: 4px; border-radius: 8px; border: 1px solid #f3f4f6; }
           .toggle-btn-active { padding: 4px 12px; background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05); border-radius: 4px; font-size: 12px; font-weight: 500; color: #4338ca; border: none; cursor: pointer; }
-          .toggle-btn { padding: 4px 12px; background: transparent; font-size: 12px; font-weight: 500; color: #6b7280; border: none; cursor: pointer; }
+          .toggle-btn { padding: 4px 12px; background: transparent; font-size: 12px; font-weight: 500; color: #6b7280; border: none; cursor: pointer; transition: color 0.2s; }
           .toggle-btn:hover { color: #374151; }
         `}
       </style>
@@ -78,16 +87,16 @@ const AnalyticsPage = () => {
         <div className="header-row">
           <div>
             <h1 className="header-title">Analytics</h1>
-            <p className="header-subtitle">Refreshed nightly · Last updated 20 May 2026</p>
+            <p className="header-subtitle">Refreshed nightly · Last updated {new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
           </div>
           <div className="header-actions">
             <div className="date-picker">
               <Calendar style={{ width: '16px', height: '16px', marginRight: '8px', color: '#9ca3af' }} />
               Feb – May 2026
             </div>
-            <button className="btn-export">
+            <button className={`btn-export ${isExporting ? 'exporting' : ''}`} onClick={handleExport}>
               <Download style={{ width: '16px', height: '16px', marginRight: '8px' }} />
-              Export CSV
+              {isExporting ? 'Exporting...' : 'Export CSV'}
             </button>
           </div>
         </div>
@@ -307,8 +316,18 @@ const AnalyticsPage = () => {
           <div className="card-header">
             <h3 className="card-title">eNPS trend</h3>
             <div className="toggle-group">
-              <button className="toggle-btn-active">Quarterly</button>
-              <button className="toggle-btn">Monthly</button>
+              <button 
+                className={eNPSTimeframe === 'Quarterly' ? 'toggle-btn-active' : 'toggle-btn'}
+                onClick={() => setENPSTimeframe('Quarterly')}
+              >
+                Quarterly
+              </button>
+              <button 
+                className={eNPSTimeframe === 'Monthly' ? 'toggle-btn-active' : 'toggle-btn'}
+                onClick={() => setENPSTimeframe('Monthly')}
+              >
+                Monthly
+              </button>
             </div>
           </div>
           

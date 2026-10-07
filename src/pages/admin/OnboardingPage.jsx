@@ -1,32 +1,91 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import AdminLayout from '../../components/layout/AdminLayout';
 import { Check } from 'lucide-react';
 
+const initialUsers = [
+  { id: 'SA', name: 'Sade Afolabi', initials: 'SA', started: 'May 18', progress: 50, status: 'In progress', statusColor: '#b45309', statusBg: '#fef3c7', active: true },
+  { id: 'CN', name: 'Chidi Nwosu', initials: 'CN', started: 'May 12', progress: 92, status: 'On track', statusColor: '#047857', statusBg: '#d1fae5', active: false },
+  { id: 'TB', name: 'Taiwo Bello', initials: 'TB', started: 'May 19', progress: 17, status: 'Needs nudge', statusColor: '#be123c', statusBg: '#ffe4e6', active: false },
+];
+
+const initialTasks = [
+  { id: 1, week: 'DAY 1 — GET SET UP', title: 'Complete your profile', owner: 'You', status: 'done' },
+  { id: 2, week: 'DAY 1 — GET SET UP', title: 'Upload ID document', owner: 'You', status: 'done' },
+  { id: 3, week: 'DAY 1 — GET SET UP', title: 'Read and acknowledge company handbook', owner: 'You', status: 'done' },
+  { id: 4, week: 'WEEK 1 — TOOLS & ACCESS', title: 'Set up laptop and install tools', owner: 'IT', status: 'done' },
+  { id: 5, week: 'WEEK 1 — TOOLS & ACCESS', title: 'Join all Slack channels', owner: 'You', status: 'done' },
+  { id: 6, week: 'WEEK 1 — TOOLS & ACCESS', title: 'Meet with your manager (intro 1:1)', owner: 'Manager', status: 'done' },
+  { id: 7, week: 'WEEK 2 — LEARN & CONNECT', title: 'Complete product design onboarding doc', owner: 'You', status: 'pending', due: 'Due May 25', dueColor: '#c2410c', dueBg: '#ffedd5' },
+  { id: 8, week: 'WEEK 2 — LEARN & CONNECT', title: 'Shadow a user research session', owner: 'HR', status: 'pending', due: 'Due May 27', dueColor: '#4b5563', dueBg: '#f3f4f6' },
+  { id: 9, week: 'WEEK 2 — LEARN & CONNECT', title: 'Set up Figma workspace and review design system', owner: 'You', status: 'pending', due: 'Overdue', dueColor: '#be123c', dueBg: '#ffe4e6' },
+];
+
 const OnboardingPage = () => {
+  const [users, setUsers] = useState(initialUsers);
+  const [selectedUserId, setSelectedUserId] = useState('SA');
+  const [tasks, setTasks] = useState(initialTasks);
+  const [nudgeSent, setNudgeSent] = useState(false);
+  const [isManaging, setIsManaging] = useState(false);
+
+  const activeUser = users.find(u => u.id === selectedUserId);
+
+  const toggleTask = (id) => {
+    setTasks(tasks.map(t => {
+      if (t.id === id) {
+        return { ...t, status: t.status === 'done' ? 'pending' : 'done' };
+      }
+      return t;
+    }));
+  };
+
+  const completedCount = tasks.filter(t => t.status === 'done').length;
+  const totalCount = tasks.length;
+  const progressPercent = Math.round((completedCount / totalCount) * 100);
+
+  const handleNudge = () => {
+    setNudgeSent(true);
+    setTimeout(() => setNudgeSent(false), 3000);
+  };
+
+  const handleSelectUser = (id) => {
+    setSelectedUserId(id);
+    setTasks(tasks.map(t => ({
+      ...t,
+      status: Math.random() > 0.5 ? 'done' : 'pending' // randomize a bit for demo
+    })));
+  };
+
   return (
     <AdminLayout title="Onboarding" subtitle={null}>
       <style>
         {`
           .card { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #f3f4f6; }
-          .task-item { display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid #f3f4f6; border-radius: 8px; margin-bottom: 8px; background: white; }
-          .task-item:hover { background: #f9fafb; cursor: pointer; }
+          .task-item { display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid #f3f4f6; border-radius: 8px; margin-bottom: 8px; background: white; transition: all 0.2s; }
+          .task-item:hover { background: #f9fafb; cursor: pointer; border-color: #d1d5db; }
           .task-done { opacity: 0.8; background: #f9fafb; }
           .badge { padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; }
           .stat-card { text-align: center; padding: 16px; background: white; border: 1px solid #f3f4f6; border-radius: 8px; flex: 1; }
           .grid-sidebar { display: grid; grid-template-columns: 1fr 340px; gap: 24px; }
-          @media (max-width: 1024px) { .grid-sidebar { grid-template-columns: 1fr; } }
+          .user-card.active { border-color: #534ab7; background: #f3f0ff; }
+          .top-actions-container { display: flex; justify-content: flex-end; gap: 12px; margin-top: -64px; margin-bottom: 32px; position: relative; z-index: 10; }
+          @media (max-width: 1024px) {
+            .grid-sidebar { grid-template-columns: 1fr; }
+            .top-actions-container { margin-top: 0 !important; justify-content: flex-start !important; }
+          }
         `}
       </style>
 
       {/* Top right actions */}
-      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '-64px', marginBottom: '32px', position: 'relative', zIndex: 10 }}>
-        <button style={{ padding: '8px 16px', backgroundColor: 'white', color: '#534ab7', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}>
-          Manage templates
+      <div className="top-actions-container">
+        <button 
+          onClick={() => setIsManaging(!isManaging)}
+          style={{ padding: '8px 16px', backgroundColor: 'white', color: '#534ab7', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '13px', fontWeight: '600', cursor: 'pointer', transition: 'all 0.2s' }}>
+          {isManaging ? 'Done Managing' : 'Manage templates'}
         </button>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 12px', backgroundColor: 'white', border: '1px solid #d1d5db', borderRadius: '20px', cursor: 'pointer' }}>
-          <div style={{ width: '24px', height: '24px', borderRadius: '50%', backgroundColor: '#e0e7ff', color: '#534ab7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: '700' }}>SA</div>
-          <span style={{ fontSize: '13px', fontWeight: '500', color: '#374151' }}>Sade A.</span>
+          <div style={{ width: '24px', height: '24px', borderRadius: '50%', backgroundColor: '#e0e7ff', color: '#534ab7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: '700' }}>{activeUser.initials}</div>
+          <span style={{ fontSize: '13px', fontWeight: '500', color: '#374151' }}>{activeUser.name.split(' ')[0]} A.</span>
         </div>
       </div>
 
@@ -36,100 +95,55 @@ const OnboardingPage = () => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           
           {/* Welcome Banner */}
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ background: 'linear-gradient(to right, #4338ca, #534ab7)', borderRadius: '12px', padding: '32px', color: 'white' }}>
-            <h2 style={{ fontSize: '24px', fontWeight: '700', margin: '0 0 8px 0' }}>Welcome to the team, Sade!</h2>
-            <p style={{ fontSize: '15px', color: 'rgba(255,255,255,0.8)', margin: '0 0 32px 0' }}>You started on 18 May 2026. Here's everything you need to complete in your first week.</p>
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} key={activeUser.id} style={{ background: 'linear-gradient(to right, #4338ca, #534ab7)', borderRadius: '12px', padding: '32px', color: 'white' }}>
+            <h2 style={{ fontSize: '24px', fontWeight: '700', margin: '0 0 8px 0' }}>Welcome to the team, {activeUser.name.split(' ')[0]}!</h2>
+            <p style={{ fontSize: '15px', color: 'rgba(255,255,255,0.8)', margin: '0 0 32px 0' }}>You started on {activeUser.started} 2026. Here's everything you need to complete in your first week.</p>
             
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
               <div style={{ whiteSpace: 'nowrap' }}>
-                <span style={{ fontSize: '24px', fontWeight: '700' }}>6 / 12</span> <span style={{ fontSize: '14px', color: 'rgba(255,255,255,0.8)' }}>Tasks completed</span>
+                <span style={{ fontSize: '24px', fontWeight: '700' }}>{completedCount} / {totalCount}</span> <span style={{ fontSize: '14px', color: 'rgba(255,255,255,0.8)' }}>Tasks completed</span>
               </div>
               <div style={{ flex: 1, height: '8px', backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: '4px', overflow: 'hidden' }}>
-                <motion.div initial={{ width: 0 }} animate={{ width: '50%' }} transition={{ duration: 1 }} style={{ height: '100%', backgroundColor: 'white', borderRadius: '4px' }} />
+                <motion.div initial={{ width: 0 }} animate={{ width: `${progressPercent}%` }} transition={{ duration: 1 }} style={{ height: '100%', backgroundColor: 'white', borderRadius: '4px' }} />
               </div>
-              <div style={{ fontSize: '14px', fontWeight: '600' }}>50%</div>
+              <div style={{ fontSize: '14px', fontWeight: '600' }}>{progressPercent}%</div>
             </div>
           </motion.div>
 
           <div style={{ backgroundColor: 'white', borderRadius: '12px', border: '1px solid #f3f4f6', padding: '32px' }}>
             
-            <h3 style={{ fontSize: '13px', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.5px', margin: '0 0 16px 0' }}>DAY 1 — GET SET UP</h3>
-            <div style={{ marginBottom: '32px' }}>
-              {['Complete your profile', 'Upload ID document', 'Read and acknowledge company handbook'].map((task, i) => (
-                <div key={i} className="task-item task-done">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div style={{ width: '20px', height: '20px', borderRadius: '4px', backgroundColor: '#534ab7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Check size={14} color="white" />
+            {Array.from(new Set(tasks.map(t => t.week))).map(week => (
+              <React.Fragment key={week}>
+                <h3 style={{ fontSize: '13px', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.5px', margin: '16px 0 16px 0' }}>{week}</h3>
+                <div style={{ marginBottom: '32px' }}>
+                  {tasks.filter(t => t.week === week).map((task) => (
+                    <div key={task.id} className={`task-item ${task.status === 'done' ? 'task-done' : ''}`} onClick={() => toggleTask(task.id)}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <div style={{ 
+                          width: '20px', height: '20px', borderRadius: '4px', 
+                          backgroundColor: task.status === 'done' ? '#534ab7' : 'transparent',
+                          border: task.status === 'done' ? 'none' : '1px solid #d1d5db',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center' 
+                        }}>
+                          {task.status === 'done' && <Check size={14} color="white" />}
+                        </div>
+                        <span style={{ fontSize: '14px', color: task.status === 'done' ? '#6b7280' : '#111827', fontWeight: task.status === 'done' ? 'normal' : '500', textDecoration: task.status === 'done' ? 'line-through' : 'none' }}>
+                          {task.title}
+                        </span>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                        <span style={{ fontSize: '11px', color: '#6b7280', backgroundColor: '#f3f4f6', padding: '2px 8px', borderRadius: '12px' }}>{task.owner}</span>
+                        {task.status === 'done' ? (
+                          <span className="badge" style={{ backgroundColor: '#d1fae5', color: '#047857' }}>✓ Done</span>
+                        ) : (
+                          <span className="badge" style={{ backgroundColor: task.dueBg || '#f3f4f6', color: task.dueColor || '#4b5563' }}>{task.due || 'Pending'}</span>
+                        )}
+                      </div>
                     </div>
-                    <span style={{ fontSize: '14px', color: '#4b5563', textDecoration: 'line-through' }}>{task}</span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <span style={{ fontSize: '12px', color: '#6b7280' }}>You</span>
-                    <span className="badge" style={{ backgroundColor: '#d1fae5', color: '#047857' }}>✓ Done</span>
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-
-            <h3 style={{ fontSize: '13px', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.5px', margin: '0 0 16px 0' }}>WEEK 1 — TOOLS & ACCESS</h3>
-            <div style={{ marginBottom: '32px' }}>
-              <div className="task-item task-done">
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{ width: '20px', height: '20px', borderRadius: '4px', backgroundColor: '#534ab7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Check size={14} color="white" /></div>
-                  <span style={{ fontSize: '14px', color: '#4b5563', textDecoration: 'line-through' }}>Set up laptop and install tools</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}><span style={{ fontSize: '12px', color: '#6b7280' }}>IT</span><span className="badge" style={{ backgroundColor: '#d1fae5', color: '#047857' }}>✓ Done</span></div>
-              </div>
-              <div className="task-item task-done">
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{ width: '20px', height: '20px', borderRadius: '4px', backgroundColor: '#534ab7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Check size={14} color="white" /></div>
-                  <span style={{ fontSize: '14px', color: '#4b5563', textDecoration: 'line-through' }}>Join all Slack channels</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}><span style={{ fontSize: '12px', color: '#6b7280' }}>You</span><span className="badge" style={{ backgroundColor: '#d1fae5', color: '#047857' }}>✓ Done</span></div>
-              </div>
-              <div className="task-item task-done">
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{ width: '20px', height: '20px', borderRadius: '4px', backgroundColor: '#534ab7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Check size={14} color="white" /></div>
-                  <span style={{ fontSize: '14px', color: '#4b5563', textDecoration: 'line-through' }}>Meet with your manager (intro 1:1)</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}><span style={{ fontSize: '12px', color: '#6b7280' }}>Manager</span><span className="badge" style={{ backgroundColor: '#d1fae5', color: '#047857' }}>✓ Done</span></div>
-              </div>
-            </div>
-
-            <h3 style={{ fontSize: '13px', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.5px', margin: '0 0 16px 0' }}>WEEK 2 — LEARN & CONNECT</h3>
-            <div>
-              <div className="task-item">
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{ width: '20px', height: '20px', borderRadius: '4px', border: '1px solid #d1d5db' }}></div>
-                  <span style={{ fontSize: '14px', color: '#111827', fontWeight: '500' }}>Complete product design onboarding doc</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                  <span style={{ fontSize: '11px', color: '#6b7280', backgroundColor: '#f3f4f6', padding: '2px 8px', borderRadius: '12px' }}>You</span>
-                  <span className="badge" style={{ backgroundColor: '#ffedd5', color: '#c2410c' }}>Due May 25</span>
-                </div>
-              </div>
-              <div className="task-item">
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{ width: '20px', height: '20px', borderRadius: '4px', border: '1px solid #d1d5db' }}></div>
-                  <span style={{ fontSize: '14px', color: '#111827', fontWeight: '500' }}>Shadow a user research session</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                  <span style={{ fontSize: '11px', color: '#6b7280', backgroundColor: '#f3f4f6', padding: '2px 8px', borderRadius: '12px' }}>HR</span>
-                  <span className="badge" style={{ backgroundColor: '#f3f4f6', color: '#4b5563' }}>Due May 27</span>
-                </div>
-              </div>
-              <div className="task-item">
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{ width: '20px', height: '20px', borderRadius: '4px', border: '1px solid #d1d5db' }}></div>
-                  <span style={{ fontSize: '14px', color: '#111827', fontWeight: '500' }}>Set up Figma workspace and review design system</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                  <span style={{ fontSize: '11px', color: '#6b7280', backgroundColor: '#f3f4f6', padding: '2px 8px', borderRadius: '12px' }}>You</span>
-                  <span className="badge" style={{ backgroundColor: '#ffe4e6', color: '#be123c' }}>Overdue</span>
-                </div>
-              </div>
-            </div>
-
+              </React.Fragment>
+            ))}
           </div>
         </div>
 
@@ -154,66 +168,36 @@ const OnboardingPage = () => {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <div style={{ padding: '16px', backgroundColor: '#f3f0ff', borderRadius: '8px', border: '1px solid #e0e7ff' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: '#e0e7ff', color: '#534ab7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700' }}>SA</div>
-                    <div>
-                      <p style={{ fontSize: '13px', fontWeight: '600', color: '#111827', margin: '0 0 2px 0' }}>Sade Afolabi</p>
-                      <p style={{ fontSize: '11px', color: '#6b7280', margin: 0 }}>Started May 18</p>
+              {users.map(u => (
+                <div key={u.id} className={`user-card ${selectedUserId === u.id ? 'active' : ''}`} onClick={() => handleSelectUser(u.id)}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: selectedUserId === u.id ? '#e0e7ff' : '#f3f4f6', color: selectedUserId === u.id ? '#534ab7' : '#6b7280', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700' }}>{u.initials}</div>
+                      <div>
+                        <p style={{ fontSize: '13px', fontWeight: '600', color: '#111827', margin: '0 0 2px 0' }}>{u.name}</p>
+                        <p style={{ fontSize: '11px', color: '#6b7280', margin: 0 }}>Started {u.started}</p>
+                      </div>
                     </div>
+                    <span style={{ fontSize: '11px', fontWeight: '600', color: u.statusColor, backgroundColor: u.statusBg, padding: '2px 8px', borderRadius: '12px' }}>{u.status}</span>
                   </div>
-                  <span style={{ fontSize: '11px', fontWeight: '600', color: '#b45309', backgroundColor: '#fef3c7', padding: '2px 8px', borderRadius: '12px' }}>In progress</span>
-                </div>
-                <div style={{ height: '4px', backgroundColor: 'rgba(83,74,183,0.1)', borderRadius: '2px' }}>
-                  <div style={{ height: '100%', width: '50%', backgroundColor: '#534ab7', borderRadius: '2px' }}></div>
-                </div>
-                <div style={{ textAlign: 'right', fontSize: '11px', fontWeight: '600', color: '#534ab7', marginTop: '4px' }}>50%</div>
-              </div>
-
-              <div style={{ padding: '16px', backgroundColor: 'white', borderRadius: '8px', border: '1px solid #f3f4f6' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: '#e0e7ff', color: '#534ab7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700' }}>CN</div>
-                    <div>
-                      <p style={{ fontSize: '13px', fontWeight: '600', color: '#111827', margin: '0 0 2px 0' }}>Chidi Nwosu</p>
-                      <p style={{ fontSize: '11px', color: '#6b7280', margin: 0 }}>Started May 12</p>
-                    </div>
+                  <div style={{ height: '4px', backgroundColor: selectedUserId === u.id ? 'rgba(83,74,183,0.1)' : '#f3f4f6', borderRadius: '2px' }}>
+                    <div style={{ height: '100%', width: `${u.id === selectedUserId ? progressPercent : u.progress}%`, backgroundColor: selectedUserId === u.id ? '#534ab7' : (u.progress > 80 ? '#059669' : '#e11d48'), borderRadius: '2px' }}></div>
                   </div>
-                  <span style={{ fontSize: '11px', fontWeight: '600', color: '#047857', backgroundColor: '#d1fae5', padding: '2px 8px', borderRadius: '12px' }}>On track</span>
-                </div>
-                <div style={{ height: '4px', backgroundColor: '#f3f4f6', borderRadius: '2px' }}>
-                  <div style={{ height: '100%', width: '92%', backgroundColor: '#059669', borderRadius: '2px' }}></div>
-                </div>
-                <div style={{ textAlign: 'right', fontSize: '11px', fontWeight: '600', color: '#4b5563', marginTop: '4px' }}>92%</div>
-              </div>
-
-              <div style={{ padding: '16px', backgroundColor: 'white', borderRadius: '8px', border: '1px solid #f3f4f6' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: '#e0e7ff', color: '#534ab7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '700' }}>TB</div>
-                    <div>
-                      <p style={{ fontSize: '13px', fontWeight: '600', color: '#111827', margin: '0 0 2px 0' }}>Taiwo Bello</p>
-                      <p style={{ fontSize: '11px', color: '#6b7280', margin: 0 }}>Started May 19</p>
-                    </div>
+                  <div style={{ textAlign: 'right', fontSize: '11px', fontWeight: '600', color: selectedUserId === u.id ? '#534ab7' : '#4b5563', marginTop: '4px' }}>
+                    {u.id === selectedUserId ? progressPercent : u.progress}%
                   </div>
-                  <span style={{ fontSize: '11px', fontWeight: '600', color: '#be123c', backgroundColor: '#ffe4e6', padding: '2px 8px', borderRadius: '12px' }}>Needs nudge</span>
                 </div>
-                <div style={{ height: '4px', backgroundColor: '#f3f4f6', borderRadius: '2px' }}>
-                  <div style={{ height: '100%', width: '17%', backgroundColor: '#e11d48', borderRadius: '2px' }}></div>
-                </div>
-                <div style={{ textAlign: 'right', fontSize: '11px', fontWeight: '600', color: '#4b5563', marginTop: '4px' }}>17%</div>
-              </div>
+              ))}
             </div>
           </motion.div>
 
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }} className="card">
-            <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', margin: '0 0 20px 0' }}>Sade's task owners</h3>
+            <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', margin: '0 0 20px 0' }}>{activeUser.name.split(' ')[0]}'s task owners</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '24px' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div style={{ width: '24px', height: '24px', borderRadius: '50%', backgroundColor: '#e0e7ff', color: '#534ab7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: '700' }}>SA</div>
-                  <span style={{ fontSize: '13px', color: '#4b5563' }}>Sade (self)</span>
+                  <div style={{ width: '24px', height: '24px', borderRadius: '50%', backgroundColor: '#e0e7ff', color: '#534ab7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: '700' }}>{activeUser.initials}</div>
+                  <span style={{ fontSize: '13px', color: '#4b5563' }}>{activeUser.name.split(' ')[0]} (self)</span>
                 </div>
                 <span style={{ fontSize: '13px', color: '#6b7280' }}>8 tasks</span>
               </div>
@@ -239,8 +223,10 @@ const OnboardingPage = () => {
                 <span style={{ fontSize: '13px', color: '#6b7280' }}>1 task</span>
               </div>
             </div>
-            <button className="auth-btn-primary" style={{ width: '100%', padding: '10px', backgroundColor: 'white', color: '#534ab7', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>
-              Send nudge to Taiwo
+            <button 
+              onClick={handleNudge}
+              style={{ width: '100%', padding: '10px', backgroundColor: nudgeSent ? '#d1fae5' : 'white', color: nudgeSent ? '#059669' : '#534ab7', border: `1px solid ${nudgeSent ? '#059669' : '#d1d5db'}`, borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer', transition: 'all 0.2s' }}>
+              {nudgeSent ? '✓ Nudge Sent!' : 'Send nudge to Taiwo'}
             </button>
           </motion.div>
 
@@ -273,4 +259,5 @@ const OnboardingPage = () => {
 };
 
 export default OnboardingPage;
+
 

@@ -3,17 +3,13 @@ import { motion } from 'framer-motion';
 import { 
   ChevronRight, 
   Info, 
-  Mail, 
-  Copy,
   Clock,
   RotateCw,
   XCircle,
   Building2,
   Briefcase,
   User,
-  ShieldAlert,
-  CheckCircle2,
-  AlertCircle
+  ShieldAlert
 } from 'lucide-react';
 import AdminLayout from '../../components/layout/AdminLayout';
 
@@ -28,6 +24,14 @@ const InviteEmployeePage = () => {
     role: 'employee'
   });
 
+  const [pendingInvites, setPendingInvites] = useState([
+    { id: 1, name: 'funke', email: 'funke@acme.com', department: 'Marketing', role: 'Employee', invitedDaysAgo: 2 },
+    { id: 2, name: 'ife', email: 'ife@acme.com', department: 'Engineering', role: 'Manager', invitedDaysAgo: 5 },
+    { id: 3, name: 'segun', email: 'segun@acme.com', department: 'Sales', role: 'Employee', invitedDaysAgo: 1 }
+  ]);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -37,147 +41,105 @@ const InviteEmployeePage = () => {
     setFormData(prev => ({ ...prev, role }));
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!formData.email) return;
+
+    setIsSubmitting(true);
+    setTimeout(() => {
+      const newInvite = {
+        id: Date.now(),
+        name: formData.firstName || formData.email.split('@')[0],
+        email: formData.email,
+        department: formData.department || 'Unassigned',
+        role: formData.role.charAt(0).toUpperCase() + formData.role.slice(1),
+        invitedDaysAgo: 0
+      };
+      setPendingInvites([newInvite, ...pendingInvites]);
+      setFormData({ firstName: '', lastName: '', email: '', jobTitle: '', department: '', manager: '', role: 'employee' });
+      setIsSubmitting(false);
+    }, 1000);
+  };
+
+  const handleRevoke = (id) => {
+    setPendingInvites(pendingInvites.filter(i => i.id !== id));
+  };
+
   const roles = [
     {
-      id: 'admin',
-      title: 'Admin',
-      description: 'Full workspace access — can invite others, manage settings and data',
-      color: 'bg-purple-50 border-purple-200',
-      activeColor: 'border-purple-600 bg-purple-50',
-      icon: ShieldAlert
+      id: 'admin', title: 'Admin', description: 'Full workspace access — can invite others, manage settings and data',
+      color: '#faf5ff', borderColor: '#e9d5ff', activeBorder: '#9333ea', icon: ShieldAlert
     },
     {
-      id: 'manager',
-      title: 'Manager',
-      description: 'Approves leave, views direct reports, runs check-ins',
-      color: 'bg-green-50 border-green-200',
-      activeColor: 'border-green-600 bg-green-50',
-      icon: Briefcase
+      id: 'manager', title: 'Manager', description: 'Approves leave, views direct reports, runs check-ins',
+      color: '#f0fdf4', borderColor: '#bbf7d0', activeBorder: '#16a34a', icon: Briefcase
     },
     {
-      id: 'employee',
-      title: 'Employee',
-      description: 'Submits leave, completes tasks, views their own profile',
-      color: 'bg-orange-50 border-orange-200',
-      activeColor: 'border-orange-500 bg-orange-50',
-      icon: User
-    }
-  ];
-
-  const pendingInvites = [
-    {
-      id: 1,
-      name: 'funke',
-      email: 'funke@acme.com',
-      department: 'Marketing',
-      role: 'Employee',
-      invitedDaysAgo: 2,
-    },
-    {
-      id: 2,
-      name: 'ife',
-      email: 'ife@acme.com',
-      department: 'Engineering',
-      role: 'Manager',
-      invitedDaysAgo: 5,
-    },
-    {
-      id: 3,
-      name: 'segun',
-      email: 'segun@acme.com',
-      department: 'Sales',
-      role: 'Employee',
-      invitedDaysAgo: 1,
+      id: 'employee', title: 'Employee', description: 'Submits leave, completes tasks, views their own profile',
+      color: '#fff7ed', borderColor: '#fed7aa', activeBorder: '#f97316', icon: User
     }
   ];
 
   return (
-    <AdminLayout>
-      <div className="max-w-6xl mx-auto space-y-6">
-        {/* Breadcrumb & Header */}
-        <div className="flex items-center text-sm text-gray-500 space-x-2">
-          <span>People</span>
-          <ChevronRight className="w-4 h-4" />
-          <span className="text-gray-900 font-medium">Invite teammate</span>
-        </div>
+    <AdminLayout title="Invite teammate" subtitle="Set their role here — they won't be able to choose it themselves.">
+      <style>
+        {`
+          .card { background: white; padding: 24px; border-radius: 12px; border: 1px solid #f3f4f6; }
+          .input-field { width: 100%; padding: 10px 16px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; outline: none; margin-top: 6px; box-sizing: border-box; }
+          .input-field:focus { border-color: #534ab7; }
+          .form-label { font-size: 13px; font-weight: 500; color: #374151; }
+          .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+          .role-card { display: flex; align-items: flex-start; padding: 16px; border: 1px solid #e5e7eb; border-radius: 12px; cursor: pointer; transition: all 0.2s; margin-bottom: 12px; background: white; }
+          .role-card:hover { border-color: #d1d5db; }
+          .split-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 32px; align-items: start; }
+          @media (max-width: 1024px) { .split-layout { grid-template-columns: 1fr; } .grid-2 { grid-template-columns: 1fr; } }
+          
+          .info-banner { background-color: #eff6ff; border: 1px solid #bfdbfe; border-radius: 12px; padding: 16px; display: flex; align-items: flex-start; gap: 12px; margin-bottom: 32px; }
+          .preview-card { background-color: #312e81; border-radius: 16px; padding: 24px; color: white; position: sticky; top: 24px; overflow: hidden; }
+        `}
+      </style>
 
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Invite a teammate</h1>
-          <p className="text-gray-500 mt-1">Set their role here — they won't be able to choose it themselves.</p>
-        </div>
-
-        {/* Info Banner */}
-        <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 flex items-start space-x-3 mb-8">
-          <Info className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-          <p className="text-sm text-blue-700 leading-relaxed">
+      <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+        
+        <div className="info-banner">
+          <Info size={20} color="#3b82f6" style={{ flexShrink: 0, marginTop: '2px' }} />
+          <p style={{ fontSize: '14px', color: '#1d4ed8', margin: 0, lineHeight: '1.5' }}>
             Only Admins can create new accounts. Invitees receive an email link, set a password, and land directly in the role and department you assign — no self sign-up, no role picker on their end.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="split-layout">
+          
           {/* Form Area */}
-          <div className="lg:col-span-2 space-y-8 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-            <div>
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Invite details</h2>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div className="card">
+            <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#111827', margin: '0 0 24px 0' }}>Invite details</h2>
+            
+            <form onSubmit={handleSubmit}>
+              <div className="grid-2" style={{ marginBottom: '16px' }}>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">First name</label>
-                  <input
-                    type="text"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleChange}
-                    placeholder="e.g. Tunde"
-                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
-                  />
+                  <label className="form-label">First name</label>
+                  <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} placeholder="e.g. Tunde" className="input-field" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Last name</label>
-                  <input
-                    type="text"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleChange}
-                    placeholder="e.g. Adeyemi"
-                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
-                  />
+                  <label className="form-label">Last name</label>
+                  <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} placeholder="e.g. Adeyemi" className="input-field" />
                 </div>
               </div>
 
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Work email</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="tunde@acme.com"
-                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
-                />
-                <p className="text-xs text-gray-500 mt-1.5">The invite link is sent here and only this address can accept it.</p>
+              <div style={{ marginBottom: '16px' }}>
+                <label className="form-label">Work email</label>
+                <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="tunde@acme.com" className="input-field" required />
+                <p style={{ fontSize: '12px', color: '#6b7280', margin: '6px 0 0 0' }}>The invite link is sent here and only this address can accept it.</p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div className="grid-2" style={{ marginBottom: '16px' }}>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Job title</label>
-                  <input
-                    type="text"
-                    name="jobTitle"
-                    value={formData.jobTitle}
-                    onChange={handleChange}
-                    placeholder="e.g. Sales Associate"
-                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-colors"
-                  />
+                  <label className="form-label">Job title</label>
+                  <input type="text" name="jobTitle" value={formData.jobTitle} onChange={handleChange} placeholder="e.g. Sales Associate" className="input-field" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>
-                  <select
-                    name="department"
-                    value={formData.department}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 bg-white transition-colors"
-                  >
+                  <label className="form-label">Department</label>
+                  <select name="department" value={formData.department} onChange={handleChange} className="input-field" style={{ appearance: 'none', backgroundColor: 'white' }}>
                     <option value="">Select</option>
                     <option value="engineering">Engineering</option>
                     <option value="design">Design</option>
@@ -187,119 +149,94 @@ const InviteEmployeePage = () => {
                 </div>
               </div>
 
-              <div className="mb-8">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Reports to (manager)</label>
-                <select
-                  name="manager"
-                  value={formData.manager}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 bg-white transition-colors"
-                >
+              <div style={{ marginBottom: '32px' }}>
+                <label className="form-label">Reports to (manager)</label>
+                <select name="manager" value={formData.manager} onChange={handleChange} className="input-field" style={{ appearance: 'none', backgroundColor: 'white' }}>
                   <option value="">No manager / reports to you</option>
                   <option value="amaka">Amaka Okonkwo</option>
                   <option value="sarah">Sarah Jenkins</option>
                 </select>
               </div>
-            </div>
 
-            <div>
-              <h3 className="text-sm font-medium text-gray-900 mb-3">Role</h3>
-              <div className="space-y-3">
+              <h3 style={{ fontSize: '14px', fontWeight: '600', color: '#111827', margin: '0 0 12px 0' }}>Role</h3>
+              <div style={{ marginBottom: '32px' }}>
                 {roles.map((r) => {
                   const isSelected = formData.role === r.id;
                   return (
                     <div 
-                      key={r.id}
+                      key={r.id} 
+                      className="role-card"
+                      style={{ 
+                        borderColor: isSelected ? r.activeBorder : '#e5e7eb',
+                        backgroundColor: isSelected ? r.color : 'white',
+                      }}
                       onClick={() => handleRoleChange(r.id)}
-                      className={`relative flex items-center p-4 border rounded-xl cursor-pointer transition-all ${
-                        isSelected 
-                          ? r.activeColor + ' shadow-sm' 
-                          : 'border-gray-200 hover:border-gray-300 bg-white'
-                      }`}
                     >
-                      <div className="flex-1 flex items-start">
-                        <div className={`p-2 rounded-lg mr-3 ${isSelected ? 'bg-white/60' : 'bg-gray-50'}`}>
-                          <r.icon className={`w-5 h-5 ${isSelected ? (r.id === 'employee' ? 'text-orange-600' : r.id === 'manager' ? 'text-green-600' : 'text-purple-600') : 'text-gray-400'}`} />
-                        </div>
-                        <div>
-                          <p className={`font-medium text-sm ${isSelected ? 'text-gray-900' : 'text-gray-700'}`}>
-                            {r.title}
-                          </p>
-                          <p className="text-xs text-gray-500 mt-0.5">
-                            {r.description}
-                          </p>
-                        </div>
+                      <div style={{ padding: '8px', borderRadius: '8px', backgroundColor: isSelected ? 'rgba(255,255,255,0.6)' : '#f9fafb', marginRight: '12px' }}>
+                        <r.icon size={20} color={isSelected ? r.activeBorder : '#9ca3af'} />
                       </div>
-                      <div className={`w-5 h-5 rounded-full border flex items-center justify-center flex-shrink-0 ml-4 ${
-                        isSelected 
-                          ? (r.id === 'employee' ? 'border-orange-500 bg-orange-500' : r.id === 'manager' ? 'border-green-500 bg-green-500' : 'border-purple-600 bg-purple-600')
-                          : 'border-gray-300'
-                      }`}>
-                        {isSelected && <div className="w-2 h-2 rounded-full bg-white" />}
+                      <div style={{ flex: 1 }}>
+                        <p style={{ fontSize: '14px', fontWeight: '500', color: isSelected ? '#111827' : '#374151', margin: '0 0 4px 0' }}>{r.title}</p>
+                        <p style={{ fontSize: '12px', color: '#6b7280', margin: 0 }}>{r.description}</p>
+                      </div>
+                      <div style={{ width: '20px', height: '20px', borderRadius: '50%', border: `2px solid ${isSelected ? r.activeBorder : '#d1d5db'}`, backgroundColor: isSelected ? r.activeBorder : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: '16px', flexShrink: 0 }}>
+                        {isSelected && <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'white' }}></div>}
                       </div>
                     </div>
                   );
                 })}
               </div>
-            </div>
 
-            <div className="pt-6 flex items-center space-x-3 border-t border-gray-100">
-              <button className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium text-sm">
-                Send invite
-              </button>
-              <button className="px-6 py-2 border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium text-sm">
-                Cancel
-              </button>
-            </div>
+              <div style={{ paddingTop: '24px', borderTop: '1px solid #f3f4f6', display: 'flex', gap: '12px' }}>
+                <button type="submit" disabled={isSubmitting} style={{ padding: '10px 24px', backgroundColor: isSubmitting ? '#9ca3af' : '#534ab7', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: isSubmitting ? 'not-allowed' : 'pointer' }}>
+                  {isSubmitting ? 'Sending...' : 'Send invite'}
+                </button>
+                <button type="button" style={{ padding: '10px 24px', backgroundColor: 'white', color: '#374151', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' }}>
+                  Cancel
+                </button>
+              </div>
+            </form>
           </div>
 
           {/* Right Panel - Preview */}
-          <div className="lg:col-span-1">
-            <div className="bg-primary-900 rounded-2xl p-6 text-white relative overflow-hidden sticky top-24 shadow-lg">
-              {/* Decorative circles */}
-              <div className="absolute top-0 right-0 -mr-16 -mt-16 w-48 h-48 rounded-full bg-white/10 blur-2xl"></div>
-              <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-48 h-48 rounded-full bg-primary-500/20 blur-2xl"></div>
-              
-              <p className="text-xs font-semibold tracking-wider text-primary-200 uppercase mb-8 relative z-10">
-                Invite Preview
+          <div className="preview-card">
+            <div style={{ position: 'absolute', top: '-40px', right: '-40px', width: '150px', height: '150px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', filter: 'blur(20px)' }}></div>
+            
+            <p style={{ fontSize: '11px', fontWeight: '600', letterSpacing: '1px', color: '#a5b4fc', textTransform: 'uppercase', marginBottom: '24px' }}>Invite Preview</p>
+
+            <div style={{ position: 'relative', zIndex: 1 }}>
+              <h3 style={{ fontSize: '20px', fontWeight: '600', wordBreak: 'break-all', margin: '0 0 4px 0' }}>
+                {formData.email || 'teammate@acme.com'}
+              </h3>
+              <p style={{ fontSize: '14px', color: '#a5b4fc', margin: '0 0 16px 0' }}>
+                {formData.jobTitle || 'Job title not set'}
               </p>
+              
+              <div style={{ display: 'inline-flex', padding: '4px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: '500', backgroundColor: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', textTransform: 'capitalize' }}>
+                {formData.role}
+              </div>
 
-              <div className="relative z-10 space-y-6">
-                <div>
-                  <h3 className="text-xl font-semibold break-all">
-                    {formData.email || 'teammate@acme.com'}
-                  </h3>
-                  <p className="text-primary-200 text-sm mt-1">
-                    {formData.jobTitle || 'Job title not set'}
+              <div style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', fontSize: '13px', color: '#e0e7ff' }}>
+                  <Building2 size={16} color="rgba(255,255,255,0.7)" style={{ marginRight: '12px' }} />
+                  {formData.department ? <span style={{ textTransform: 'capitalize' }}>{formData.department}</span> : 'Department not set'}
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', fontSize: '13px', color: '#e0e7ff' }}>
+                  <User size={16} color="rgba(255,255,255,0.7)" style={{ marginRight: '12px' }} />
+                  {formData.manager ? <span style={{ textTransform: 'capitalize' }}>{formData.manager}</span> : 'No manager assigned'}
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', fontSize: '13px', color: '#e0e7ff' }}>
+                  <Clock size={16} color="rgba(255,255,255,0.7)" style={{ marginRight: '12px' }} />
+                  Link expires in 7 days
+                </div>
+              </div>
+
+              <div style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                <div style={{ backgroundColor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '12px' }}>
+                  <p style={{ fontSize: '11px', color: '#a5b4fc', margin: '0 0 4px 0' }}>Invite link (sent by email)</p>
+                  <p style={{ fontSize: '12px', color: '#e0e7ff', fontFamily: 'monospace', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    app.hrstack.com/invite/1jf2a91c4
                   </p>
-                  
-                  <div className="mt-3 inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-white/10 text-white border border-white/20 capitalize">
-                    {formData.role}
-                  </div>
-                </div>
-
-                <div className="space-y-4 pt-6 border-t border-white/10">
-                  <div className="flex items-center text-sm text-primary-100">
-                    <Building2 className="w-4 h-4 mr-3 opacity-70" />
-                    {formData.department ? <span className="capitalize">{formData.department}</span> : 'Department not set'}
-                  </div>
-                  <div className="flex items-center text-sm text-primary-100">
-                    <User className="w-4 h-4 mr-3 opacity-70" />
-                    {formData.manager ? <span className="capitalize">{formData.manager}</span> : 'No manager assigned'}
-                  </div>
-                  <div className="flex items-center text-sm text-primary-100">
-                    <Clock className="w-4 h-4 mr-3 opacity-70" />
-                    Link expires in 7 days
-                  </div>
-                </div>
-
-                <div className="pt-6 border-t border-white/10">
-                  <div className="bg-white/5 border border-white/10 rounded-lg p-3">
-                    <p className="text-xs text-primary-200 mb-1">Invite link (sent by email)</p>
-                    <p className="text-xs text-primary-100 font-mono truncate">
-                      app.hrstack.com/invite/1jf2a91c4
-                    </p>
-                  </div>
                 </div>
               </div>
             </div>
@@ -307,44 +244,46 @@ const InviteEmployeePage = () => {
         </div>
 
         {/* Pending Invites */}
-        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm mt-8">
-          <div className="flex items-center space-x-2 mb-6">
-            <h2 className="text-lg font-semibold text-gray-900">Pending invites:</h2>
-            <span className="text-sm text-gray-500">awaiting response</span>
+        <div className="card" style={{ marginTop: '32px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px' }}>
+            <h2 style={{ fontSize: '18px', fontWeight: '600', color: '#111827', margin: 0 }}>Pending invites:</h2>
+            <span style={{ fontSize: '14px', color: '#6b7280' }}>awaiting response</span>
           </div>
 
-          <div className="space-y-4">
-            {pendingInvites.map((invite) => (
-              <div key={invite.id} className="flex items-center justify-between p-4 border border-gray-100 rounded-xl hover:bg-gray-50/50 transition-colors">
-                <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 font-medium capitalize">
-                    {invite.name[0]}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {pendingInvites.length === 0 ? (
+              <p style={{ fontSize: '14px', color: '#6b7280', margin: 0 }}>No pending invites.</p>
+            ) : (
+              pendingInvites.map((invite) => (
+                <div key={invite.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', border: '1px solid #f3f4f6', borderRadius: '12px', transition: 'all 0.2s' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                    <div style={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6b7280', fontWeight: '500', textTransform: 'capitalize' }}>
+                      {invite.name[0]}
+                    </div>
+                    <div>
+                      <p style={{ fontSize: '14px', fontWeight: '500', color: '#111827', margin: '0 0 2px 0' }}>{invite.email}</p>
+                      <p style={{ fontSize: '12px', color: '#6b7280', margin: 0 }}>
+                        <span style={{ textTransform: 'capitalize' }}>{invite.department}</span> · {invite.role} · Invited {invite.invitedDaysAgo} {invite.invitedDaysAgo === 1 ? 'day' : 'days'} ago
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">{invite.email}</p>
-                    <p className="text-xs text-gray-500 mt-0.5">
-                      {invite.department} · {invite.role} · Invited {invite.invitedDaysAgo} {invite.invitedDaysAgo === 1 ? 'day' : 'days'} ago
-                    </p>
+                  
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                    <span style={{ padding: '4px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: '500', backgroundColor: '#fff7ed', color: '#c2410c', border: '1px solid #ffedd5' }}>
+                      Pending
+                    </span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', borderLeft: '1px solid #e5e7eb', paddingLeft: '16px' }}>
+                      <button style={{ fontSize: '12px', fontWeight: '500', color: '#534ab7', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <RotateCw size={14} /> Resend
+                      </button>
+                      <button onClick={() => handleRevoke(invite.id)} style={{ fontSize: '12px', fontWeight: '500', color: '#ef4444', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <XCircle size={14} /> Revoke
+                      </button>
+                    </div>
                   </div>
                 </div>
-                
-                <div className="flex items-center space-x-4">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-orange-50 text-orange-700 border border-orange-100">
-                    Pending
-                  </span>
-                  <div className="flex items-center space-x-3 border-l border-gray-200 pl-4">
-                    <button className="text-xs font-medium text-primary-600 hover:text-primary-700 transition-colors flex items-center">
-                      <RotateCw className="w-3.5 h-3.5 mr-1" />
-                      Resend
-                    </button>
-                    <button className="text-xs font-medium text-red-600 hover:text-red-700 transition-colors flex items-center">
-                      <XCircle className="w-3.5 h-3.5 mr-1" />
-                      Revoke
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       </div>

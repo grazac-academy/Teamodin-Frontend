@@ -1,19 +1,18 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import AdminLayout from '../../components/layout/AdminLayout';
 
 // Mock Data
 const stats = [
   { title: 'Total Employees', value: '142', subtext: '+4 this month', subcolor: '#10b981' },
-  { title: 'Pending Leaves', value: '8', subtext: 'Needs attention', subcolor: '#f59e0b' },
   { title: 'Onboarding Rate', value: '94%', subtext: 'Above target', subcolor: '#10b981' },
   { title: 'eNPS Score', value: '42', subtext: 'Last survey May 10', subcolor: '#534ab7' }
 ];
 
-const pendingLeaves = [
-  { initials: 'KO', name: 'Kunle Obi', type: 'Annual leave - May 26–30', color: '#e0e7ff', textColor: '#534ab7' },
-  { initials: 'TF', name: 'Tolu Fashola', type: 'Sick leave - May 21', color: '#ffedd5', textColor: '#ea580c' },
-  { initials: 'EM', name: 'Emeka Madu', type: 'Annual leave - Jun 2–6', color: '#dbeafe', textColor: '#2563eb' }
+const initialPendingLeaves = [
+  { id: 1, initials: 'KO', name: 'Kunle Obi', type: 'Annual leave - May 26–30', color: '#e0e7ff', textColor: '#534ab7' },
+  { id: 2, initials: 'TF', name: 'Tolu Fashola', type: 'Sick leave - May 21', color: '#ffedd5', textColor: '#ea580c' },
+  { id: 3, initials: 'EM', name: 'Emeka Madu', type: 'Annual leave - Jun 2–6', color: '#dbeafe', textColor: '#2563eb' }
 ];
 
 const headcount = [
@@ -50,6 +49,12 @@ const itemVariants = {
 };
 
 const AdminDashboard = () => {
+  const [leaves, setLeaves] = useState(initialPendingLeaves);
+
+  const handleApprove = (id) => {
+    setLeaves(leaves.filter(l => l.id !== id));
+  };
+
   return (
     <AdminLayout 
       title={<>Good morning, Amaka <span style={{ display: 'inline-block', animation: 'wave 2s infinite', transformOrigin: '70% 70%' }}>👋</span></>} 
@@ -103,9 +108,21 @@ const AdminDashboard = () => {
         
         {/* Stats Row */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '24px' }}>
-          {stats.map((stat, i) => (
+          <motion.div variants={itemVariants} className="stat-card">
+            <h3 style={{ fontSize: '32px', fontWeight: '700', color: '#111827', margin: '0 0 8px 0' }}>142</h3>
+            <p style={{ fontSize: '13px', fontWeight: '600', color: '#4b5563', margin: '0 0 4px 0' }}>Total Employees</p>
+            <p style={{ fontSize: '12px', color: '#10b981', margin: 0, fontWeight: '500' }}>+4 this month</p>
+          </motion.div>
+          
+          <motion.div variants={itemVariants} className="stat-card">
+            <h3 style={{ fontSize: '32px', fontWeight: '700', color: '#f59e0b', margin: '0 0 8px 0' }}>{leaves.length}</h3>
+            <p style={{ fontSize: '13px', fontWeight: '600', color: '#4b5563', margin: '0 0 4px 0' }}>Pending Leaves</p>
+            <p style={{ fontSize: '12px', color: '#f59e0b', margin: 0, fontWeight: '500' }}>Needs attention</p>
+          </motion.div>
+
+          {stats.slice(1).map((stat, i) => (
             <motion.div key={i} variants={itemVariants} className="stat-card">
-              <h3 style={{ fontSize: '32px', fontWeight: '700', color: stat.title === 'Pending Leaves' ? '#f59e0b' : stat.title === 'Onboarding Rate' ? '#10b981' : stat.title === 'eNPS Score' ? '#534ab7' : '#111827', margin: '0 0 8px 0' }}>
+              <h3 style={{ fontSize: '32px', fontWeight: '700', color: stat.title === 'Onboarding Rate' ? '#10b981' : '#534ab7', margin: '0 0 8px 0' }}>
                 {stat.value}
               </h3>
               <p style={{ fontSize: '13px', fontWeight: '600', color: '#4b5563', margin: '0 0 4px 0' }}>{stat.title}</p>
@@ -123,20 +140,33 @@ const AdminDashboard = () => {
               <a href="#" style={{ fontSize: '13px', color: '#534ab7', fontWeight: '500', textDecoration: 'none' }}>View all</a>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {pendingLeaves.map((leave, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: i !== pendingLeaves.length - 1 ? '16px' : '0', borderBottom: i !== pendingLeaves.length - 1 ? '1px solid #f3f4f6' : 'none' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div style={{ width: '36px', height: '36px', borderRadius: '50%', backgroundColor: leave.color, color: leave.textColor, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: '600' }}>
-                      {leave.initials}
+              <AnimatePresence>
+                {leaves.length === 0 && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ padding: '24px 0', textAlign: 'center', color: '#9ca3af', fontSize: '14px' }}>
+                    All caught up! No pending leave requests.
+                  </motion.div>
+                )}
+                {leaves.map((leave, i) => (
+                  <motion.div 
+                    key={leave.id} 
+                    initial={{ opacity: 0, height: 0 }} 
+                    animate={{ opacity: 1, height: 'auto' }} 
+                    exit={{ opacity: 0, height: 0, overflow: 'hidden' }}
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: i !== leaves.length - 1 ? '16px' : '0', borderBottom: i !== leaves.length - 1 ? '1px solid #f3f4f6' : 'none' }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <div style={{ width: '36px', height: '36px', borderRadius: '50%', backgroundColor: leave.color, color: leave.textColor, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: '600' }}>
+                        {leave.initials}
+                      </div>
+                      <div>
+                        <p style={{ fontSize: '14px', fontWeight: '600', color: '#111827', margin: '0 0 2px 0' }}>{leave.name}</p>
+                        <p style={{ fontSize: '13px', color: '#6b7280', margin: 0 }}>{leave.type}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p style={{ fontSize: '14px', fontWeight: '600', color: '#111827', margin: '0 0 2px 0' }}>{leave.name}</p>
-                      <p style={{ fontSize: '13px', color: '#6b7280', margin: 0 }}>{leave.type}</p>
-                    </div>
-                  </div>
-                  <button className="btn-approve">Approve</button>
-                </div>
-              ))}
+                    <button className="btn-approve" onClick={() => handleApprove(leave.id)}>Approve</button>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             </div>
           </motion.div>
 

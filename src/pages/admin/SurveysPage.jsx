@@ -1,9 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import AdminLayout from '../../components/layout/AdminLayout';
 import { Lock } from 'lucide-react';
 
 const SurveysPage = () => {
+  const [npsScore, setNpsScore] = useState(8);
+  const [likertChoice, setLikertChoice] = useState('Agree');
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleSubmit = () => {
+    setIsSubmitted(true);
+    setTimeout(() => setIsSubmitted(false), 3000);
+  };
+
   return (
     <AdminLayout>
       <style>
@@ -20,19 +29,20 @@ const SurveysPage = () => {
           .card { background: white; padding: 32px; border-radius: 16px; border: 1px solid #f3f4f6; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
           .alert-box { background: #f8f7f1; border: 1px solid #e5e3d7; border-radius: 8px; padding: 12px; display: flex; align-items: center; font-size: 12px; color: #4b5563; margin-bottom: 24px; }
           .form-label { display: block; font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 16px; }
-          .nps-grid { display: flex; gap: 8px; }
-          .nps-btn { flex: 1; aspect-ratio: 1; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; border: 1px solid transparent; }
+          .nps-grid { display: flex; gap: 8px; flex-wrap: wrap; }
+          .nps-btn { flex: 1 1 calc(16.66% - 8px); min-width: 40px; aspect-ratio: 1; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; border: 1px solid transparent; }
           .nps-detractor { background: #fef2f2; color: #dc2626; border-color: #fee2e2; }
           .nps-passive { background: #fff7ed; color: #ea580c; border-color: #ffedd5; }
           .nps-promoter { background: #f0fdf4; color: #16a34a; border-color: #dcfce7; }
-          .nps-selected { background: white; border-color: #4f46e5; color: #4338ca; box-shadow: 0 0 0 1px #4f46e5; }
-          .likert-btn { flex: 1; padding: 12px 8px; border-radius: 12px; font-size: 12px; font-weight: 600; text-align: center; cursor: pointer; transition: all 0.2s; border: 1px solid #e5e7eb; background: white; color: #4b5563; }
+          .nps-selected { background: white; border-color: #4f46e5; color: #4338ca; box-shadow: 0 0 0 1px #4f46e5; transform: translateY(-2px); }
+          .likert-btn { flex: 1 1 calc(33.33% - 12px); min-width: 100px; padding: 12px 8px; border-radius: 12px; font-size: 12px; font-weight: 600; text-align: center; cursor: pointer; transition: all 0.2s; border: 1px solid #e5e7eb; background: white; color: #4b5563; }
           .likert-btn:hover { background: #f9fafb; }
           .likert-active { background: #eef2ff; border-color: #c7d2fe; color: #4338ca; }
           .form-textarea { width: 100%; padding: 16px; background: #f6f5f3; border: none; border-radius: 12px; font-size: 14px; color: #1f2937; resize: none; outline: none; box-sizing: border-box; font-family: inherit; }
           .form-textarea:focus { box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2); }
           .btn-submit { width: 100%; padding: 14px; background: #4f46e5; color: white; border: none; border-radius: 12px; font-weight: 600; font-size: 14px; cursor: pointer; transition: background 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05); margin-top: 16px; }
           .btn-submit:hover { background: #4338ca; }
+          .btn-submit.submitted { background: #10b981; }
           .result-bar { display: flex; height: 12px; width: 100%; border-radius: 9999px; overflow: hidden; margin-bottom: 12px; }
           .bar-emerald { background: #10b981; }
           .bar-gray { background: #e5e3d7; }
@@ -86,15 +96,15 @@ const SurveysPage = () => {
                     {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => {
                       const isPromoter = num >= 9;
                       const isPassive = num >= 7 && num <= 8;
-                      const isSelected = num === 8;
+                      const isSelected = num === npsScore;
                       
                       let btnClass = 'nps-btn nps-detractor';
                       if (isPassive) btnClass = 'nps-btn nps-passive';
                       if (isPromoter) btnClass = 'nps-btn nps-promoter';
-                      if (isSelected) btnClass = 'nps-btn nps-selected';
+                      if (isSelected) btnClass += ' nps-selected';
 
                       return (
-                        <button key={num} className={btnClass}>
+                        <button key={num} onClick={() => setNpsScore(num)} className={btnClass}>
                           {num}
                         </button>
                       );
@@ -109,11 +119,12 @@ const SurveysPage = () => {
                 {/* Q2 */}
                 <div>
                   <label className="form-label">I have the resources I need to do my best work.</label>
-                  <div style={{ display: 'flex', gap: '12px' }}>
+                  <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                     {['Strongly disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly agree'].map((opt) => (
                       <button 
                         key={opt}
-                        className={`likert-btn ${opt === 'Agree' ? 'likert-active' : ''}`}
+                        onClick={() => setLikertChoice(opt)}
+                        className={`likert-btn ${opt === likertChoice ? 'likert-active' : ''}`}
                       >
                         {opt}
                       </button>
@@ -132,8 +143,8 @@ const SurveysPage = () => {
                 </div>
 
                 {/* Submit Button */}
-                <button className="btn-submit">
-                  Submit responses
+                <button className={`btn-submit ${isSubmitted ? 'submitted' : ''}`} onClick={handleSubmit}>
+                  {isSubmitted ? '✓ Responses submitted' : 'Submit responses'}
                 </button>
 
               </div>

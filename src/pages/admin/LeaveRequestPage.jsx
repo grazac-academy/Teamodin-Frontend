@@ -2,13 +2,62 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import AdminLayout from '../../components/layout/AdminLayout';
 
+const initialRequests = [
+  { type: 'Annual leave', dates: 'Mar 10–14 · 5 days', status: 'Approved', statusBg: '#d1fae5', statusColor: '#047857' },
+  { type: 'Sick leave', dates: 'Feb 3 · 1 day', status: 'Approved', statusBg: '#d1fae5', statusColor: '#047857' },
+  { type: 'Annual leave', dates: 'Dec 23–Jan 2 · 8 days', status: 'Approved', statusBg: '#d1fae5', statusColor: '#047857' },
+];
+
 const LeaveRequestPage = () => {
+  const [requests, setRequests] = useState(initialRequests);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [leaveType, setLeaveType] = useState('Annual leave');
+  const [startDate, setStartDate] = useState('Mon, 26 May 2026');
+  const [endDate, setEndDate] = useState('Fri, 30 May 2026');
+  
+  const [balances, setBalances] = useState({
+    annual: { used: 12, total: 20 },
+    sick: { used: 3, total: 14 },
+    casual: { used: 2, total: 4 }
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    setTimeout(() => {
+      setRequests([{
+        type: leaveType,
+        dates: `${startDate.split(', ')[1].split(' 2026')[0]} - ${endDate.split(', ')[1].split(' 2026')[0]} · 5 days`,
+        status: 'Pending',
+        statusBg: '#fef3c7',
+        statusColor: '#b45309'
+      }, ...requests]);
+      
+      if (leaveType === 'Annual leave') {
+        setBalances(prev => ({...prev, annual: { ...prev.annual, used: prev.annual.used + 5 }}));
+      } else if (leaveType === 'Sick leave') {
+        setBalances(prev => ({...prev, sick: { ...prev.sick, used: prev.sick.used + 5 }}));
+      } else {
+        setBalances(prev => ({...prev, casual: { ...prev.casual, used: prev.casual.used + 5 }}));
+      }
+      
+      setIsSubmitting(false);
+    }, 1500);
+  };
+
+  const getAvailableDays = () => {
+    if (leaveType === 'Annual leave') return balances.annual.total - balances.annual.used;
+    if (leaveType === 'Sick leave') return balances.sick.total - balances.sick.used;
+    return balances.casual.total - balances.casual.used;
+  };
+
   return (
     <AdminLayout title="Leave" subtitle="Manage your time off and team availability">
       <style>
         {`
           .card { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #f3f4f6; }
-          .balance-card { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: #f3f0ff; border-radius: 8px; margin-bottom: 24px; }
+          .balance-card { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: #f3f0ff; border-radius: 8px; margin-bottom: 24px; transition: all 0.3s ease; }
           .input-field { width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; outline: none; margin-top: 6px; }
           .form-label { font-size: 13px; font-weight: 600; color: #4b5563; text-transform: uppercase; letter-spacing: 0.5px; }
           .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -26,18 +75,23 @@ const LeaveRequestPage = () => {
             <div className="balance-card">
               <div>
                 <p style={{ fontSize: '13px', color: '#534ab7', margin: '0 0 4px 0', fontWeight: '600' }}>Available balance</p>
-                <p style={{ fontSize: '24px', fontWeight: '700', color: '#383287', margin: 0 }}>12 days</p>
-                <p style={{ fontSize: '12px', color: '#6b7280', margin: 0 }}>Annual leave</p>
+                <p style={{ fontSize: '24px', fontWeight: '700', color: '#383287', margin: 0 }}>{getAvailableDays()} days</p>
+                <p style={{ fontSize: '12px', color: '#6b7280', margin: 0 }}>{leaveType}</p>
               </div>
               <div style={{ backgroundColor: '#534ab7', color: 'white', padding: '6px 16px', borderRadius: '20px', fontSize: '14px', fontWeight: '600' }}>
                 Requesting: 5d
               </div>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               <div>
                 <label className="form-label">Leave Type</label>
-                <select className="input-field" style={{ appearance: 'none', backgroundColor: 'white' }}>
+                <select 
+                  className="input-field" 
+                  style={{ appearance: 'none', backgroundColor: 'white' }}
+                  value={leaveType}
+                  onChange={(e) => setLeaveType(e.target.value)}
+                >
                   <option>Annual leave</option>
                   <option>Sick leave</option>
                   <option>Casual leave</option>
@@ -47,11 +101,11 @@ const LeaveRequestPage = () => {
               <div className="grid-2">
                 <div>
                   <label className="form-label">Start Date</label>
-                  <input type="text" defaultValue="Mon, 26 May 2026" className="input-field" />
+                  <input type="text" value={startDate} onChange={e => setStartDate(e.target.value)} className="input-field" />
                 </div>
                 <div>
                   <label className="form-label">End Date</label>
-                  <input type="text" defaultValue="Fri, 30 May 2026" className="input-field" />
+                  <input type="text" value={endDate} onChange={e => setEndDate(e.target.value)} className="input-field" />
                 </div>
               </div>
 
@@ -64,27 +118,34 @@ const LeaveRequestPage = () => {
                 <textarea className="input-field" rows="3" defaultValue="Family trip planned." style={{ resize: 'none' }}></textarea>
               </div>
 
-              <button className="auth-btn-primary" style={{ width: '100%', padding: '14px', backgroundColor: '#534ab7', color: 'white', border: 'none', borderRadius: '8px', fontSize: '15px', fontWeight: '600', cursor: 'pointer' }}>
-                Submit request
+              <button 
+                type="submit"
+                disabled={isSubmitting || getAvailableDays() < 5}
+                className="auth-btn-primary" 
+                style={{ 
+                  width: '100%', padding: '14px', 
+                  backgroundColor: isSubmitting ? '#9ca3af' : (getAvailableDays() < 5 ? '#f87171' : '#534ab7'), 
+                  color: 'white', border: 'none', borderRadius: '8px', fontSize: '15px', fontWeight: '600', 
+                  cursor: isSubmitting || getAvailableDays() < 5 ? 'not-allowed' : 'pointer',
+                  transition: 'all 0.2s'
+                }}
+              >
+                {isSubmitting ? 'Submitting...' : (getAvailableDays() < 5 ? 'Insufficient Balance' : 'Submit request')}
               </button>
-            </div>
+            </form>
           </motion.div>
 
           {/* Recent Requests */}
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="card">
             <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', margin: '0 0 20px 0' }}>My recent requests</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {[
-                { type: 'Annual leave', dates: 'Mar 10–14 · 5 days', status: 'Approved' },
-                { type: 'Sick leave', dates: 'Feb 3 · 1 day', status: 'Approved' },
-                { type: 'Annual leave', dates: 'Dec 23–Jan 2 · 8 days', status: 'Approved' },
-              ].map((req, i) => (
-                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: i !== 2 ? '16px' : '0', borderBottom: i !== 2 ? '1px solid #f3f4f6' : 'none' }}>
+              {requests.map((req, i) => (
+                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: i !== requests.length - 1 ? '16px' : '0', borderBottom: i !== requests.length - 1 ? '1px solid #f3f4f6' : 'none' }}>
                   <div>
                     <p style={{ fontSize: '14px', fontWeight: '600', color: '#111827', margin: '0 0 4px 0' }}>{req.type}</p>
                     <p style={{ fontSize: '13px', color: '#6b7280', margin: 0 }}>{req.dates}</p>
                   </div>
-                  <span style={{ backgroundColor: '#d1fae5', color: '#047857', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '600' }}>
+                  <span style={{ backgroundColor: req.statusBg, color: req.statusColor, padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '600' }}>
                     {req.status}
                   </span>
                 </div>
@@ -99,9 +160,9 @@ const LeaveRequestPage = () => {
             <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', margin: '0 0 20px 0' }}>My leave balances</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               {[
-                { type: 'Annual', used: 12, total: 20, color: '#534ab7' },
-                { type: 'Sick', used: 3, total: 14, color: '#10b981' },
-                { type: 'Casual', used: 2, total: 4, color: '#d97706' }
+                { type: 'Annual', used: balances.annual.used, total: balances.annual.total, color: '#534ab7' },
+                { type: 'Sick', used: balances.sick.used, total: balances.sick.total, color: '#10b981' },
+                { type: 'Casual', used: balances.casual.used, total: balances.casual.total, color: '#d97706' }
               ].map((leave, i) => (
                 <div key={i}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '13px' }}>
