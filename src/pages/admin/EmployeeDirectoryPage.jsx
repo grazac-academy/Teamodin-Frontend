@@ -39,6 +39,8 @@ const initialEmployees = [
   },
 ];
 
+import { Link } from 'react-router-dom';
+
 const EmployeeDirectoryPage = () => {
   const [employees, setEmployees] = useState(initialEmployees);
   const [selectedId, setSelectedId] = useState(1);
@@ -83,10 +85,19 @@ const EmployeeDirectoryPage = () => {
     }, 1000);
   };
 
+  const titleTabs = (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '24px', marginTop: '8px' }}>
+      <Link to="/admin/employees" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#111827', textDecoration: 'none', borderBottom: '2px solid #111827', paddingBottom: '4px', fontWeight: '700', fontSize: '18px' }}>
+        People 
+      </Link>
+      <Link to="/admin/employees/invite" style={{ color: '#6b7280', textDecoration: 'none', borderBottom: '2px solid transparent', paddingBottom: '4px', fontWeight: '500', fontSize: '18px' }}>
+        Invite teammate
+      </Link>
+    </div>
+  );
+
   return (
-    <AdminLayout 
-      title={<div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>People <span style={{ fontSize: '13px', fontWeight: '500', color: '#6b7280', backgroundColor: '#f3f4f6', padding: '4px 10px', borderRadius: '12px' }}>{employees.length} employees</span></div>} 
-    >
+    <AdminLayout title={titleTabs}>
       <style>
         {`
           .emp-list-item {
@@ -132,33 +143,34 @@ const EmployeeDirectoryPage = () => {
         `}
       </style>
 
-      {/* Top Actions */}
-      <div className="top-actions-container">
-        <button style={{ padding: '10px 16px', backgroundColor: 'white', color: '#534ab7', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer', transition: 'all 0.2s' }}>
-          Import CSV
-        </button>
-        <button 
-          onClick={handleAddDemoEmployee}
-          disabled={isAdding}
-          style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', backgroundColor: isAdding ? '#9ca3af' : '#534ab7', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: isAdding ? 'not-allowed' : 'pointer', transition: 'all 0.2s' }}
-        >
-          {isAdding ? 'Adding...' : <><Plus size={16} /> Add employee</>}
-        </button>
-      </div>
+
 
       <div className="split-pane">
         
         {/* Left Pane - List */}
         <div className="pane-left">
           <div style={{ padding: '24px', borderBottom: '1px solid #f3f4f6' }}>
-            <div style={{ position: 'relative', marginBottom: '16px' }}>
-              <Search size={16} color="#9ca3af" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
-              <input 
-                type="text" placeholder="Search by name or dept..." 
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                style={{ width: '100%', padding: '10px 16px 10px 36px', borderRadius: '8px', border: '1px solid #e5e7eb', backgroundColor: '#f9fafb', outline: 'none', fontSize: '14px' }}
-              />
+            
+            <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', alignItems: 'center' }}>
+              <div style={{ position: 'relative', flex: 1 }}>
+                <Search size={16} color="#9ca3af" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+                <input 
+                  type="text" placeholder="Search..." 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  style={{ width: '100%', padding: '10px 16px 10px 36px', borderRadius: '8px', border: '1px solid #e5e7eb', backgroundColor: '#f9fafb', outline: 'none', fontSize: '14px', boxSizing: 'border-box' }}
+                />
+              </div>
+              <button style={{ padding: '10px 16px', backgroundColor: 'white', color: '#534ab7', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer', whiteSpace: 'nowrap', transition: 'all 0.2s' }}>
+                Import CSV
+              </button>
+              <button 
+                onClick={handleAddDemoEmployee}
+                disabled={isAdding}
+                style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', backgroundColor: isAdding ? '#9ca3af' : '#534ab7', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: isAdding ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap', transition: 'all 0.2s' }}
+              >
+                {isAdding ? 'Adding...' : <><Plus size={16} /> Add employee</>}
+              </button>
             </div>
             
             <div className="segmented-control">

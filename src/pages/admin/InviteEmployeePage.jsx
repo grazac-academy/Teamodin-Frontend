@@ -13,6 +13,8 @@ import {
 } from 'lucide-react';
 import AdminLayout from '../../components/layout/AdminLayout';
 
+import { Link } from 'react-router-dom';
+
 const InviteEmployeePage = () => {
   const [formData, setFormData] = useState({
     firstName: '',
@@ -80,8 +82,19 @@ const InviteEmployeePage = () => {
     }
   ];
 
+  const titleTabs = (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '24px', marginTop: '8px' }}>
+      <Link to="/admin/employees" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#6b7280', textDecoration: 'none', borderBottom: '2px solid transparent', paddingBottom: '4px', fontWeight: '500', fontSize: '18px' }}>
+        People 
+      </Link>
+      <Link to="/admin/employees/invite" style={{ color: '#111827', textDecoration: 'none', borderBottom: '2px solid #111827', paddingBottom: '4px', fontWeight: '700', fontSize: '18px' }}>
+        Invite teammate
+      </Link>
+    </div>
+  );
+
   return (
-    <AdminLayout title="Invite teammate" subtitle="Set their role here — they won't be able to choose it themselves.">
+    <AdminLayout title={titleTabs} subtitle="Set their role here — they won't be able to choose it themselves.">
       <style>
         {`
           .card { background: white; padding: 24px; border-radius: 12px; border: 1px solid #f3f4f6; }
