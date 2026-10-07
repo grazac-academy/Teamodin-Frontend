@@ -85,7 +85,7 @@ const EmployeeDirectoryPage = () => {
             
             <div className="segmented-control">
               {['All', 'Active', 'New hire', 'Inactive'].map(opt => (
-                <button key={opt} className={\`segment-btn \${filter === opt ? 'active' : ''}\`} onClick={() => setFilter(opt)}>
+                <button key={opt} className={`segment-btn ${filter === opt ? 'active' : ''}`} onClick={() => setFilter(opt)}>
                   {opt}
                 </button>
               ))}
@@ -98,7 +98,7 @@ const EmployeeDirectoryPage = () => {
                 <motion.div 
                   key={emp.id}
                   initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                  className={\`emp-list-item \${selectedId === emp.id ? 'selected' : ''}\`}
+                  className={`emp-list-item ${selectedId === emp.id ? 'selected' : ''}`}
                   onClick={() => setSelectedId(emp.id)}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -199,7 +199,7 @@ const EmployeeDirectoryPage = () => {
                           <div style={{ width: '60px', fontSize: '13px', color: '#4b5563', fontWeight: '500' }}>{leave.type}</div>
                           <div style={{ flex: 1, height: '8px', backgroundColor: '#f3f4f6', borderRadius: '4px', overflow: 'hidden' }}>
                             <motion.div 
-                              initial={{ width: 0 }} animate={{ width: \`\${(leave.used / leave.total) * 100}%\` }}
+                              initial={{ width: 0 }} animate={{ width: `${(leave.used / leave.total) * 100}%` }}
                               transition={{ duration: 1, delay: 0.1 * i }}
                               style={{ height: '100%', backgroundColor: leave.color, borderRadius: '4px' }} 
                             />
@@ -236,3 +236,4 @@ const EmployeeDirectoryPage = () => {
 };
 
 export default EmployeeDirectoryPage;
+

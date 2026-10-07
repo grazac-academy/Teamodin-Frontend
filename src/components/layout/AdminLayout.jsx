@@ -16,7 +16,7 @@ const AdminLayout = ({ children, title, subtitle }) => {
     { name: 'Employee Directory', path: '/admin/employees', icon: <Users size={20} /> },
     { name: 'Leave Request', path: '/admin/leave', icon: <Calendar size={20} /> },
     { name: 'Onboarding', path: '/admin/onboarding', icon: <UserPlus size={20} /> },
-    { name: 'Check-ins', path: '/admin/checkins', icon: <CheckSquare size={20} /> },
+    { name: 'Check-ins', path: '/admin/check-ins', icon: <CheckSquare size={20} /> },
     { name: 'Surveys', path: '/admin/surveys', icon: <BarChart2 size={20} /> },
     { name: 'Analytics', path: '/admin/analytics', icon: <PieChart size={20} /> },
   ];

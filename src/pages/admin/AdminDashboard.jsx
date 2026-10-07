@@ -150,7 +150,7 @@ const AdminDashboard = () => {
                   <div style={{ flex: 1, height: '8px', backgroundColor: '#f3f4f6', borderRadius: '4px', overflow: 'hidden' }}>
                     <motion.div 
                       initial={{ width: 0 }}
-                      animate={{ width: \`\${(dept.count / dept.max) * 100}%\` }}
+                      animate={{ width: `${(dept.count / dept.max) * 100}%` }}
                       transition={{ duration: 1, delay: 0.2 + (i * 0.1), ease: "easeOut" }}
                       style={{ height: '100%', backgroundColor: dept.color, borderRadius: '4px' }} 
                     />
