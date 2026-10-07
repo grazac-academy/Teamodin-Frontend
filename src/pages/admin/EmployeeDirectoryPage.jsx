@@ -41,7 +41,7 @@ const EmployeeDirectoryPage = () => {
       <style>
         {`
           .emp-list-item {
-            display: flex; alignItems: 'center'; justify-content: space-between;
+            display: flex; align-items: center; justify-content: space-between;
             padding: 16px; border-radius: 8px; cursor: pointer; transition: all 0.2s;
             margin-bottom: 4px;
           }
@@ -57,6 +57,24 @@ const EmployeeDirectoryPage = () => {
           .segment-btn.active {
             background: white; color: #534ab7; box-shadow: 0 1px 2px rgba(0,0,0,0.05); font-weight: 600;
           }
+          .split-pane {
+            display: flex; gap: 24px; background-color: white; border-radius: 12px; border: 1px solid #f3f4f6; overflow: hidden; min-height: 600px;
+          }
+          .pane-left {
+            width: 340px; border-right: 1px solid #f3f4f6; display: flex; flex-direction: column;
+          }
+          .pane-right {
+            flex: 1; padding: 32px; display: flex; flex-direction: column;
+          }
+          .info-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 48px;
+          }
+          @media (max-width: 1024px) {
+            .split-pane { flex-direction: column; }
+            .pane-left { width: 100%; border-right: none; border-bottom: 1px solid #f3f4f6; }
+            .pane-right { padding: 20px; }
+            .info-grid { grid-template-columns: 1fr; gap: 20px; }
+          }
         `}
       </style>
 
@@ -70,10 +88,10 @@ const EmployeeDirectoryPage = () => {
         </button>
       </div>
 
-      <div style={{ display: 'flex', gap: '24px', backgroundColor: 'white', borderRadius: '12px', border: '1px solid #f3f4f6', overflow: 'hidden', minHeight: '600px' }}>
+      <div className="split-pane">
         
         {/* Left Pane - List */}
-        <div style={{ width: '340px', borderRight: '1px solid #f3f4f6', display: 'flex', flexDirection: 'column' }}>
+        <div className="pane-left">
           <div style={{ padding: '24px', borderBottom: '1px solid #f3f4f6' }}>
             <div style={{ position: 'relative', marginBottom: '16px' }}>
               <Search size={16} color="#9ca3af" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
@@ -110,7 +128,7 @@ const EmployeeDirectoryPage = () => {
                       <p style={{ fontSize: '12px', color: '#6b7280', margin: 0 }}>{emp.role}</p>
                     </div>
                   </div>
-                  <span style={{ backgroundColor: emp.statusBg, color: emp.statusColor, padding: '4px 8px', borderRadius: '12px', fontSize: '11px', fontWeight: '600' }}>
+                  <span style={{ backgroundColor: emp.statusBg, color: emp.statusColor, padding: '4px 8px', borderRadius: '12px', fontSize: '11px', fontWeight: '600', whiteSpace: 'nowrap', flexShrink: 0 }}>
                     {emp.status}
                   </span>
                 </motion.div>
@@ -120,7 +138,7 @@ const EmployeeDirectoryPage = () => {
         </div>
 
         {/* Right Pane - Details */}
-        <div style={{ flex: 1, padding: '32px', display: 'flex', flexDirection: 'column' }}>
+        <div className="pane-right">
           <AnimatePresence mode="wait">
             <motion.div
               key={selectedId}
@@ -155,7 +173,7 @@ const EmployeeDirectoryPage = () => {
               {/* Info Grid */}
               {selectedEmp.email ? (
                 <>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px', marginBottom: '48px' }}>
+                  <div className="info-grid">
                     <div>
                       <p style={{ fontSize: '11px', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.5px', margin: '0 0 4px 0' }}>Email</p>
                       <p style={{ fontSize: '14px', color: '#111827', margin: 0 }}>{selectedEmp.email}</p>

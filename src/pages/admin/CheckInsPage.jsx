@@ -1,78 +1,159 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import AdminLayout from '../../components/layout/AdminLayout';
-import { MessageSquare, Clock, CheckCircle2 } from 'lucide-react';
 
 const CheckInsPage = () => {
   return (
     <AdminLayout>
-      <div className="max-w-6xl mx-auto space-y-6">
-        <div className="flex justify-between items-end mb-8">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Check-ins</h1>
-            <p className="text-gray-500 mt-1">Manage weekly 1:1s and team updates</p>
-          </div>
-          <button className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium text-sm">
-            Create Check-in
-          </button>
-        </div>
+      <style>
+        {`
+          .checkins-container { max-width: 1152px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+          .header-title { font-size: 24px; font-weight: 700; color: #111827; margin: 0 0 24px 0; }
+          .grid-layout { display: grid; grid-template-columns: 1fr; gap: 32px; align-items: start; }
+          @media (min-width: 1024px) {
+            .grid-layout { grid-template-columns: 2fr 1fr; }
+          }
+          .card { background: white; padding: 32px; border-radius: 16px; border: 1px solid #f3f4f6; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+          .card-side { background: white; padding: 24px; border-radius: 16px; border: 1px solid #f3f4f6; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 24px; }
+          .badge { display: inline-block; padding: 4px 12px; background: #eef2ff; color: #4338ca; font-size: 12px; font-weight: 600; border-radius: 9999px; border: 1px solid #e0e7ff; margin-bottom: 16px; }
+          .form-label { display: block; font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 4px; }
+          .form-desc { font-size: 12px; color: #6b7280; margin-bottom: 12px; }
+          .form-textarea { width: 100%; padding: 16px; background: #f6f5f3; border: none; border-radius: 12px; font-size: 14px; color: #1f2937; resize: none; outline: none; box-sizing: border-box; font-family: inherit; }
+          .form-textarea:focus { box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2); }
+          .rating-btn { width: 48px; height: 48px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; cursor: pointer; border: 1px solid #e5e7eb; background: white; color: #4b5563; transition: all 0.2s; }
+          .rating-btn:hover { background: #f9fafb; }
+          .rating-btn.active { background: #4f46e5; color: white; border-color: #4f46e5; }
+          .btn-back { padding: 12px 24px; background: white; color: #4338ca; border: 1px solid #e5e7eb; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.2s; }
+          .btn-back:hover { background: #f9fafb; }
+          .btn-save { flex: 1; padding: 12px; background: #4f46e5; color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+          .btn-save:hover { background: #4338ca; }
+        `}
+      </style>
+      <div className="checkins-container">
+        
+        <h1 className="header-title">Check-ins</h1>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Active Check-ins List */}
-          <div className="lg:col-span-2 space-y-4">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">This Week</h2>
-            
-            {[
-              { name: 'David Bello', role: 'Manager', status: 'Pending your review', time: 'Due tomorrow', icon: Clock, color: 'text-orange-500', bg: 'bg-orange-50' },
-              { name: 'Kunle Obi', role: 'Direct Report', status: 'Completed', time: 'Submitted yesterday', icon: CheckCircle2, color: 'text-green-500', bg: 'bg-green-50' },
-              { name: 'Sade Afolabi', role: 'Direct Report', status: 'Not started', time: 'Due in 3 days', icon: MessageSquare, color: 'text-gray-400', bg: 'bg-gray-50' },
-            ].map((checkin, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.1 }}
-                className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center justify-between hover:border-primary-200 cursor-pointer transition-colors"
-              >
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 rounded-full bg-primary-50 flex items-center justify-center text-primary-600 font-semibold text-lg">
-                    {checkin.name.split(' ').map(n => n[0]).join('')}
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">{checkin.name}</h3>
-                    <p className="text-sm text-gray-500">{checkin.role}</p>
-                  </div>
+        <div className="grid-layout">
+          
+          {/* Main Form Area */}
+          <div>
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="card">
+              <div style={{ marginBottom: '24px' }}>
+                <span className="badge">Q2 2026 Check-in · Due May 31</span>
+                <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#111827', margin: '0 0 4px 0' }}>Self-assessment</h2>
+                <p style={{ fontSize: '14px', color: '#6b7280', margin: 0 }}>Share how the quarter went from your perspective. Your manager will see this.</p>
+              </div>
+
+              {/* Progress Steps */}
+              <div style={{ marginBottom: '32px' }}>
+                <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+                  <div style={{ height: '6px', flex: 1, background: '#4f46e5', borderRadius: '9999px' }}></div>
+                  <div style={{ height: '6px', flex: 1, background: '#4f46e5', borderRadius: '9999px' }}></div>
+                  <div style={{ height: '6px', flex: 1, background: '#c7d2fe', borderRadius: '9999px' }}></div>
+                  <div style={{ height: '6px', flex: 1, background: '#f3f4f6', borderRadius: '9999px' }}></div>
                 </div>
+                <p style={{ fontSize: '12px', color: '#6b7280', fontWeight: '500', margin: 0 }}>Step 3 of 4</p>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
                 
-                <div className="flex flex-col items-end">
-                  <div className={`flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-medium ${checkin.bg} ${checkin.color}`}>
-                    <checkin.icon className="w-3.5 h-3.5" />
-                    <span>{checkin.status}</span>
-                  </div>
-                  <span className="text-xs text-gray-400 mt-2">{checkin.time}</span>
+                {/* Q1 */}
+                <div>
+                  <label className="form-label">What went well this quarter?</label>
+                  <p className="form-desc">Be specific — mention projects, outcomes, or behaviours you're proud of.</p>
+                  <textarea 
+                    className="form-textarea"
+                    rows="3"
+                    defaultValue="Shipped the auth redesign two weeks ahead of schedule. Collaborated closely with design to reduce re-work. Mentored two junior engineers on testing patterns."
+                  ></textarea>
                 </div>
-              </motion.div>
-            ))}
+
+                {/* Q2 */}
+                <div>
+                  <label className="form-label" style={{ marginBottom: '12px' }}>Where did you face challenges?</label>
+                  <textarea 
+                    className="form-textarea"
+                    rows="2"
+                    defaultValue="Context-switching between the auth project and support tickets slowed me down mid-quarter."
+                  ></textarea>
+                </div>
+
+                {/* Q3 (Rating) */}
+                <div>
+                  <label className="form-label" style={{ marginBottom: '12px' }}>How would you rate your overall performance this quarter?</label>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    {[1, 2, 3, 4, 5].map((num) => (
+                      <button 
+                        key={num}
+                        className={`rating-btn ${num === 4 ? 'active' : ''}`}
+                      >
+                        {num}
+                      </button>
+                    ))}
+                    <span style={{ fontSize: '14px', color: '#6b7280', marginLeft: '12px' }}>4 = Strong performance</span>
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', paddingTop: '16px', borderTop: '1px solid #f3f4f6' }}>
+                  <button className="btn-back">← Back</button>
+                  <button className="btn-save">Save & continue →</button>
+                </div>
+
+              </div>
+            </motion.div>
           </div>
 
           {/* Side Panel */}
-          <div className="space-y-6">
-            <div className="bg-primary-900 rounded-2xl p-6 text-white relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
-              <h3 className="text-lg font-semibold relative z-10 mb-2">Weekly Summary</h3>
-              <p className="text-primary-100 text-sm relative z-10 mb-6">You have 1 pending check-in to review this week.</p>
+          <div>
+            
+            {/* Manager View */}
+            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }} className="card-side">
+              <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', margin: '0 0 16px 0' }}>Manager view</h3>
               
-              <div className="space-y-3 relative z-10">
-                <div className="flex justify-between items-center text-sm border-b border-white/10 pb-2">
-                  <span className="text-primary-200">Completion rate</span>
-                  <span className="font-semibold">67%</span>
+              <div style={{ background: '#faf9f5', border: '1px solid #f3f4f6', padding: '16px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#fef2f2', color: '#dc2626', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: '700' }}>
+                    DB
+                  </div>
+                  <div>
+                    <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#111827', margin: '0 0 2px 0' }}>David Bello</h4>
+                    <p style={{ fontSize: '12px', color: '#6b7280', margin: 0 }}>Your manager · Has not submitted yet</p>
+                  </div>
                 </div>
-                <div className="flex justify-between items-center text-sm border-b border-white/10 pb-2">
-                  <span className="text-primary-200">Blockers reported</span>
-                  <span className="font-semibold">2</span>
-                </div>
+                <span style={{ padding: '4px 12px', background: '#ffedd5', color: '#c2410c', fontSize: '12px', fontWeight: '600', borderRadius: '8px' }}>
+                  Pending
+                </span>
               </div>
-            </div>
+              
+              <p style={{ fontSize: '12px', color: '#6b7280', margin: 0 }}>
+                Both responses are shared after the cycle closes on May 31.
+              </p>
+            </motion.div>
+
+            {/* Previous Check-ins */}
+            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} className="card-side">
+              <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', margin: '0 0 16px 0' }}>Previous check-ins</h3>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {[
+                  { title: 'Q1 2026', date: 'Closed Mar 31' },
+                  { title: 'Q4 2025', date: 'Closed Dec 20' },
+                  { title: 'Q3 2025', date: 'Closed Sep 30' },
+                ].map((item, idx) => (
+                  <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: idx !== 2 ? '16px' : '0', borderBottom: idx !== 2 ? '1px solid #f3f4f6' : 'none' }}>
+                    <div>
+                      <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#111827', margin: '0 0 4px 0' }}>{item.title}</h4>
+                      <p style={{ fontSize: '12px', color: '#6b7280', margin: 0 }}>{item.date}</p>
+                    </div>
+                    <span style={{ padding: '4px 12px', background: '#d1fae5', color: '#047857', fontSize: '12px', fontWeight: '600', borderRadius: '8px' }}>
+                      Completed
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
           </div>
         </div>
       </div>
@@ -81,4 +162,3 @@ const CheckInsPage = () => {
 };
 
 export default CheckInsPage;
-
