@@ -70,7 +70,7 @@ const OnboardingPage = () => {
           .user-card { padding: 16px; border: 1px solid #f3f4f6; border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s; background: white; }
           .user-card:hover { border-color: #d1d5db; }
           .user-card.active { border-color: #534ab7; background: #f3f0ff; }
-          .top-actions-container { display: flex; justify-content: flex-end; gap: 12px; margin-top: -64px; margin-bottom: 32px; position: relative; z-index: 10; }
+          .top-actions-container { display: flex; justify-content: flex-end; gap: 12px; margin-bottom: 32px; position: relative; z-index: 10; }
           @media (max-width: 1024px) {
             .grid-sidebar { grid-template-columns: 1fr; }
             .top-actions-container { margin-top: 0 !important; justify-content: flex-start !important; }

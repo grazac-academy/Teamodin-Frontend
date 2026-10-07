@@ -2,6 +2,10 @@ import { useState, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import AdminLayout from '../../components/layout/AdminLayout';
 import { Search, Plus, Download, Upload, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { useStore } from '../../store/useStore';
+import Papa from 'papaparse';
+import toast from 'react-hot-toast';
 
 const initialEmployees = [
   { id: 1, initials: 'KO', name: 'Kunle Obi', role: 'Software Engineer · Engineering', status: 'Active', statusColor: '#10b981', statusBg: '#d1fae5', 
@@ -36,10 +40,9 @@ const initialEmployees = [
   { id: 7, initials: 'DB', name: 'David Bello', role: 'Engineering Manager · Engineering', status: 'Active', statusColor: '#10b981', statusBg: '#d1fae5',
     email: 'david.bello@company.com', dept: 'Engineering', title: 'Engineering Manager', manager: 'VP Eng', startDate: '01 Jan 2020', type: 'Full-time', location: 'Lagos, Nigeria', empId: 'EMP-00003',
     leaves: [{ type: 'Annual', used: 15, total: 20, color: '#534ab7' }]
-import { Link } from 'react-router-dom';
-import { useStore } from '../../store/useStore';
-import Papa from 'papaparse';
-import toast from 'react-hot-toast';
+  }
+];
+
 
 const EmployeeDirectoryPage = () => {
   const { employees, addEmployee, updateEmployeeStatus } = useStore();
@@ -226,12 +229,35 @@ const EmployeeDirectoryPage = () => {
           }
           .top-actions-container {
             display: flex; justify-content: flex-end; gap: 12px; 
-            margin-top: -64px; margin-bottom: 32px; position: relative; z-index: 10;
+            margin-bottom: 32px; position: relative; z-index: 10;
           }
         `}
       </style>
 
 
+
+      <div className="top-actions-container">
+        <input 
+          type="file" 
+          accept=".csv" 
+          ref={fileInputRef} 
+          onChange={handleImportCSV} 
+          style={{ display: 'none' }} 
+        />
+        <button onClick={handleExportCSV} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '10px 16px', backgroundColor: 'white', color: '#534ab7', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer', whiteSpace: 'nowrap', transition: 'all 0.2s' }}>
+          <Download size={16} /> Export
+        </button>
+        <button onClick={handleImportCSVClick} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '10px 16px', backgroundColor: 'white', color: '#534ab7', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer', whiteSpace: 'nowrap', transition: 'all 0.2s' }}>
+          <Upload size={16} /> Import
+        </button>
+        <button 
+          onClick={handleAddDemoEmployee}
+          disabled={isAdding}
+          style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', backgroundColor: isAdding ? '#9ca3af' : '#534ab7', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: isAdding ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap', transition: 'all 0.2s' }}
+        >
+          {isAdding ? 'Adding...' : <><Plus size={16} /> Add employee</>}
+        </button>
+      </div>
 
       <div className="split-pane">
         
@@ -249,26 +275,6 @@ const EmployeeDirectoryPage = () => {
                   style={{ width: '100%', padding: '10px 16px 10px 36px', borderRadius: '8px', border: '1px solid #e5e7eb', backgroundColor: '#f9fafb', outline: 'none', fontSize: '14px', boxSizing: 'border-box' }}
                 />
               </div>
-              <input 
-                type="file" 
-                accept=".csv" 
-                ref={fileInputRef} 
-                onChange={handleImportCSV} 
-                style={{ display: 'none' }} 
-              />
-              <button onClick={handleExportCSV} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '10px 16px', backgroundColor: 'white', color: '#534ab7', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer', whiteSpace: 'nowrap', transition: 'all 0.2s' }}>
-                <Download size={16} /> Export
-              </button>
-              <button onClick={handleImportCSVClick} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '10px 16px', backgroundColor: 'white', color: '#534ab7', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: 'pointer', whiteSpace: 'nowrap', transition: 'all 0.2s' }}>
-                <Upload size={16} /> Import
-              </button>
-              <button 
-                onClick={handleAddDemoEmployee}
-                disabled={isAdding}
-                style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', backgroundColor: isAdding ? '#9ca3af' : '#534ab7', color: 'white', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: '600', cursor: isAdding ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap', transition: 'all 0.2s' }}
-              >
-                {isAdding ? 'Adding...' : <><Plus size={16} /> Add employee</>}
-              </button>
             </div>
             
             <div className="segmented-control">

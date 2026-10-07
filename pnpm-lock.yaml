@@ -14,15 +14,24 @@ importers:
       lucide-react:
         specifier: ^1.33.0
         version: 1.52.0(@types/react@19.2.18)(react@19.2.8)
+      papaparse:
+        specifier: ^5.7.0
+        version: 5.7.0
       react:
         specifier: ^19.2.7
         version: 19.2.8
       react-dom:
         specifier: ^19.2.7
         version: 19.2.8(react@19.2.8)
+      react-hot-toast:
+        specifier: ^2.6.1
+        version: 2.6.1(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react-router-dom:
         specifier: ^7.18.2
         version: 7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      zustand:
+        specifier: ^5.0.15
+        version: 5.0.15(@types/react@19.2.18)(react@19.2.8)
     devDependencies:
       '@eslint/js':
         specifier: ^10.0.1
@@ -634,6 +643,11 @@ packages:
     resolution: {integrity: sha512-Z2I8hM+PbJDXQDq3Icgpzv+mPdwr68iZUU9d5WW4FuXfDUQfkZaZuvjMv42/5crNyw154+9+VWXbYrUgDXbxNw==}
     engines: {node: '>=18'}
 
+  goober@2.1.19:
+    resolution: {integrity: sha512-U7veizMqxyKlM58+Z5j2ngJBH/r9siDmxpvNxSw0PylF6WQvrASJEZrxh1hidRBJc2jqoBVSyOban5u8m+6Rxg==}
+    peerDependencies:
+      csstype: ^3.0.10
+
   hasown@2.0.4:
     resolution: {integrity: sha512-T2UbfbBEF32wiepXIsMlTW9+dDYC6wMh/t/vYA4tuOMKqWz/n3vr1NFSxQiyP+zk2mXsoMA/i/7qV6LKut1t1A==}
     engines: {node: '>= 0.4'}
@@ -869,6 +883,9 @@ packages:
     resolution: {integrity: sha512-LaNjtRWUBY++zB5nE/NwcaoMylSPk+S+ZHNB1TzdbMJMny6dynpAGt7X/tl/QYq3TIeE6nxHppbo2LGymrG5Pw==}
     engines: {node: '>=10'}
 
+  papaparse@5.7.0:
+    resolution: {integrity: sha512-qBGxg/7Q3Kl9Wfhrz2Z74UnvnHTXLNG6jmKJFeBvP2+y4lV7So+7SR62+Zd47JvdrCkX+nDcnr0ObPzek/+6RA==}
+
   path-exists@4.0.0:
     resolution: {integrity: sha512-ak9Qy5Q7jYb2Wwcey5Fpvg2KoAc/ZIhLSLOSBmRmygPsGwkVVt0fZa0qrtMz+m6tJTAHfZQ8FnmB4MG4LWy7/w==}
     engines: {node: '>=8'}
@@ -957,6 +974,20 @@ packages:
     resolution: {integrity: sha512-rVprimfGBG3DR+Tq0IQG2DT5PxKth1WIGDmj5yPmlzr4YBe7uyE+Du4oVqTDXZSHGGGXRtTJEGSSePyQCMBglQ==}
     peerDependencies:
       react: ^19.2.8
+
+  react-hot-toast@2.6.1:
+    resolution: {integrity: sha512-gjFsf05dxcku0FkyMtFH+XmYFdA2odXfBVknEr/IZ+XpUjwsgvtY2616sOpUynK+l9ykQDRNpaJ1hYfuximUiA==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: '>=16'
+      react-dom: '>=16'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
 
   react-router-dom@7.18.2:
     resolution: {integrity: sha512-AIKJ/jgGlFb3EbfCXk5Gzshiwt+l3mqbCrNjmEWMMjqQxNJ3svBa6bgzFyCC2Sw3RA0VWF1kg3uQf2OFhxb8hw==}
@@ -1149,6 +1180,24 @@ packages:
 
   zod@4.4.3:
     resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
+
+  zustand@5.0.15:
+    resolution: {integrity: sha512-MpSEjRiBkA9crSYeOUH32rJC7SVqAbm0Fqcqge/bUi2PPoLcBWKOsG+C8mevmpr8TwXHBVkChbbJiyvkE+i/3A==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@types/react': '>=18.0.0'
+      immer: '>=9.0.6'
+      react: '>=18.0.0'
+      use-sync-external-store: '>=1.2.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      immer:
+        optional: true
+      react:
+        optional: true
+      use-sync-external-store:
+        optional: true
 
 snapshots:
 
@@ -1673,6 +1722,10 @@ snapshots:
 
   globals@17.11.0: {}
 
+  goober@2.1.19(csstype@3.2.3):
+    dependencies:
+      csstype: 3.2.3
+
   hasown@2.0.4:
     dependencies:
       function-bind: 1.1.2
@@ -1851,6 +1904,8 @@ snapshots:
     dependencies:
       p-limit: 3.1.0
 
+  papaparse@5.7.0: {}
+
   path-exists@4.0.0: {}
 
   path-key@3.1.1: {}
@@ -1912,6 +1967,16 @@ snapshots:
     dependencies:
       react: 19.2.8
       scheduler: 0.27.0
+
+  react-hot-toast@2.6.1(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+    dependencies:
+      csstype: 3.2.3
+      goober: 2.1.19(csstype@3.2.3)
+      react: 19.2.8
+      react-dom: 19.2.8(react@19.2.8)
+    optionalDependencies:
+      '@types/react': 19.2.18
+      '@types/react-dom': 19.2.4(@types/react@19.2.18)
 
   react-router-dom@7.18.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:
@@ -2092,3 +2157,8 @@ snapshots:
       zod: 4.4.3
 
   zod@4.4.3: {}
+
+  zustand@5.0.15(@types/react@19.2.18)(react@19.2.8):
+    optionalDependencies:
+      '@types/react': 19.2.18
+      react: 19.2.8
