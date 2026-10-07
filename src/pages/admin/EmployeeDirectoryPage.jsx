@@ -36,17 +36,66 @@ const initialEmployees = [
   { id: 7, initials: 'DB', name: 'David Bello', role: 'Engineering Manager · Engineering', status: 'Active', statusColor: '#10b981', statusBg: '#d1fae5',
     email: 'david.bello@company.com', dept: 'Engineering', title: 'Engineering Manager', manager: 'VP Eng', startDate: '01 Jan 2020', type: 'Full-time', location: 'Lagos, Nigeria', empId: 'EMP-00003',
     leaves: [{ type: 'Annual', used: 15, total: 20, color: '#534ab7' }]
-  },
-];
-
 import { Link } from 'react-router-dom';
+import { useStore } from '../../store/useStore';
+import Papa from 'papaparse';
+import toast from 'react-hot-toast';
 
 const EmployeeDirectoryPage = () => {
-  const [employees, setEmployees] = useState(initialEmployees);
-  const [selectedId, setSelectedId] = useState(1);
+  const { employees, addEmployee, updateEmployeeStatus } = useStore();
+  const [selectedId, setSelectedId] = useState(employees[0]?.id || 1);
   const [filter, setFilter] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [isAdding, setIsAdding] = useState(false);
+  const fileInputRef = useRef(null);
+
+  const handleImportCSV = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: (results) => {
+        const parsedData = results.data;
+        if (parsedData.length > 0) {
+          let count = 0;
+          parsedData.forEach(row => {
+            if (row.name && row.email) {
+              const newEmp = {
+                id: Date.now() + Math.random(),
+                initials: row.name.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase(),
+                name: row.name,
+                role: `${row.title || 'Employee'} · ${row.department || 'General'}`,
+                status: 'New hire',
+                statusColor: '#534ab7',
+                statusBg: '#e0e7ff',
+                email: row.email,
+                dept: row.department || 'General',
+                title: row.title || 'Employee',
+                manager: row.manager || 'Unassigned',
+                startDate: row.startDate || 'Today',
+                type: row.type || 'Full-time',
+                location: row.location || 'Remote',
+                empId: `EMP-${Math.floor(Math.random() * 1000)}`,
+                leaves: [{ type: 'Annual', used: 0, total: 20, color: '#534ab7' }]
+              };
+              addEmployee(newEmp);
+              count++;
+            }
+          });
+          toast.success(`Imported ${count} employees from CSV!`);
+        } else {
+          toast.error("CSV file is empty or improperly formatted.");
+        }
+        // Reset file input
+        e.target.value = null;
+      },
+      error: () => {
+        toast.error("Failed to parse CSV file.");
+      }
+    });
+  };
 
   const selectedEmp = employees.find(e => e.id === selectedId) || employees[0];
 
@@ -63,12 +112,7 @@ const EmployeeDirectoryPage = () => {
 
   const handleDeactivate = () => {
     if (!selectedEmp) return;
-    setEmployees(employees.map(emp => {
-      if (emp.id === selectedId) {
-        return { ...emp, status: 'Inactive', statusBg: '#f3f4f6', statusColor: '#6b7280' };
-      }
-      return emp;
-    }));
+    updateEmployeeStatus(selectedId, 'Inactive', '#f3f4f6', '#6b7280');
   };
 
   const handleAddDemoEmployee = () => {
@@ -79,7 +123,7 @@ const EmployeeDirectoryPage = () => {
         email: 'john.doe@company.com', dept: 'Marketing', title: 'Marketing Specialist', manager: 'CMO', startDate: 'Today', type: 'Contract', location: 'Remote', empId: `EMP-000${Math.floor(Math.random() * 100)}`,
         leaves: [{ type: 'Annual', used: 0, total: 20, color: '#534ab7' }]
       };
-      setEmployees([newEmp, ...employees]);
+      addEmployee(newEmp);
       setSelectedId(newEmp.id);
       setIsAdding(false);
     }, 1000);

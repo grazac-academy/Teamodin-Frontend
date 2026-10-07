@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 import { 
   
@@ -11,11 +12,11 @@ import {
   User,
   ShieldAlert
 } from 'lucide-react';
-import AdminLayout from '../../components/layout/AdminLayout';
-
 import { Link } from 'react-router-dom';
+import { useStore } from '../../store/useStore';
 
 const InviteEmployeePage = () => {
+  const { pendingInvites, addInvite, revokeInvite } = useStore();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -26,11 +27,6 @@ const InviteEmployeePage = () => {
     role: 'employee'
   });
 
-  const [pendingInvites, setPendingInvites] = useState([
-    { id: 1, name: 'funke', email: 'funke@acme.com', department: 'Marketing', role: 'Employee', invitedDaysAgo: 2 },
-    { id: 2, name: 'ife', email: 'ife@acme.com', department: 'Engineering', role: 'Manager', invitedDaysAgo: 5 },
-    { id: 3, name: 'segun', email: 'segun@acme.com', department: 'Sales', role: 'Employee', invitedDaysAgo: 1 }
-  ]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -57,14 +53,16 @@ const InviteEmployeePage = () => {
         role: formData.role.charAt(0).toUpperCase() + formData.role.slice(1),
         invitedDaysAgo: 0
       };
-      setPendingInvites([newInvite, ...pendingInvites]);
+      addInvite(newInvite);
       setFormData({ firstName: '', lastName: '', email: '', jobTitle: '', department: '', manager: '', role: 'employee' });
       setIsSubmitting(false);
+      toast.success(`Invite sent to ${newInvite.email}`);
     }, 1000);
   };
 
   const handleRevoke = (id) => {
-    setPendingInvites(pendingInvites.filter(i => i.id !== id));
+    revokeInvite(id);
+    toast.success('Invite revoked');
   };
 
   const roles = [
