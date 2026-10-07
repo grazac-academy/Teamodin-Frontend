@@ -16,6 +16,7 @@ import InviteOnboardingPage from './pages/auth/InviteOnboardingPage';
 
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
+import EmployeeDirectoryPage from './pages/admin/EmployeeDirectoryPage';
 import InviteEmployeePage from './pages/admin/InviteEmployeePage';
 import SettingsPage from './pages/admin/SettingsPage';
 import SecuritySettingsPage from './pages/admin/SecuritySettingsPage';

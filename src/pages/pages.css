@@ -379,6 +379,19 @@
   background: var(--border-color);
 }
 
+/* Primary Auth Button Hover State */
+.auth-btn-primary {
+  transition: all 0.2s ease-in-out !important;
+}
+.auth-btn-primary:hover:not(:disabled) {
+  background-color: #4338ca !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(83, 74, 183, 0.2);
+}
+.auth-btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .landing-hero {
