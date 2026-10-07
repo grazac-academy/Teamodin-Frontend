@@ -6,12 +6,14 @@ import {
   CheckSquare, BarChart2, PieChart, Settings, 
   Menu, X, Bell, Search 
 } from 'lucide-react';
+import { useAuth } from '../../hooks/useAuth';
 
 const AdminLayout = ({ children, title, subtitle }) => {
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
   const [isTablet, setIsTablet] = useState(window.innerWidth < 768);
+  const { user } = useAuth();
 
   useEffect(() => {
     const handleResize = () => {
@@ -188,9 +190,12 @@ const AdminLayout = ({ children, title, subtitle }) => {
             {/* Profile */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '4px 12px 4px 4px', border: '1px solid #e5e7eb', borderRadius: '24px', backgroundColor: 'white', cursor: 'pointer' }}>
               <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#e0e7ff', color: '#534ab7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: '700' }}>
-                AO
+                {user?.first_name ? user.first_name[0]?.toUpperCase() : (user?.name ? user.name[0]?.toUpperCase() : 'A')}
+                {user?.last_name ? user.last_name[0]?.toUpperCase() : (user?.name && user.name.split(' ')[1] ? user.name.split(' ')[1][0]?.toUpperCase() : 'O')}
               </div>
-              <span style={{ fontSize: '14px', fontWeight: '600', color: '#374151' }}>Amaka O.</span>
+              <span style={{ fontSize: '14px', fontWeight: '600', color: '#374151' }}>
+                {user?.first_name || (user?.name ? user.name.split(' ')[0] : 'Amaka')} {user?.last_name ? user.last_name[0]?.toUpperCase() + '.' : (user?.name && user.name.split(' ')[1] ? user.name.split(' ')[1][0]?.toUpperCase() + '.' : 'O.')}
+              </span>
             </div>
 
           </div>

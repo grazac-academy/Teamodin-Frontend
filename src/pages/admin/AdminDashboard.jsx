@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import AdminLayout from '../../components/layout/AdminLayout';
 import { useStore } from '../../store/useStore';
+import { useAuth } from '../../hooks/useAuth';
 
 // Mock Data
 const stats = [
@@ -52,6 +53,7 @@ const itemVariants = {
 const AdminDashboard = () => {
   const [leaves, setLeaves] = useState(initialPendingLeaves);
   const { employees, pendingInvites } = useStore();
+  const { user } = useAuth();
 
   const handleApprove = (id) => {
     setLeaves(leaves.filter(l => l.id !== id));
@@ -74,9 +76,11 @@ const AdminDashboard = () => {
     year: 'numeric'
   });
 
+  const firstName = user?.first_name || user?.firstName || user?.name?.split(' ')[0] || 'Admin';
+
   return (
     <AdminLayout 
-      title={<>{greeting}, Amaka <span style={{ display: 'inline-block', animation: 'wave 2s infinite', transformOrigin: '70% 70%' }}>👋</span></>} 
+      title={<>{greeting}, {firstName} <span style={{ display: 'inline-block', animation: 'wave 2s infinite', transformOrigin: '70% 70%' }}>👋</span></>} 
       subtitle={currentDate}
     >
       <style>
