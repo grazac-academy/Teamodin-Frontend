@@ -117,7 +117,7 @@ const ValueGrid = () => {
           animate={{ y: [0, -10, 0] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
         >
-          <img src={probsImage} alt="" className="lp-value__media-img" />
+          <img src={probsImage} alt="Illustration depicting the chaos of scattered spreadsheets and manual HR processes" className="lp-value__media-img" />
           <figcaption className="lp-value__media-caption">
             The old way — scattered, invisible, manual
           </figcaption>
