@@ -28,9 +28,10 @@ class APIClient {
   }
 
   getHeaders(isFormData = false) {
-    const headers = {
-      'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
-    };
+    const headers = {};
+    if (!isFormData) {
+      headers['Content-Type'] = 'application/json';
+    }
 
     const token = this.getAuthToken();
     if (token) {
@@ -134,9 +135,6 @@ class APIClient {
       formData.append(key, additionalData[key]);
     });
 
-    const headers = {
-      Authorization: `Bearer ${this.getAuthToken()}`,
-    };
 
     return this.request(endpoint, {
       method: 'POST',

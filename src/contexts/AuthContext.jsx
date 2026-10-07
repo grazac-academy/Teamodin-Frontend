@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components, react-hooks/set-state-in-effect */
 import { createContext, useState, useCallback, useEffect } from 'react';
 import { apiClient, authAPI, userAPI } from '../utils/api';
 import { STORAGE_KEYS } from '../utils/constants';

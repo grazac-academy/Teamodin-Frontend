@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import '../pages.css';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
 import { Check, EyeOff, Eye, LogIn } from 'lucide-react';
 
 const SignInPage = () => {

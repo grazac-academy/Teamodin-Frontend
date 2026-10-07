@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import '../pages.css';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
 import { Mail } from 'lucide-react';
 
 const OTPVerifyPage = () => {

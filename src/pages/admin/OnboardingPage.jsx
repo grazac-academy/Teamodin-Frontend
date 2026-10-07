@@ -61,12 +61,14 @@ const OnboardingPage = () => {
       <style>
         {`
           .card { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #f3f4f6; }
-          .task-item { display: flex; align-items: center; justify-content: space-between; padding: 16px; border: 1px solid #f3f4f6; border-radius: 8px; margin-bottom: 8px; background: white; transition: all 0.2s; }
+          .task-item { display: flex; align-items: flex-start; justify-content: space-between; padding: 16px; border: 1px solid #f3f4f6; border-radius: 8px; margin-bottom: 8px; background: white; transition: all 0.2s; flex-wrap: wrap; gap: 12px; }
           .task-item:hover { background: #f9fafb; cursor: pointer; border-color: #d1d5db; }
           .task-done { opacity: 0.8; background: #f9fafb; }
-          .badge { padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+          .badge { padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600; white-space: nowrap; flex-shrink: 0; }
           .stat-card { text-align: center; padding: 16px; background: white; border: 1px solid #f3f4f6; border-radius: 8px; flex: 1; }
           .grid-sidebar { display: grid; grid-template-columns: 1fr 340px; gap: 24px; }
+          .user-card { padding: 16px; border: 1px solid #f3f4f6; border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s; background: white; }
+          .user-card:hover { border-color: #d1d5db; }
           .user-card.active { border-color: #534ab7; background: #f3f0ff; }
           .top-actions-container { display: flex; justify-content: flex-end; gap: 12px; margin-top: -64px; margin-bottom: 32px; position: relative; z-index: 10; }
           @media (max-width: 1024px) {
@@ -178,7 +180,7 @@ const OnboardingPage = () => {
                         <p style={{ fontSize: '11px', color: '#6b7280', margin: 0 }}>Started {u.started}</p>
                       </div>
                     </div>
-                    <span style={{ fontSize: '11px', fontWeight: '600', color: u.statusColor, backgroundColor: u.statusBg, padding: '2px 8px', borderRadius: '12px' }}>{u.status}</span>
+                    <span style={{ fontSize: '11px', fontWeight: '600', color: u.statusColor, backgroundColor: u.statusBg, padding: '4px 8px', borderRadius: '12px', whiteSpace: 'nowrap', flexShrink: 0 }}>{u.status}</span>
                   </div>
                   <div style={{ height: '4px', backgroundColor: selectedUserId === u.id ? 'rgba(83,74,183,0.1)' : '#f3f4f6', borderRadius: '2px' }}>
                     <div style={{ height: '100%', width: `${u.id === selectedUserId ? progressPercent : u.progress}%`, backgroundColor: selectedUserId === u.id ? '#534ab7' : (u.progress > 80 ? '#059669' : '#e11d48'), borderRadius: '2px' }}></div>

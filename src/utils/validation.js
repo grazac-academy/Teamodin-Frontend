@@ -82,7 +82,7 @@ export const validateFullName = (name) => {
 
 export const validatePhoneNumber = (phone) => {
   if (!phone) return { valid: false, error: 'Phone number is required' };
-  if (!/^[\d\s\-\+\(\)]{7,}$/.test(phone.replace(/\s/g, ''))) {
+  if (!/^[\d\s\-+()]{7,}$/.test(phone.replace(/\s/g, ''))) {
     return { valid: false, error: 'Please enter a valid phone number' };
   }
   return { valid: true };
@@ -111,7 +111,7 @@ export const getPasswordRequirements = (password = '') => {
     hasUppercase: /[A-Z]/.test(password),
     hasLowercase: /[a-z]/.test(password),
     hasNumber: /\d/.test(password),
-    hasSpecialChar: new RegExp(`[${PASSWORD_REQUIREMENTS.SPECIAL_CHARS.replace(/[\[\]\\]/g, '\\$&')}]`).test(password),
+    hasSpecialChar: new RegExp(`[${PASSWORD_REQUIREMENTS.SPECIAL_CHARS.replace(/[[\]\\]/g, '\\$&')}]`).test(password),
     noSpaces: !/\s/.test(password),
   };
 };

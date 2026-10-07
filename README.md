@@ -1,16 +1,59 @@
-# React + Vite
+# HRStack
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**HRStack** is a modern People Operations (People Ops) MVP tailored specifically for African Small and Medium-sized Businesses (SMBs). Built by **Team Odin** at the **Grazac** product studio in Abeokuta, Nigeria.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Employee Directory**: Keep track of all team members and their roles.
+- **Leave Management**: Seamlessly manage time off, sick leave, and vacations.
+- **Check-ins**: Regular automated check-ins to monitor team health and blockers.
+- **Surveys**: Gather employee feedback efficiently.
+- **Onboarding**: Streamlined processes to bring new hires up to speed quickly.
+- **Analytics**: Insights and reporting for HR metrics.
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend**: React (with Vite)
+- **Styling**: Standard CSS (Note: Tailwind CSS is strictly not used in this project)
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Follow these steps to run the project locally.
+
+### Prerequisites
+
+Ensure you have [Node.js](https://nodejs.org/) installed on your machine.
+
+### Installation
+
+1. Clone the repository and navigate to the project directory:
+
+   ```bash
+   git clone <repository-url>
+   cd Teamodin-Frontend
+   ```
+
+2. Install the dependencies:
+
+   ```bash
+   npm install
+   ```
+
+### Running the Development Server
+
+Start the Vite development server by running:
+
+```bash
+npm run dev
+```
+
+The application will be available at [http://localhost:5173](http://localhost:5173).
+
+## Development Guidelines
+
+- **Styling constraints**: Use standard CSS files or inline styles only. Do not use Tailwind CSS or any utility-first CSS framework.
+
+## Team Odin Members
+
+- Solomon Samuel (Frontend Developer)
+- *And the rest of the amazing Team Odin at Grazac!*

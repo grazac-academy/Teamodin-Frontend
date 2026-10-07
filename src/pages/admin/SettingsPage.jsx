@@ -1,23 +1,23 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useForm } from '../../hooks/useForm';
 import { validateCompanyName } from '../../utils/validation';
 import Button from '../../components/common/Button/Button';
-import Input from '../../components/common/Input/Input';
 import AdminLayout from '../../components/layout/AdminLayout';
 
 const SettingsPage = () => {
   const [apiError, setApiError] = useState('');
-  
+  const [apiSuccess, setApiSuccess] = useState(false);
 
   const validationSchema = {
     companyName: (value) => validateCompanyName(value),
   };
 
   const handleSubmit = async (values) => {
+    console.log(values);
     setApiError('');
-    // In real app, would call updateSettings API
-    console.log('Updating settings:', values);
+    setApiSuccess(true);
+    setTimeout(() => setApiSuccess(false), 3000);
   };
 
   const form = useForm(
@@ -129,7 +129,9 @@ const SettingsPage = () => {
             </div>
 
             <div>
-              <Button variant="primary" size="md" onClick={() => form.handleSubmit({ preventDefault: () => {} })}>Save changes</Button>
+              <Button variant="primary" size="md" onClick={() => form.handleSubmit({ preventDefault: () => {} })} style={{ backgroundColor: apiSuccess ? '#10b981' : undefined }}>
+                {apiSuccess ? '✓ Saved' : 'Save changes'}
+              </Button>
             </div>
           </form>
         </div>

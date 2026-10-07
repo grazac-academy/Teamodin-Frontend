@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -10,6 +10,17 @@ import {
 const AdminLayout = ({ children, title, subtitle }) => {
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+  const [isTablet, setIsTablet] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1024);
+      setIsTablet(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const navItems = [
     { name: 'Dashboard', path: '/admin/dashboard', icon: <LayoutDashboard size={20} /> },
@@ -47,10 +58,10 @@ const AdminLayout = ({ children, title, subtitle }) => {
       {/* Sidebar */}
       <motion.aside
         initial={false}
-        animate={{ x: isSidebarOpen ? 0 : (window.innerWidth < 1024 ? -280 : 0) }}
+        animate={{ x: isSidebarOpen ? 0 : (isMobile ? -280 : 0) }}
         transition={{ type: 'spring', bounce: 0, duration: 0.3 }}
         style={{
-          position: window.innerWidth < 1024 ? 'fixed' : 'sticky',
+          position: isMobile ? 'fixed' : 'sticky',
           top: 0,
           left: 0,
           height: '100vh',
@@ -70,7 +81,7 @@ const AdminLayout = ({ children, title, subtitle }) => {
             </div>
             <span style={{ fontSize: '18px', fontWeight: '700', color: '#111827' }}>HRStack</span>
           </div>
-          {window.innerWidth < 1024 && (
+          {isMobile && (
             <button onClick={() => setIsSidebarOpen(false)} style={{ background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer' }}>
               <X size={24} />
             </button>
@@ -83,7 +94,7 @@ const AdminLayout = ({ children, title, subtitle }) => {
             <Link
               key={item.name}
               to={item.path}
-              onClick={() => window.innerWidth < 1024 && setIsSidebarOpen(false)}
+              onClick={() => isMobile && setIsSidebarOpen(false)}
               style={{
                 display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 12px',
                 borderRadius: '8px', textDecoration: 'none',
@@ -104,7 +115,7 @@ const AdminLayout = ({ children, title, subtitle }) => {
         <div style={{ padding: '16px' }}>
           <Link
             to="/admin/settings"
-            onClick={() => window.innerWidth < 1024 && setIsSidebarOpen(false)}
+            onClick={() => isMobile && setIsSidebarOpen(false)}
             style={{
               display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 12px',
               borderRadius: '8px', textDecoration: 'none',
@@ -126,12 +137,12 @@ const AdminLayout = ({ children, title, subtitle }) => {
         {/* Header */}
         <header style={{ 
           display: 'flex', alignItems: 'center', justifyContent: 'space-between', 
-          padding: '24px 32px', backgroundColor: '#f9fafb',
+          padding: isMobile ? '16px 20px' : '24px 32px', backgroundColor: '#f9fafb',
           flexWrap: 'wrap', gap: '16px'
         }}>
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-            {window.innerWidth < 1024 && (
+            {isMobile && (
               <button onClick={() => setIsSidebarOpen(true)} style={{ background: 'none', border: 'none', color: '#4b5563', cursor: 'pointer', display: 'flex', padding: 0 }}>
                 <Menu size={24} />
               </button>
@@ -147,7 +158,7 @@ const AdminLayout = ({ children, title, subtitle }) => {
           <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
             
             {/* Search */}
-            <div style={{ position: 'relative', display: window.innerWidth < 768 ? 'none' : 'block' }}>
+            <div style={{ position: 'relative', display: isTablet ? 'none' : 'block' }}>
               <Search size={16} color="#9ca3af" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
               <input 
                 type="text" 
@@ -186,7 +197,7 @@ const AdminLayout = ({ children, title, subtitle }) => {
         </header>
 
         {/* Page Content */}
-        <main style={{ flex: 1, padding: '0 32px 32px 32px' }}>
+        <main style={{ flex: 1, padding: isMobile ? '0 20px 20px 20px' : '0 32px 32px 32px' }}>
           {children}
         </main>
 

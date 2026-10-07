@@ -27,7 +27,7 @@ import SettingsPage from './pages/admin/SettingsPage';
 import SecuritySettingsPage from './pages/admin/SecuritySettingsPage';
 
 // Protected Route Component
-const ProtectedRoute = ({ children, isAuthenticated, requiredRole }) => {
+const ProtectedRoute = ({ children, isAuthenticated }) => {
   if (!isAuthenticated) {
     return <Navigate to="/sign-in" replace />;
   }

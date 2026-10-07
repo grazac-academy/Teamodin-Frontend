@@ -23,6 +23,11 @@ const CheckInsPage = () => {
           }
           .card { background: white; padding: 32px; border-radius: 16px; border: 1px solid #f3f4f6; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
           .card-side { background: white; padding: 24px; border-radius: 16px; border: 1px solid #f3f4f6; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 24px; }
+          @media (max-width: 768px) {
+            .card { padding: 20px; }
+            .card-side { padding: 16px; }
+            .header-title { font-size: 20px; margin-bottom: 16px; }
+          }
           .badge { display: inline-block; padding: 4px 12px; background: #eef2ff; color: #4338ca; font-size: 12px; font-weight: 600; border-radius: 9999px; border: 1px solid #e0e7ff; margin-bottom: 16px; }
           .form-label { display: block; font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 4px; }
           .form-desc { font-size: 12px; color: #6b7280; margin-bottom: 12px; }
@@ -127,7 +132,7 @@ const CheckInsPage = () => {
             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }} className="card-side">
               <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', margin: '0 0 16px 0' }}>Manager view</h3>
               
-              <div style={{ background: '#faf9f5', border: '1px solid #f3f4f6', padding: '16px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+              <div style={{ background: '#faf9f5', border: '1px solid #f3f4f6', padding: '16px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', flexWrap: 'wrap', gap: '8px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#fef2f2', color: '#dc2626', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: '700' }}>
                     DB
@@ -137,7 +142,7 @@ const CheckInsPage = () => {
                     <p style={{ fontSize: '12px', color: '#6b7280', margin: 0 }}>Your manager · Has not submitted yet</p>
                   </div>
                 </div>
-                <span style={{ padding: '4px 12px', background: '#ffedd5', color: '#c2410c', fontSize: '12px', fontWeight: '600', borderRadius: '8px' }}>
+                <span style={{ padding: '4px 12px', background: '#ffedd5', color: '#c2410c', fontSize: '12px', fontWeight: '600', borderRadius: '8px', whiteSpace: 'nowrap', flexShrink: 0 }}>
                   Pending
                 </span>
               </div>
@@ -162,7 +167,7 @@ const CheckInsPage = () => {
                       <h4 style={{ fontSize: '14px', fontWeight: '600', color: '#111827', margin: '0 0 4px 0' }}>{item.title}</h4>
                       <p style={{ fontSize: '12px', color: '#6b7280', margin: 0 }}>{item.date}</p>
                     </div>
-                    <span style={{ padding: '4px 12px', background: '#d1fae5', color: '#047857', fontSize: '12px', fontWeight: '600', borderRadius: '8px' }}>
+                    <span style={{ padding: '4px 12px', background: '#d1fae5', color: '#047857', fontSize: '12px', fontWeight: '600', borderRadius: '8px', whiteSpace: 'nowrap', flexShrink: 0 }}>
                       Completed
                     </span>
                   </div>

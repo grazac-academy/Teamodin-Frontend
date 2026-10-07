@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 import '../pages.css';
 import { Eye, EyeOff, Check, CheckCircle2 } from 'lucide-react';
 

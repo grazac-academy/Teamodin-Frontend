@@ -23,6 +23,13 @@ const PEOPLE = [
     name: 'Grazac',
     role: 'Parent product studio · Nigeria',
   },
+  {
+    initials: 'SS',
+    bg: 'var(--danger-light)',
+    color: 'var(--danger-dark)',
+    name: 'Solomon Samuel',
+    role: 'Frontend Developer · Team Odin',
+  },
 ];
 
 const FACTS = [

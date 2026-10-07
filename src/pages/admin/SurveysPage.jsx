@@ -7,10 +7,16 @@ const SurveysPage = () => {
   const [npsScore, setNpsScore] = useState(8);
   const [likertChoice, setLikertChoice] = useState('Agree');
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
 
   const handleSubmit = () => {
     setIsSubmitted(true);
     setTimeout(() => setIsSubmitted(false), 3000);
+  };
+
+  const handleNewSurvey = () => {
+    setIsCreating(true);
+    setTimeout(() => setIsCreating(false), 2000);
   };
 
   return (
@@ -66,8 +72,8 @@ const SurveysPage = () => {
         {/* Header */}
         <div className="header-row">
           <h1 className="header-title">Surveys</h1>
-          <button className="btn-new">
-            + New survey
+          <button className="btn-new" onClick={handleNewSurvey} disabled={isCreating}>
+            {isCreating ? 'Creating...' : '+ New survey'}
           </button>
         </div>
 
