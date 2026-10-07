@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import AdminLayout from '../../components/layout/AdminLayout';
 import { ArrowUpRight, ArrowDownRight, Download, Calendar } from 'lucide-react';
@@ -62,7 +62,7 @@ const AnalyticsPage = () => {
           .enps-title-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 16px; }
           .enps-score { font-size: 36px; font-weight: 700; color: #4f46e5; margin-left: auto; }
           .enps-bar { height: 12px; width: 100%; display: flex; border-radius: 9999px; overflow: hidden; margin-bottom: 12px; }
-          .enps-legend { display: flex; justify-content: space-between; font-size: 10px; font-weight: 500; }
+          .enps-legend { display: flex; justify-content: space-between; font-size: 10px; font-weight: 500; flex-wrap: wrap; gap: 8px; }
           .enps-legend-item { display: flex; align-items: center; }
           .enps-dot { width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
           .info-box { margin-top: 24px; background: #f9fafb; border-radius: 8px; padding: 12px; text-align: center; font-size: 12px; color: #6b7280; }

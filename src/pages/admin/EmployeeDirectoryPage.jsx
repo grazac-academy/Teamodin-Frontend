@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import AdminLayout from '../../components/layout/AdminLayout';
 import { Search, Plus } from 'lucide-react';
@@ -97,10 +97,10 @@ const EmployeeDirectoryPage = () => {
           .emp-list-item:hover { background-color: #f9fafb; }
           .emp-list-item.selected { background-color: #f3f0ff; }
           .segmented-control {
-            display: flex; background: #f3f4f6; border-radius: 8px; padding: 4px; gap: 4px;
+            display: flex; flex-wrap: wrap; background: #f3f4f6; border-radius: 8px; padding: 4px; gap: 4px;
           }
           .segment-btn {
-            flex: 1; padding: 6px; border: none; background: transparent; color: #4b5563;
+            flex: 1 1 auto; white-space: nowrap; padding: 6px 12px; border: none; background: transparent; color: #4b5563;
             border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s;
           }
           .segment-btn.active {

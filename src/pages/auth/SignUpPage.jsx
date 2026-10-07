@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import '../pages.css';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
@@ -6,7 +6,7 @@ import { Check, EyeOff, Eye, Users, CalendarCheck, BarChart3 } from 'lucide-reac
 
 const SignUpPage = () => {
   const navigate = useNavigate();
-  const { signUp } = useAuth();
+  
   
   const [formData, setFormData] = useState({
     companyName: '',

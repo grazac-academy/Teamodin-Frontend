@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import '../pages.css';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
@@ -98,7 +98,7 @@ const ProfileSetupPage = () => {
               { num: 3, label: 'Notifications' },
               { num: 4, label: 'All done' }
             ].map((step, index) => (
-              <React.Fragment key={step.num}>
+              <div key={step.num}>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
                   <div style={{
                     width: '32px', height: '32px', borderRadius: '50%',
@@ -117,7 +117,7 @@ const ProfileSetupPage = () => {
                 {index < 3 && (
                   <div style={{ flex: 1, height: '1px', backgroundColor: '#e5e7eb', margin: '0 8px', position: 'relative', top: '-14px' }} />
                 )}
-              </React.Fragment>
+              </div>
             ))}
           </div>
 

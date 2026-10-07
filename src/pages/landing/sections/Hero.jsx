@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
@@ -88,7 +88,7 @@ const Hero = () => {
 
         <motion.div className="lp-hero__social" variants={itemVariants}>
           <ul className="lp-hero__avatars">
-            {AVATARS.map((avatar, i) => (
+            {AVATARS.map((avatar) => (
               <motion.li
                 key={avatar.initials}
                 className="lp-hero__avatar"

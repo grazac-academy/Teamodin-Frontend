@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import '../pages.css';
@@ -6,7 +6,7 @@ import { Eye, EyeOff, Check, CheckCircle2 } from 'lucide-react';
 
 const InviteOnboardingPage = () => {
   const navigate = useNavigate();
-  const { inviteToken } = useParams();
+  
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -51,7 +51,7 @@ const InviteOnboardingPage = () => {
         setIsLoading(false);
         navigate('/admin/dashboard', { replace: true });
       }, 1000);
-    } catch (err) {
+    } catch {
       setIsLoading(false);
     }
   };

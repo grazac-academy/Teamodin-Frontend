@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Sparkles, MapPin, Users } from 'lucide-react';
 
 const PEOPLE = [

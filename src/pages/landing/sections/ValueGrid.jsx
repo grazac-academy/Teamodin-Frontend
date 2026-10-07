@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { motion } from 'framer-motion';
 import { AlertTriangle, MessageSquare, TrendingDown } from 'lucide-react';
 import { CalendarCheck, ListChecks, Users, Repeat, BarChart3, HeartPulse } from 'lucide-react';

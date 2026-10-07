@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import AdminLayout from '../../components/layout/AdminLayout';
 import { Check } from 'lucide-react';
@@ -22,7 +22,7 @@ const initialTasks = [
 ];
 
 const OnboardingPage = () => {
-  const [users, setUsers] = useState(initialUsers);
+  const [users] = useState(initialUsers);
   const [selectedUserId, setSelectedUserId] = useState('SA');
   const [tasks, setTasks] = useState(initialTasks);
   const [nudgeSent, setNudgeSent] = useState(false);
@@ -113,7 +113,7 @@ const OnboardingPage = () => {
           <div style={{ backgroundColor: 'white', borderRadius: '12px', border: '1px solid #f3f4f6', padding: '32px' }}>
             
             {Array.from(new Set(tasks.map(t => t.week))).map(week => (
-              <React.Fragment key={week}>
+              <div key={week}>
                 <h3 style={{ fontSize: '13px', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.5px', margin: '16px 0 16px 0' }}>{week}</h3>
                 <div style={{ marginBottom: '32px' }}>
                   {tasks.filter(t => t.week === week).map((task) => (
@@ -142,7 +142,7 @@ const OnboardingPage = () => {
                     </div>
                   ))}
                 </div>
-              </React.Fragment>
+              </div>
             ))}
           </div>
         </div>

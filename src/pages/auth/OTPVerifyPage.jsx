@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import '../pages.css';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
@@ -7,7 +7,7 @@ import { Mail } from 'lucide-react';
 const OTPVerifyPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { verifyOTP } = useAuth();
+  
   const email = location.state?.email || 'amaka@acme.com';
 
   const [otp, setOtp] = useState(['', '', '', '', '', '']);

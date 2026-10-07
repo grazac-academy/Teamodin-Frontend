@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import AdminLayout from '../../components/layout/AdminLayout';
 import { Lock } from 'lucide-react';

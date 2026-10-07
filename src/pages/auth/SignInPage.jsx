@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import '../pages.css';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import { Layers, MapPin, Check, EyeOff, Eye, LogIn } from 'lucide-react';
+import { Check, EyeOff, Eye, LogIn } from 'lucide-react';
 
 const SignInPage = () => {
   const navigate = useNavigate();
-  const { signIn } = useAuth();
+  
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [apiError, setApiError] = useState('');

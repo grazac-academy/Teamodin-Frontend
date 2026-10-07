@@ -1,4 +1,4 @@
-import React, { createContext, useState, useCallback, useEffect } from 'react';
+import { createContext, useState, useCallback, useEffect } from 'react';
 import { apiClient, authAPI, userAPI } from '../utils/api';
 import { STORAGE_KEYS } from '../utils/constants';
 
@@ -11,24 +11,7 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Initialize auth state from localStorage
-  useEffect(() => {
-    const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
-    const userData = localStorage.getItem(STORAGE_KEYS.USER_DATA);
 
-    if (token && userData) {
-      try {
-        setUser(JSON.parse(userData));
-        setIsAuthenticated(true);
-        // Optionally validate token with backend
-        loadUserProfile();
-      } catch (err) {
-        console.error('Failed to initialize auth state:', err);
-        clearAuth();
-      }
-    }
-    setLoading(false);
-  }, []);
 
   const clearAuth = useCallback(() => {
     apiClient.clearAuthTokens();
@@ -62,6 +45,25 @@ export const AuthProvider = ({ children }) => {
       console.error('Failed to load workspace:', err);
     }
   }, []);
+
+  // Initialize auth state from localStorage
+  useEffect(() => {
+    const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
+    const userData = localStorage.getItem(STORAGE_KEYS.USER_DATA);
+
+    if (token && userData) {
+      try {
+        setUser(JSON.parse(userData));
+        setIsAuthenticated(true);
+        // Optionally validate token with backend
+        loadUserProfile();
+      } catch (err) {
+        console.error('Failed to initialize auth state:', err);
+        clearAuth();
+      }
+    }
+    setLoading(false);
+  }, [clearAuth, loadUserProfile]);
 
   const signIn = useCallback(async (email, password) => {
     setLoading(true);

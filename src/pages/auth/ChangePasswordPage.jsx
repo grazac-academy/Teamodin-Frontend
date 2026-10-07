@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { validatePassword, getPasswordRequirements, getPasswordStrength } from '../../utils/validation';
@@ -51,7 +51,7 @@ const ChangePasswordPage = () => {
       }
 
       navigate('/admin/settings', { replace: true });
-    } catch (err) {
+    } catch {
       setError('An unexpected error occurred');
       setIsLoading(false);
     }

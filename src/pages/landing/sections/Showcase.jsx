@@ -1,4 +1,4 @@
-import React from 'react';
+
 import leaveImg from '../../../assets/showcase-leave.png';
 import onboardingImg from '../../../assets/showcase-onboarding.png';
 import checkinsImg from '../../../assets/showcase-checkins.png';

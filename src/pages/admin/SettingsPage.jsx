@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { useForm } from '../../hooks/useForm';
 import { validateCompanyName } from '../../utils/validation';
 import Button from '../../components/common/Button/Button';
 import Input from '../../components/common/Input/Input';
-import '../pages.css';
+import AdminLayout from '../../components/layout/AdminLayout';
 
 const SettingsPage = () => {
   const [apiError, setApiError] = useState('');
-  const [activeTab, setActiveTab] = useState('general');
+  
 
   const validationSchema = {
     companyName: (value) => validateCompanyName(value),
@@ -34,105 +34,107 @@ const SettingsPage = () => {
   );
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '250px 1fr', minHeight: '100vh', backgroundColor: 'var(--bg-secondary)' }}>
-      {/* Sidebar */}
-      <div style={{ backgroundColor: 'var(--bg-primary)', borderRight: '1px solid var(--border-color)', padding: 'var(--spacing-lg)' }}>
-        <div style={{ marginBottom: 'var(--spacing-xl)' }}>
-          <div className="auth-logo">
-            <span className="logo-icon">HR</span>
-            <span>HRStack</span>
-          </div>
+    <AdminLayout title="Settings">
+      <style>
+        {`
+          .settings-container {
+            max-width: 900px;
+            margin: 0 auto;
+          }
+          .settings-tabs {
+            display: flex; gap: 24px; border-bottom: 1px solid #e5e7eb; margin-bottom: 32px; overflow-x: auto;
+          }
+          .settings-tab {
+            padding: 12px 0; color: #6b7280; font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap;
+          }
+          .settings-tab:hover { color: #374151; }
+          .settings-tab.active { color: #534ab7; border-bottom-color: #534ab7; }
+          
+          .form-section { margin-bottom: 40px; }
+          .form-title { font-size: 16px; font-weight: 600; margin: 0 0 8px 0; color: #111827; }
+          .form-desc { font-size: 13px; color: #6b7280; margin: 0 0 24px 0; }
+          
+          .form-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
+          @media (min-width: 768px) { .form-grid { grid-template-columns: 1fr 1fr; } }
+          
+          .form-label { font-size: 13px; font-weight: 500; display: block; margin-bottom: 8px; color: #374151; }
+          .form-input-group { display: flex; align-items: center; gap: 8px; }
+          .form-prefix { font-size: 13px; color: #6b7280; }
+          .form-input { flex: 1; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px; width: 100%; box-sizing: border-box; }
+          .form-select { width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px; background: white; box-sizing: border-box; }
+        `}
+      </style>
+
+      <div className="settings-container">
+        
+        {/* Tabs */}
+        <div className="settings-tabs">
+          <Link to="/admin/settings" className="settings-tab active">General settings</Link>
+          <Link to="/admin/settings/security" className="settings-tab">Security</Link>
         </div>
 
-        <nav style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-sm)' }}>
-          <Link to="/admin/dashboard" style={{ padding: 'var(--spacing-md) var(--spacing-lg)', color: 'var(--text-secondary)', textDecoration: 'none', borderRadius: 'var(--radius-md)', transition: 'all var(--transition-fast)' }}>
-            Dashboard
-          </Link>
-          <Link to="/admin/employees" style={{ padding: 'var(--spacing-md) var(--spacing-lg)', color: 'var(--text-secondary)', textDecoration: 'none', borderRadius: 'var(--radius-md)' }}>
-            Employee Directory
-          </Link>
-          <Link to="/admin/leave" style={{ padding: 'var(--spacing-md) var(--spacing-lg)', color: 'var(--text-secondary)', textDecoration: 'none', borderRadius: 'var(--radius-md)' }}>
-            Leave
-          </Link>
-          <Link to="/admin/onboarding" style={{ padding: 'var(--spacing-md) var(--spacing-lg)', color: 'var(--text-secondary)', textDecoration: 'none', borderRadius: 'var(--radius-md)' }}>
-            Onboarding
-          </Link>
-          <Link to="/admin/check-ins" style={{ padding: 'var(--spacing-md) var(--spacing-lg)', color: 'var(--text-secondary)', textDecoration: 'none', borderRadius: 'var(--radius-md)' }}>
-            Check-ins
-          </Link>
-          <Link to="/admin/analytics" style={{ padding: 'var(--spacing-md) var(--spacing-lg)', color: 'var(--text-secondary)', textDecoration: 'none', borderRadius: 'var(--radius-md)' }}>
-            Analytics
-          </Link>
-        </nav>
+        <div>
+          <h1 style={{ fontSize: '24px', fontWeight: '700', marginBottom: '8px', color: '#111827' }}>General settings</h1>
+          <p style={{ color: '#6b7280', marginBottom: '32px', fontSize: '14px' }}>Manage your workspace details, branding, and regional preferences.</p>
 
-        <div style={{ borderTop: '1px solid var(--border-color)', marginTop: 'var(--spacing-xl)', paddingTop: 'var(--spacing-lg)' }}>
-          <p style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: 'var(--spacing-md)' }}>Settings</p>
-          <Link to="/admin/settings" style={{ padding: 'var(--spacing-md) var(--spacing-lg)', color: 'var(--primary)', textDecoration: 'none', borderRadius: 'var(--radius-md)', backgroundColor: 'var(--primary-light)', display: 'block', marginBottom: 'var(--spacing-sm)' }}>
-            Settings
-          </Link>
-          <Link to="/admin/settings/security" style={{ padding: 'var(--spacing-md) var(--spacing-lg)', color: 'var(--text-secondary)', textDecoration: 'none', borderRadius: 'var(--radius-md)', display: 'block' }}>
-            Sign out
-          </Link>
-        </div>
-      </div>
+          {apiError && <div style={{ padding: '12px', backgroundColor: '#fef2f2', color: '#dc2626', borderRadius: '8px', marginBottom: '24px', fontSize: '14px' }}>{apiError}</div>}
 
-      {/* Main Content */}
-      <div style={{ padding: 'var(--spacing-2xl)' }}>
-        <div style={{ maxWidth: '900px' }}>
-          <h1 style={{ fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-bold)', marginBottom: 'var(--spacing-xl)' }}>General settings</h1>
-          <p style={{ color: 'var(--text-secondary)', marginBottom: 'var(--spacing-2xl)' }}>Manage your workspace details, branding, and regional preferences.</p>
+          <form onSubmit={form.handleSubmit} style={{ display: 'flex', flexDirection: 'column' }}>
+            
+            <div className="form-section">
+              <h2 className="form-title">Workspace details</h2>
+              <p className="form-desc">This is how your company appears to all employees inside HRStack.</p>
 
-          {apiError && <div style={{ padding: 'var(--spacing-md)', backgroundColor: 'var(--danger-light)', color: 'var(--danger)', borderRadius: 'var(--radius-md)', marginBottom: 'var(--spacing-lg)' }}>{apiError}</div>}
-
-          <form onSubmit={form.handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-xl)' }}>
-            <div>
-              <h2 style={{ fontSize: 'var(--font-size-base)', fontWeight: 'var(--font-weight-semibold)', marginBottom: 'var(--spacing-lg)' }}>Workspace details</h2>
-              <p style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-secondary)', marginBottom: 'var(--spacing-lg)' }}>This is how your company appears to all employees inside HRStack.</p>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--spacing-lg)' }}>
-                <Input label="Company name" name="companyName" value={form.values.companyName} onChange={form.handleChange} error={form.errors.companyName} touched={form.touched.companyName} />
+              <div className="form-grid">
                 <div>
-                  <label style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', display: 'block', marginBottom: 'var(--spacing-sm)' }}>Workspace URL</label>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)' }}>
-                    <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--text-secondary)' }}>hrstack.app/</span>
-                    <input value={form.values.workspaceUrl} style={{ flex: 1, padding: 'var(--spacing-md)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)' }} disabled />
+                  <label className="form-label">Company name</label>
+                  <input type="text" name="companyName" value={form.values.companyName} onChange={form.handleChange} className="form-input" />
+                  {form.errors.companyName && form.touched.companyName && <span style={{ color: '#dc2626', fontSize: '12px', marginTop: '4px', display: 'block' }}>{form.errors.companyName}</span>}
+                </div>
+                <div>
+                  <label className="form-label">Workspace URL</label>
+                  <div className="form-input-group">
+                    <span className="form-prefix">hrstack.app/</span>
+                    <input type="text" value={form.values.workspaceUrl} className="form-input" disabled style={{ backgroundColor: '#f3f4f6', cursor: 'not-allowed' }} />
                   </div>
                 </div>
               </div>
             </div>
 
-            <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: 'var(--spacing-xl)' }}>
-              <h2 style={{ fontSize: 'var(--font-size-base)', fontWeight: 'var(--font-weight-semibold)', marginBottom: 'var(--spacing-lg)' }}>Regional preferences</h2>
-              <p style={{ fontSize: 'var(--font-size-xs)', color: 'var(--text-secondary)', marginBottom: 'var(--spacing-lg)' }}>Affects date format, public holidays calendars, and local policy defaults.</p>
+            <div className="form-section" style={{ borderTop: '1px solid #f3f4f6', paddingTop: '32px' }}>
+              <h2 className="form-title">Regional preferences</h2>
+              <p className="form-desc">Affects date format, public holidays calendars, and local policy defaults.</p>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--spacing-lg)' }}>
+              <div className="form-grid">
                 <div>
-                  <label style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', display: 'block', marginBottom: 'var(--spacing-sm)' }}>Primary country</label>
-                  <select style={{ width: '100%', padding: 'var(--spacing-md)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)' }} value={form.values.primaryCountry} onChange={form.handleChange}>
+                  <label className="form-label">Primary country</label>
+                  <select className="form-select" name="primaryCountry" value={form.values.primaryCountry} onChange={form.handleChange}>
                     <option>Nigeria (NG)</option>
                   </select>
                 </div>
                 <div>
-                  <label style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', display: 'block', marginBottom: 'var(--spacing-sm)' }}>Date format</label>
-                  <select style={{ width: '100%', padding: 'var(--spacing-md)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)' }} value={form.values.dateFormat}>
+                  <label className="form-label">Date format</label>
+                  <select className="form-select" name="dateFormat" value={form.values.dateFormat} onChange={form.handleChange}>
                     <option>DD / MM / YYYY</option>
                   </select>
                 </div>
               </div>
 
-              <div style={{ marginTop: 'var(--spacing-lg)' }}>
-                <label style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', display: 'block', marginBottom: 'var(--spacing-sm)' }}>Timezone</label>
-                <select style={{ width: '100%', padding: 'var(--spacing-md)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)' }} value={form.values.timezone}>
+              <div style={{ marginTop: '24px' }}>
+                <label className="form-label">Timezone</label>
+                <select className="form-select" name="timezone" value={form.values.timezone} onChange={form.handleChange}>
                   <option>Africa/Lagos (WAT, UTC+1)</option>
                 </select>
               </div>
             </div>
 
-            <Button variant="primary" size="md" onClick={() => form.handleSubmit({ preventDefault: () => {} })}>Save</Button>
+            <div>
+              <Button variant="primary" size="md" onClick={() => form.handleSubmit({ preventDefault: () => {} })}>Save changes</Button>
+            </div>
           </form>
         </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 };
 
