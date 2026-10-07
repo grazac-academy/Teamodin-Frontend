@@ -52,8 +52,3 @@ The application will be available at [http://localhost:5173](http://localhost:51
 ## Development Guidelines
 
 - **Styling constraints**: Use standard CSS files or inline styles only. Do not use Tailwind CSS or any utility-first CSS framework.
-
-## Team Odin Members
-
-- Solomon Samuel (Frontend Developer)
-- *And the rest of the amazing Team Odin at Grazac!*
