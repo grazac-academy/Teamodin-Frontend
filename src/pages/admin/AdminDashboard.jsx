@@ -55,10 +55,25 @@ const AdminDashboard = () => {
     setLeaves(leaves.filter(l => l.id !== id));
   };
 
+  const currentHour = new Date().getHours();
+  let greeting = 'Good morning';
+  if (currentHour >= 12 && currentHour < 17) {
+    greeting = 'Good afternoon';
+  } else if (currentHour >= 17) {
+    greeting = 'Good evening';
+  }
+
+  const currentDate = new Date().toLocaleDateString('en-GB', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+
   return (
     <AdminLayout 
-      title={<>Good morning, Amaka <span style={{ display: 'inline-block', animation: 'wave 2s infinite', transformOrigin: '70% 70%' }}>👋</span></>} 
-      subtitle="Wednesday, 20 May 2026"
+      title={<>{greeting}, Amaka <span style={{ display: 'inline-block', animation: 'wave 2s infinite', transformOrigin: '70% 70%' }}>👋</span></>} 
+      subtitle={currentDate}
     >
       <style>
         {`
