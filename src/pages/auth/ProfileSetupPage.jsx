@@ -5,7 +5,7 @@ import { useAuth } from '../../hooks/useAuth';
 
 const ProfileSetupPage = () => {
   const navigate = useNavigate();
-  const { user, updateUser } = useAuth();
+  const { user, updateUser, setIsAuthenticated } = useAuth();
   
   // Dummy data based on design
   const initialName = user?.name || user?.full_name || 'Amaka Okonkwo';
@@ -40,6 +40,10 @@ const ProfileSetupPage = () => {
           department: formData.department,
           phone_number: formData.phoneNumber
         });
+      }
+      if (setIsAuthenticated) {
+        setIsAuthenticated(true);
+        localStorage.setItem('hrstack_auth_token', 'mock-token-for-ui-testing');
       }
       setCurrentStep(2);
     } else {

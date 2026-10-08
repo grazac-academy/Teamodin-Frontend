@@ -29,6 +29,8 @@ const InviteOnboardingPage = () => {
     }));
   };
 
+  const { setIsAuthenticated, updateUser } = useAuth();
+
   const handleStep1Continue = (e) => {
     e.preventDefault();
     setCurrentStep(2);
@@ -48,6 +50,16 @@ const InviteOnboardingPage = () => {
       // Simulate API call
       setTimeout(() => {
         setIsLoading(false);
+        setIsAuthenticated(true);
+        updateUser({
+          name: inviteData.fullName,
+          first_name: inviteData.fullName.split(' ')[0],
+          last_name: inviteData.fullName.split(' ').slice(1).join(' '),
+          job_title: inviteData.jobTitle,
+          department: inviteData.department,
+          email: inviteData.email
+        });
+        localStorage.setItem('hrstack_auth_token', 'mock_token_for_ui_testing');
         navigate('/admin/dashboard', { replace: true });
       }, 1000);
     } catch {

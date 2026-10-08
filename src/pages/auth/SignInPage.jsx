@@ -2,6 +2,7 @@ import { useState } from 'react';
 import '../pages.css';
 import { useNavigate, Link } from 'react-router-dom';
 import { Check, EyeOff, Eye, LogIn } from 'lucide-react';
+import { useAuth } from '../../hooks/useAuth';
 
 const SignInPage = () => {
   const navigate = useNavigate();
@@ -10,6 +11,8 @@ const SignInPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [apiError, setApiError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  const { setIsAuthenticated, updateUser } = useAuth();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -23,6 +26,15 @@ const SignInPage = () => {
     // Bypass API for UI flow testing
     setTimeout(() => {
       setIsLoading(false);
+      setIsAuthenticated(true);
+      // Optional: Update user with some mock data if they sign in directly
+      updateUser({ 
+        name: 'Admin User',
+        first_name: 'Admin', 
+        last_name: 'User' 
+      });
+      // Set a mock token so they stay logged in upon refresh
+      localStorage.setItem('hrstack_auth_token', 'mock_token_for_ui_testing');
       navigate('/admin/dashboard', { replace: true });
     }, 500);
   };

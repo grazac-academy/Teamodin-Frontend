@@ -27,8 +27,12 @@ import SurveysPage from './pages/admin/SurveysPage';
 import SettingsPage from './pages/admin/SettingsPage';
 import SecuritySettingsPage from './pages/admin/SecuritySettingsPage';
 
+import { useAuth } from './hooks/useAuth';
+
 // Protected Route Component
-const ProtectedRoute = ({ children, isAuthenticated }) => {
+const ProtectedRoute = ({ children, requiredRole }) => {
+  const { isAuthenticated } = useAuth();
+  
   if (!isAuthenticated) {
     return <Navigate to="/sign-in" replace />;
   }

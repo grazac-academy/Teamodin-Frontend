@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import '../pages.css';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { Mail } from 'lucide-react';
+import { useAuth } from '../../hooks/useAuth';
 
 const OTPVerifyPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { setIsAuthenticated } = useAuth();
   
   const email = location.state?.email || 'amaka@acme.com';
 
@@ -52,6 +54,7 @@ const OTPVerifyPage = () => {
     // Bypass API for UI flow testing
     setTimeout(() => {
       setIsLoading(false);
+      setIsAuthenticated(true);
       navigate('/profile/setup', { replace: true });
     }, 500);
   };
