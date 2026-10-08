@@ -5,10 +5,10 @@ import { useAuth } from '../../hooks/useAuth';
 
 const ProfileSetupPage = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
   
   // Dummy data based on design
-  const initialName = user?.full_name || 'Amaka Okonkwo';
+  const initialName = user?.name || user?.full_name || 'Amaka Okonkwo';
   const email = user?.email || 'amaka@acme.com';
 
   const [formData, setFormData] = useState({
@@ -31,6 +31,16 @@ const ProfileSetupPage = () => {
     // Since we only have design for step 1, we can either mock steps or complete.
     // For now, let's just complete to dashboard since all fields are here.
     if (currentStep === 1) {
+      if (updateUser) {
+        updateUser({
+          name: formData.fullName,
+          first_name: formData.fullName.split(' ')[0],
+          last_name: formData.fullName.split(' ').slice(1).join(' '),
+          job_title: formData.jobTitle,
+          department: formData.department,
+          phone_number: formData.phoneNumber
+        });
+      }
       setCurrentStep(2);
     } else {
       navigate('/admin/dashboard', { replace: true });

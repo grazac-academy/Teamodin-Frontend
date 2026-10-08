@@ -209,6 +209,14 @@ export const AuthProvider = ({ children }) => {
     }
   }, [clearAuth]);
 
+  const updateUser = useCallback((userData) => {
+    setUser((prev) => {
+      const newUser = { ...prev, ...userData };
+      localStorage.setItem(STORAGE_KEYS.USER_DATA, JSON.stringify(newUser));
+      return newUser;
+    });
+  }, []);
+
   const value = {
     // State
     user,
@@ -228,6 +236,7 @@ export const AuthProvider = ({ children }) => {
     loadWorkspace,
     clearAuth,
     setError,
+    updateUser,
   };
 
   return (
