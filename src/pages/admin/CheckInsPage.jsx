@@ -47,6 +47,17 @@ const CheckInsPage = () => {
           .tab-btn.active { color: #534ab7; border-bottom-color: #534ab7; }
           .card { background: white; padding: 32px; border-radius: 16px; border: 1px solid #f3f4f6; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
           .card-side { background: white; padding: 24px; border-radius: 16px; border: 1px solid #f3f4f6; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 24px; }
+          .form-grid-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 32px; align-items: start; }
+          .rating-buttons-group { display: flex; gap: 12px; flex-wrap: wrap; }
+          @media (max-width: 900px) {
+            .form-grid-layout { grid-template-columns: 1fr; gap: 24px; }
+          }
+          @media (max-width: 640px) {
+            .card { padding: 20px 16px; }
+            .card-side { padding: 18px 16px; }
+            .modal-box { padding: 20px 16px; }
+            .rating-btn { width: 42px; height: 42px; font-size: 13px; }
+          }
           .badge { display: inline-block; padding: 4px 12px; background: #eef2ff; color: #4338ca; font-size: 12px; font-weight: 600; border-radius: 9999px; border: 1px solid #e0e7ff; margin-bottom: 16px; }
           .form-label { display: block; font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 4px; }
           .form-desc { font-size: 12px; color: #6b7280; margin-bottom: 12px; }
@@ -55,8 +66,8 @@ const CheckInsPage = () => {
           .rating-btn { width: 48px; height: 48px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; cursor: pointer; border: 1px solid #e5e7eb; background: white; color: #4b5563; transition: all 0.2s; }
           .rating-btn:hover { background: #f9fafb; }
           .rating-btn.active { background: #534ab7; color: white; border-color: #534ab7; }
-          .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
-          .modal-box { background: white; border-radius: 16px; width: 100%; max-width: 480px; padding: 32px; }
+          .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 16px; }
+          .modal-box { background: white; border-radius: 16px; width: 100%; max-width: 480px; padding: 32px; max-height: 90vh; overflow-y: auto; }
         `}
       </style>
       
@@ -171,7 +182,7 @@ const CheckInsPage = () => {
 
         {/* Tab 2: Self-Assessment Form */}
         {activeTab === 'form' && (
-          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '32px', alignItems: 'start' }}>
+          <div className="form-grid-layout">
             
             {/* Main Form Area */}
             <div>
@@ -221,7 +232,7 @@ const CheckInsPage = () => {
                   <div>
                     <label className="form-label">Overall rating for this quarter</label>
                     <p className="form-desc">How would you score your own impact?</p>
-                    <div style={{ display: 'flex', gap: '12px', marginTop: '12px' }}>
+                    <div className="rating-buttons-group" style={{ marginTop: '12px' }}>
                       {[1, 2, 3, 4, 5].map((val) => (
                         <button
                           key={val}

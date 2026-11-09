@@ -1,11 +1,250 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import AdminLayout from '../../components/layout/AdminLayout';
 import { ArrowUpRight, ArrowDownRight, Download, Calendar } from 'lucide-react';
 
+// Self-contained responsive SVG line chart component
+const ResponsiveLineChart = ({
+  data,
+  minY,
+  maxY,
+  yTicks,
+  lineColor = '#534ab7',
+  areaColor = '#534ab7',
+  dashedComparison = false,
+  targetValue = null,
+  height = 180
+}) => {
+  const containerRef = useRef(null);
+  const [width, setWidth] = useState(0);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const updateSize = () => {
+      if (containerRef.current) {
+        setWidth(containerRef.current.clientWidth);
+      }
+    };
+    updateSize();
+
+    let ro = null;
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(() => updateSize());
+      ro.observe(containerRef.current);
+    }
+    window.addEventListener('resize', updateSize);
+    return () => {
+      if (ro) ro.disconnect();
+      window.removeEventListener('resize', updateSize);
+    };
+  }, []);
+
+  const paddingLeft = 36;
+  const paddingRight = 20;
+  const paddingTop = 22;
+  const paddingBottom = 26;
+
+  const chartW = Math.max(10, width - paddingLeft - paddingRight);
+  const chartH = Math.max(10, height - paddingTop - paddingBottom);
+
+  const getX = (index) => {
+    if (data.length <= 1) return paddingLeft;
+    return paddingLeft + (index / (data.length - 1)) * chartW;
+  };
+
+  const getY = (val) => {
+    const range = maxY - minY || 1;
+    const normalized = (val - minY) / range;
+    return paddingTop + chartH - normalized * chartH;
+  };
+
+  const linePath = data.length > 0
+    ? data.map((d, i) => `${i === 0 ? 'M' : 'L'} ${getX(i).toFixed(1)} ${getY(d.value).toFixed(1)}`).join(' ')
+    : '';
+
+  const areaPath = data.length > 0
+    ? `${linePath} L ${getX(data.length - 1).toFixed(1)} ${(paddingTop + chartH).toFixed(1)} L ${getX(0).toFixed(1)} ${(paddingTop + chartH).toFixed(1)} Z`
+    : '';
+
+  const gradId = `grad-${lineColor.replace('#', '')}-${minY}-${maxY}`;
+
+  return (
+    <div ref={containerRef} style={{ width: '100%', height: `${height}px`, position: 'relative', overflow: 'hidden' }}>
+      {width > 0 && (
+        <svg width={width} height={height} style={{ display: 'block', overflow: 'visible' }}>
+          <defs>
+            <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={areaColor} stopOpacity="0.18" />
+              <stop offset="100%" stopColor={areaColor} stopOpacity="0.0" />
+            </linearGradient>
+          </defs>
+
+          {/* Grid lines and Y-axis labels */}
+          {yTicks.map((tick, i) => {
+            const y = getY(tick);
+            return (
+              <g key={i}>
+                <line
+                  x1={paddingLeft}
+                  y1={y}
+                  x2={width - paddingRight}
+                  y2={y}
+                  stroke="#f3f4f6"
+                  strokeWidth="1"
+                />
+                <text
+                  x={paddingLeft - 8}
+                  y={y + 3.5}
+                  textAnchor="end"
+                  fill="#9ca3af"
+                  fontSize="10"
+                  fontFamily="inherit"
+                >
+                  {tick}
+                </text>
+              </g>
+            );
+          })}
+
+          {/* Optional Target line */}
+          {targetValue !== null && (
+            <line
+              x1={paddingLeft}
+              y1={getY(targetValue)}
+              x2={width - paddingRight}
+              y2={getY(targetValue)}
+              stroke="#a5b4fc"
+              strokeWidth="1.5"
+              strokeDasharray="4 4"
+            />
+          )}
+
+          {/* Secondary dashed comparison line */}
+          {dashedComparison && data.length >= 4 && (
+            <path
+              d={`M ${getX(0)} ${getY(128)} L ${getX(1)} ${getY(131)} L ${getX(2)} ${getY(135)} L ${getX(3)} ${getY(138)}`}
+              fill="none"
+              stroke="#a5b4fc"
+              strokeWidth="2"
+              strokeDasharray="4 4"
+            />
+          )}
+
+          {/* Gradient area under line */}
+          {areaPath && (
+            <path d={areaPath} fill={`url(#${gradId})`} />
+          )}
+
+          {/* Main line */}
+          {linePath && (
+            <path
+              d={linePath}
+              fill="none"
+              stroke={lineColor}
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          )}
+
+          {/* Points, badges, and labels */}
+          {data.map((item, i) => {
+            const x = getX(i);
+            const y = getY(item.value);
+            const isHovered = hoveredIndex === i;
+
+            return (
+              <g key={i}>
+                {/* X-axis label */}
+                <text
+                  x={x}
+                  y={height - 6}
+                  textAnchor="middle"
+                  fill="#9ca3af"
+                  fontSize="11"
+                  fontWeight="500"
+                  fontFamily="inherit"
+                >
+                  {item.label}
+                </text>
+
+                {/* Crisp value pill badge */}
+                <g transform={`translate(${x}, ${y - 12})`}>
+                  <rect
+                    x="-13"
+                    y="-12"
+                    width="26"
+                    height="16"
+                    rx="8"
+                    fill={lineColor}
+                  />
+                  <text
+                    x="0"
+                    y="-1"
+                    textAnchor="middle"
+                    fill="#ffffff"
+                    fontSize="10"
+                    fontWeight="700"
+                    fontFamily="inherit"
+                  >
+                    {item.value}
+                  </text>
+                </g>
+
+                {/* Circular point marker */}
+                <circle
+                  cx={x}
+                  cy={y}
+                  r={isHovered ? 5 : 3.5}
+                  fill={lineColor}
+                  stroke="#ffffff"
+                  strokeWidth="2"
+                />
+
+                {/* Hover hit area */}
+                <circle
+                  cx={x}
+                  cy={y}
+                  r="18"
+                  fill="transparent"
+                  style={{ cursor: 'pointer' }}
+                  onMouseEnter={() => setHoveredIndex(i)}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                />
+              </g>
+            );
+          })}
+        </svg>
+      )}
+    </div>
+  );
+};
+
 const AnalyticsPage = () => {
   const [eNPSTimeframe, setENPSTimeframe] = useState('Quarterly');
   const [isExporting, setIsExporting] = useState(false);
+
+  const headcountData = [
+    { label: 'Feb', value: 130 },
+    { label: 'Mar', value: 134 },
+    { label: 'Apr', value: 138 },
+    { label: 'May', value: 142 }
+  ];
+
+  const enpsQuarterlyData = [
+    { label: 'Q3 2025', value: 28 },
+    { label: 'Q4 2025', value: 33 },
+    { label: 'Q1 2026', value: 36 },
+    { label: 'Q2 2026', value: 42 }
+  ];
+
+  const enpsMonthlyData = [
+    { label: 'Feb', value: 34 },
+    { label: 'Mar', value: 37 },
+    { label: 'Apr', value: 39 },
+    { label: 'May', value: 42 }
+  ];
 
   const handleExport = () => {
     setIsExporting(true);
@@ -17,36 +256,31 @@ const AnalyticsPage = () => {
       <style>
         {`
           .analytics-container { max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
-          .header-row { display: flex; flex-direction: column; gap: 16px; margin-bottom: 32px; }
+          .header-row { display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; }
           @media (min-width: 768px) {
             .header-row { flex-direction: row; align-items: center; justify-content: space-between; }
           }
           .header-title { font-size: 24px; font-weight: 700; color: #111827; margin: 0 0 4px 0; }
           .header-subtitle { font-size: 14px; color: #6b7280; margin: 0; }
-          .header-actions { display: flex; align-items: center; gap: 12px; }
+          .header-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
           .date-picker { display: flex; align-items: center; background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 8px 12px; font-size: 14px; color: #4b5563; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
           .btn-export { display: flex; align-items: center; padding: 8px 16px; background: white; border: 1px solid #e5e7eb; color: #374151; border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 14px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: background 0.2s; }
           .btn-export:hover { background: #f9fafb; }
           .btn-export.exporting { background: #eef2ff; color: #4338ca; border-color: #c7d2fe; }
-          .kpi-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
-          @media (min-width: 768px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+          .kpi-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+          @media (min-width: 640px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
           @media (min-width: 1024px) { .kpi-grid { grid-template-columns: repeat(4, 1fr); } }
-          .card { background: white; padding: 24px; border-radius: 16px; border: 1px solid #f3f4f6; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-          .kpi-value { font-size: 30px; font-weight: 700; margin: 0 0 4px 0; }
-          .kpi-label { font-size: 14px; color: #6b7280; margin: 0 0 12px 0; }
+          .card { background: white; padding: 24px; border-radius: 16px; border: 1px solid #f3f4f6; box-shadow: 0 1px 3px rgba(0,0,0,0.05); box-sizing: border-box; }
+          @media (max-width: 640px) { .card { padding: 18px 16px; } }
+          .kpi-value { font-size: 28px; font-weight: 700; margin: 0 0 4px 0; }
+          .kpi-label { font-size: 13px; color: #6b7280; margin: 0 0 12px 0; }
           .kpi-trend { display: flex; align-items: center; font-size: 12px; font-weight: 500; color: #059669; }
           .kpi-trend-down { display: flex; align-items: center; font-size: 12px; font-weight: 500; color: #059669; }
-          .middle-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
+          .middle-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
           @media (min-width: 1024px) { .middle-grid { grid-template-columns: repeat(2, 1fr); } }
-          .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+          .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 8px; }
           .card-title { font-size: 16px; font-weight: 600; color: #111827; margin: 0; }
           .card-subtitle { font-size: 12px; color: #6b7280; margin: 0; }
-          .chart-area { height: 192px; position: relative; width: 100%; margin-top: 16px; border-bottom: 1px solid #f3f4f6; }
-          .chart-y-axis { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; font-size: 10px; color: #9ca3af; padding-bottom: 24px; }
-          .chart-grid { position: absolute; left: 24px; right: 0; bottom: 24px; top: 8px; display: flex; flex-direction: column; justify-content: space-between; }
-          .chart-grid-line { border-top: 1px solid #f3f4f6; width: 100%; height: 100%; }
-          .chart-svg-area { position: absolute; inset: 0; margin-left: 24px; padding-bottom: 24px; padding-top: 8px; }
-          .chart-x-axis { position: absolute; bottom: 0; left: 24px; right: 0; display: flex; justify-content: space-between; font-size: 10px; color: #9ca3af; }
           .chart-legend { display: flex; align-items: center; gap: 16px; margin-top: 16px; }
           .legend-item { display: flex; align-items: center; font-size: 12px; color: #6b7280; }
           .legend-line { width: 12px; height: 2px; background: #4f46e5; margin-right: 8px; }
@@ -146,38 +380,16 @@ const AnalyticsPage = () => {
               <span className="card-subtitle">Feb – May 2026</span>
             </div>
             
-            <div className="chart-area">
-              <div className="chart-y-axis">
-                <div>142</div>
-                <div>138</div>
-                <div>134</div>
-                <div>130</div>
-              </div>
-              
-              <div className="chart-grid">
-                <div className="chart-grid-line"></div>
-                <div className="chart-grid-line"></div>
-                <div className="chart-grid-line"></div>
-                <div className="chart-grid-line"></div>
-              </div>
-
-              <div className="chart-svg-area">
-                <svg style={{ width: '100%', height: '100%' }} preserveAspectRatio="none" viewBox="0 0 100 100">
-                  <path d="M 0 100 L 33 66 L 66 33 L 100 0" fill="none" stroke="#534ab7" strokeWidth="2" vectorEffect="non-scaling-stroke" />
-                  <circle cx="0" cy="100" r="4" fill="#534ab7" />
-                  <circle cx="33" cy="66" r="4" fill="#534ab7" />
-                  <circle cx="66" cy="33" r="4" fill="#534ab7" />
-                  <circle cx="100" cy="0" r="4" fill="#534ab7" />
-                </svg>
-              </div>
-
-              <div className="chart-x-axis">
-                <span>Feb</span>
-                <span>Mar</span>
-                <span>Apr</span>
-                <span>May</span>
-              </div>
-            </div>
+            <ResponsiveLineChart
+              data={headcountData}
+              minY={126}
+              maxY={146}
+              yTicks={[142, 138, 134, 130]}
+              lineColor="#534ab7"
+              areaColor="#534ab7"
+              dashedComparison={true}
+              height={190}
+            />
 
             <div className="chart-legend">
               <div className="legend-item">
@@ -331,46 +543,16 @@ const AnalyticsPage = () => {
             </div>
           </div>
           
-          <div className="chart-area" style={{ borderBottom: '1px solid #f3f4f6' }}>
-            <div className="chart-y-axis" style={{ paddingBottom: '24px' }}>
-              <div>60</div>
-              <div>50</div>
-              <div>40</div>
-              <div>30</div>
-              <div>20</div>
-              <div>10</div>
-            </div>
-            
-            <div className="chart-grid">
-              <div className="chart-grid-line"></div>
-              <div className="chart-grid-line"></div>
-              <div className="chart-grid-line" style={{ background: 'rgba(249, 250, 251, 0.5)' }}></div>
-              <div className="chart-grid-line"></div>
-              <div className="chart-grid-line"></div>
-            </div>
-
-            <div className="chart-svg-area">
-              <svg style={{ width: '100%', height: '100%' }} preserveAspectRatio="none" viewBox="0 0 100 100">
-                <path d="M 20 60 L 50 50 L 75 45 L 95 30" fill="none" stroke="#534ab7" strokeWidth="2" vectorEffect="non-scaling-stroke" />
-                <circle cx="20" cy="60" r="4" fill="#534ab7" />
-                <circle cx="50" cy="50" r="4" fill="#534ab7" />
-                <circle cx="75" cy="45" r="4" fill="#534ab7" />
-                <circle cx="95" cy="30" r="4" fill="#534ab7" />
-                
-                <text x="20" y="55" fontSize="3" fill="#534ab7" fontWeight="bold" textAnchor="middle">28</text>
-                <text x="50" y="45" fontSize="3" fill="#534ab7" fontWeight="bold" textAnchor="middle">33</text>
-                <text x="75" y="40" fontSize="3" fill="#534ab7" fontWeight="bold" textAnchor="middle">36</text>
-                <text x="95" y="25" fontSize="3" fill="#534ab7" fontWeight="bold" textAnchor="middle">42</text>
-              </svg>
-            </div>
-
-            <div className="chart-x-axis" style={{ padding: '0 48px' }}>
-              <span>Q3 2025</span>
-              <span>Q4 2025</span>
-              <span>Q1 2026</span>
-              <span>Q2 2026</span>
-            </div>
-          </div>
+          <ResponsiveLineChart
+            data={eNPSTimeframe === 'Quarterly' ? enpsQuarterlyData : enpsMonthlyData}
+            minY={10}
+            maxY={60}
+            yTicks={[60, 50, 40, 30, 20, 10]}
+            lineColor="#534ab7"
+            areaColor="#534ab7"
+            targetValue={40}
+            height={200}
+          />
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '16px', fontSize: '12px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>

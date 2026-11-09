@@ -14,18 +14,22 @@ const SecuritySettingsPage = () => {
           .settings-container {
             max-width: 900px;
             margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
           }
           .settings-tabs {
-            display: flex; gap: 24px; border-bottom: 1px solid #e5e7eb; margin-bottom: 32px; overflow-x: auto;
+            display: flex; gap: 20px; border-bottom: 1px solid #e5e7eb; margin-bottom: 32px; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 4px;
           }
+          .settings-tabs::-webkit-scrollbar { height: 4px; }
+          .settings-tabs::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }
           .settings-tab {
-            padding: 12px 0; color: #6b7280; font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap;
+            padding: 10px 0; color: #6b7280; font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; flex-shrink: 0;
           }
           .settings-tab:hover { color: #374151; }
-          .settings-tab.active { color: #534ab7; border-bottom-color: #534ab7; }
+          .settings-tab.active { color: #534ab7; border-bottom-color: #534ab7; font-weight: 600; }
           
           .card-section {
-            background: white; padding: 24px; border-radius: 12px; border: 1px solid #f3f4f6; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 24px;
+            background: white; padding: 24px; border-radius: 12px; border: 1px solid #f3f4f6; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 24px; box-sizing: border-box;
           }
           .card-title { font-size: 16px; font-weight: 600; margin: 0 0 8px 0; color: #111827; }
           .card-desc { font-size: 13px; color: #6b7280; margin: 0 0 24px 0; }

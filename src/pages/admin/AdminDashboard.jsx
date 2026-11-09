@@ -104,12 +104,21 @@ const AdminDashboard = () => {
           @media (max-width: 1024px) {
             .dashboard-grid {
               grid-template-columns: 1fr;
+              gap: 16px;
             }
+          }
+          @media (max-width: 640px) {
+            .stat-card { padding: 16px; }
+            .panel-card { padding: 18px 16px; }
+            .stats-grid-row { gap: 12px !important; grid-template-columns: repeat(2, 1fr) !important; }
+          }
+          @media (max-width: 440px) {
+            .stats-grid-row { grid-template-columns: 1fr !important; }
           }
           .stat-card {
             background: white; padding: 24px; border-radius: 12px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #f3f4f6;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s; box-sizing: border-box;
           }
           .stat-card:hover {
             transform: translateY(-2px);
@@ -117,7 +126,7 @@ const AdminDashboard = () => {
           }
           .panel-card {
             background: white; padding: 24px; border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #f3f4f6;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #f3f4f6; box-sizing: border-box;
           }
           .btn-approve {
             background: #d1fae5; color: #059669; border: none; padding: 6px 12px;
@@ -131,7 +140,7 @@ const AdminDashboard = () => {
       <motion.div variants={containerVariants} initial="hidden" animate="show" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
         
         {/* Stats Row */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '24px' }}>
+        <div className="stats-grid-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '20px' }}>
           <motion.div variants={itemVariants} className="stat-card">
             <h3 style={{ fontSize: '32px', fontWeight: '700', color: '#111827', margin: '0 0 8px 0' }}>{employees.length}</h3>
             <p style={{ fontSize: '13px', fontWeight: '600', color: '#4b5563', margin: '0 0 4px 0' }}>Total Employees</p>

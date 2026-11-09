@@ -191,12 +191,12 @@ const AdminLayout = ({ children, title, subtitle }) => {
             </div>
 
             {/* Profile */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '4px 12px 4px 4px', border: '1px solid #e5e7eb', borderRadius: '24px', backgroundColor: 'white', cursor: 'pointer' }}>
-              <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#e0e7ff', color: '#534ab7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: '700' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '4px 10px 4px 4px', border: '1px solid #e5e7eb', borderRadius: '24px', backgroundColor: 'white', cursor: 'pointer' }}>
+              <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#e0e7ff', color: '#534ab7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: '700', flexShrink: 0 }}>
                 {user?.first_name ? user.first_name[0]?.toUpperCase() : (user?.name ? user.name[0]?.toUpperCase() : 'A')}
                 {user?.last_name ? user.last_name[0]?.toUpperCase() : (user?.name && user.name.split(' ')[1] ? user.name.split(' ')[1][0]?.toUpperCase() : 'O')}
               </div>
-              <span style={{ fontSize: '14px', fontWeight: '600', color: '#374151' }}>
+              <span style={{ fontSize: '14px', fontWeight: '600', color: '#374151', display: isTablet ? 'none' : 'inline', whiteSpace: 'nowrap' }}>
                 {user?.first_name || (user?.name ? user.name.split(' ')[0] : 'Amaka')} {user?.last_name ? user.last_name[0]?.toUpperCase() + '.' : (user?.name && user.name.split(' ')[1] ? user.name.split(' ')[1][0]?.toUpperCase() + '.' : 'O.')}
               </span>
             </div>
@@ -205,7 +205,7 @@ const AdminLayout = ({ children, title, subtitle }) => {
         </header>
 
         {/* Page Content */}
-        <main style={{ flex: 1, padding: isMobile ? '0 20px 20px 20px' : '0 32px 32px 32px' }}>
+        <main style={{ flex: 1, padding: isMobile ? '0 16px 24px 16px' : '0 32px 32px 32px', boxSizing: 'border-box', minWidth: 0 }}>
           {children}
         </main>
 

@@ -223,13 +223,13 @@ const EmployeeDirectoryPage = () => {
           @media (max-width: 1024px) {
             .split-pane { flex-direction: column; }
             .pane-left { width: 100%; border-right: none; border-bottom: 1px solid #f3f4f6; }
-            .pane-right { padding: 20px; }
+            .pane-right { padding: 20px 16px; }
             .info-grid { grid-template-columns: 1fr; gap: 20px; }
-            .top-actions-container { margin-top: 0 !important; justify-content: flex-start !important; }
+            .top-actions-container { margin-top: 0 !important; justify-content: flex-start !important; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
           }
           .top-actions-container {
             display: flex; justify-content: flex-end; gap: 12px; 
-            margin-bottom: 32px; position: relative; z-index: 10;
+            margin-bottom: 32px; position: relative; z-index: 10; flex-wrap: wrap;
           }
         `}
       </style>

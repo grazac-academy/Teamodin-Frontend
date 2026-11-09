@@ -28,15 +28,23 @@ const NotificationsSettingsPage = () => {
     <AdminLayout title="Settings">
       <style>
         {`
-          .settings-container { max-width: 960px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
-          .settings-tabs { display: flex; gap: 24px; border-bottom: 1px solid #e5e7eb; overflow-x: auto; }
-          .settings-tab { padding: 12px 0; color: #6b7280; font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
+          .settings-container { max-width: 960px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; width: 100%; box-sizing: border-box; }
+          .settings-tabs { display: flex; gap: 20px; border-bottom: 1px solid #e5e7eb; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 4px; }
+          .settings-tabs::-webkit-scrollbar { height: 4px; }
+          .settings-tabs::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }
+          .settings-tab { padding: 10px 0; color: #6b7280; font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; flex-shrink: 0; }
           .settings-tab:hover { color: #374151; }
-          .settings-tab.active { color: #534ab7; border-bottom-color: #534ab7; }
-          .card-section { background: white; padding: 24px; border-radius: 12px; border: 1px solid #f3f4f6; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+          .settings-tab.active { color: #534ab7; border-bottom-color: #534ab7; font-weight: 600; }
+          .card-section { background: white; padding: 24px; border-radius: 12px; border: 1px solid #f3f4f6; box-shadow: 0 1px 3px rgba(0,0,0,0.05); box-sizing: border-box; }
+          @media (max-width: 640px) {
+            .card-section { padding: 16px; }
+            .settings-tabs { gap: 16px; margin-bottom: 16px; }
+            .settings-tab { font-size: 13px; }
+            .toggle-row { gap: 12px; }
+          }
           .card-title { font-size: 16px; font-weight: 600; margin: 0 0 6px 0; color: #111827; }
           .card-desc { font-size: 13px; color: #6b7280; margin: 0 0 20px 0; }
-          .toggle-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid #f9fafb; }
+          .toggle-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid #f9fafb; gap: 16px; }
         `}
       </style>
 

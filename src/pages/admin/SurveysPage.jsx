@@ -47,6 +47,14 @@ const SurveysPage = () => {
             .grid-layout { grid-template-columns: 1fr 1fr; }
           }
           .card { background: white; padding: 32px; border-radius: 16px; border: 1px solid #f3f4f6; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+          .modal-box { background: white; border-radius: 16px; width: 100%; max-width: 480px; padding: 28px; max-height: 90vh; overflow-y: auto; }
+          .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+          @media (max-width: 640px) {
+            .card { padding: 20px 16px; }
+            .modal-box { padding: 20px 16px; }
+            .modal-grid { grid-template-columns: 1fr; }
+            .header-row { flex-wrap: wrap; gap: 12px; }
+          }
           .alert-box { background: #f8f7f1; border: 1px solid #e5e3d7; border-radius: 8px; padding: 12px; display: flex; align-items: center; font-size: 12px; color: #4b5563; margin-bottom: 24px; }
           .form-label { display: block; font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 16px; }
           .nps-grid { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -240,8 +248,8 @@ const SurveysPage = () => {
         {/* Create Survey Modal */}
         <AnimatePresence>
           {isModalOpen && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: '20px' }}>
-              <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} style={{ background: 'white', borderRadius: '16px', width: '100%', maxWidth: '480px', padding: '28px' }}>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: '16px' }}>
+              <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} className="modal-box">
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                   <h2 style={{ fontSize: '18px', fontWeight: '700', color: '#111827', margin: 0 }}>Launch New Pulse Survey</h2>
                   <button onClick={() => setIsModalOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6b7280' }}>
@@ -262,7 +270,7 @@ const SurveysPage = () => {
                     />
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                  <div className="modal-grid">
                     <div>
                       <label style={{ fontSize: '13px', fontWeight: '600', color: '#374151' }}>Survey Type</label>
                       <select 

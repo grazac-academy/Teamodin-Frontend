@@ -70,10 +70,18 @@ const OnboardingPage = () => {
           .user-card { padding: 16px; border: 1px solid #f3f4f6; border-radius: 8px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s; background: white; }
           .user-card:hover { border-color: #d1d5db; }
           .user-card.active { border-color: #534ab7; background: #f3f0ff; }
-          .top-actions-container { display: flex; justify-content: flex-end; gap: 12px; margin-bottom: 32px; position: relative; z-index: 10; }
+          .top-actions-container { display: flex; justify-content: flex-end; gap: 12px; margin-bottom: 32px; position: relative; z-index: 10; flex-wrap: wrap; }
+          .onboarding-banner { background: linear-gradient(to right, #4338ca, #534ab7); border-radius: 12px; padding: 32px; color: white; }
+          .tasks-box { background-color: white; border-radius: 12px; border: 1px solid #f3f4f6; padding: 32px; }
           @media (max-width: 1024px) {
             .grid-sidebar { grid-template-columns: 1fr; }
             .top-actions-container { margin-top: 0 !important; justify-content: flex-start !important; }
+          }
+          @media (max-width: 640px) {
+            .onboarding-banner { padding: 20px 16px; }
+            .tasks-box { padding: 16px 12px; }
+            .card { padding: 16px; }
+            .task-item { padding: 12px; }
           }
         `}
       </style>
@@ -97,22 +105,22 @@ const OnboardingPage = () => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           
           {/* Welcome Banner */}
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} key={activeUser.id} style={{ background: 'linear-gradient(to right, #4338ca, #534ab7)', borderRadius: '12px', padding: '32px', color: 'white' }}>
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} key={activeUser.id} className="onboarding-banner">
             <h2 style={{ fontSize: '24px', fontWeight: '700', margin: '0 0 8px 0' }}>Welcome to the team, {activeUser.name.split(' ')[0]}!</h2>
             <p style={{ fontSize: '15px', color: 'rgba(255,255,255,0.8)', margin: '0 0 32px 0' }}>You started on {activeUser.started} 2026. Here's everything you need to complete in your first week.</p>
             
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
               <div style={{ whiteSpace: 'nowrap' }}>
                 <span style={{ fontSize: '24px', fontWeight: '700' }}>{completedCount} / {totalCount}</span> <span style={{ fontSize: '14px', color: 'rgba(255,255,255,0.8)' }}>Tasks completed</span>
               </div>
-              <div style={{ flex: 1, height: '8px', backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: '4px', overflow: 'hidden' }}>
+              <div style={{ flex: 1, minWidth: '140px', height: '8px', backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: '4px', overflow: 'hidden' }}>
                 <motion.div initial={{ width: 0 }} animate={{ width: `${progressPercent}%` }} transition={{ duration: 1 }} style={{ height: '100%', backgroundColor: 'white', borderRadius: '4px' }} />
               </div>
               <div style={{ fontSize: '14px', fontWeight: '600' }}>{progressPercent}%</div>
             </div>
           </motion.div>
 
-          <div style={{ backgroundColor: 'white', borderRadius: '12px', border: '1px solid #f3f4f6', padding: '32px' }}>
+          <div className="tasks-box">
             
             {Array.from(new Set(tasks.map(t => t.week))).map(week => (
               <div key={week}>

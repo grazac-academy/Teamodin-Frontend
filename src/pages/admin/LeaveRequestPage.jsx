@@ -112,20 +112,27 @@ const LeaveRequestPage = () => {
     <AdminLayout title="Leave & Time Off" subtitle="Manage company leave approvals, employee time-off balances, and team calendar.">
       <style>
         {`
-          .leave-container { max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
-          .tab-nav { display: flex; gap: 24px; border-bottom: 1px solid #e5e7eb; overflow-x: auto; }
-          .tab-btn { padding: 12px 4px; font-size: 14px; font-weight: 600; color: #6b7280; background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap; transition: all 0.2s; display: flex; alignItems: center; gap: 8px; }
+          .leave-container { max-width: 1280px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; width: 100%; box-sizing: border-box; }
+          .tab-nav { display: flex; gap: 20px; border-bottom: 1px solid #e5e7eb; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 4px; }
+          .tab-nav::-webkit-scrollbar { height: 4px; }
+          .tab-nav::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }
+          .tab-btn { padding: 10px 4px; font-size: 14px; font-weight: 600; color: #6b7280; background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap; transition: all 0.2s; display: flex; alignItems: center; gap: 8px; flex-shrink: 0; }
           .tab-btn:hover { color: #111827; }
           .tab-btn.active { color: #534ab7; border-bottom-color: #534ab7; }
           .badge-count { background: #fee2e2; color: #b91c1c; font-size: 11px; padding: 2px 8px; borderRadius: 10px; font-weight: 700; }
-          .card { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #f3f4f6; }
-          .balance-card { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: #f3f0ff; border-radius: 8px; margin-bottom: 24px; transition: all 0.3s ease; }
+          .card { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #f3f4f6; box-sizing: border-box; }
+          @media (max-width: 640px) {
+            .card { padding: 16px; }
+            .tab-btn { font-size: 13px; }
+          }
+          .balance-card { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: #f3f0ff; border-radius: 8px; margin-bottom: 24px; transition: all 0.3s ease; flex-wrap: wrap; gap: 12px; }
           .input-field { width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; outline: none; margin-top: 6px; box-sizing: border-box; }
           .form-label { font-size: 13px; font-weight: 600; color: #4b5563; text-transform: uppercase; letter-spacing: 0.5px; }
-          .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-          @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } .layout-grid { grid-template-columns: 1fr !important; } }
+          .grid-2 { display: grid; grid-template-columns: 1fr; gap: 16px; }
+          @media (min-width: 640px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+          @media (max-width: 768px) { .layout-grid { grid-template-columns: 1fr !important; } }
           .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
-          .modal-box { background: white; border-radius: 16px; width: 100%; max-width: 440px; padding: 24px; }
+          .modal-box { background: white; border-radius: 16px; width: 100%; max-width: 440px; padding: 24px; box-sizing: border-box; }
         `}
       </style>
 
@@ -166,10 +173,10 @@ const LeaveRequestPage = () => {
             </div>
 
             {/* Approvals Table Card */}
-            <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}>
+            <div className="card" style={{ padding: 0, overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+              <table style={{ width: '100%', minWidth: '650px', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}>
                 <thead>
-                  <tr style={{ background: '#fafafa', borderBottom: '1px solid #e5e7eb', color: '#6b7280' }}>
+                  <tr style={{ background: '#fafafa', borderBottom: '1px solid #e5e7eb', color: '#6b7280', whiteSpace: 'nowrap' }}>
                     <th style={{ padding: '14px 20px' }}>Employee</th>
                     <th style={{ padding: '14px 20px' }}>Leave Type</th>
                     <th style={{ padding: '14px 20px' }}>Dates & Duration</th>

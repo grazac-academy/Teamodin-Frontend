@@ -40,28 +40,40 @@ const SettingsPage = () => {
           .settings-container {
             max-width: 900px;
             margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
           }
           .settings-tabs {
-            display: flex; gap: 24px; border-bottom: 1px solid #e5e7eb; margin-bottom: 32px; overflow-x: auto;
+            display: flex; gap: 20px; border-bottom: 1px solid #e5e7eb; margin-bottom: 32px; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 4px;
           }
+          .settings-tabs::-webkit-scrollbar { height: 4px; }
+          .settings-tabs::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }
           .settings-tab {
-            padding: 12px 0; color: #6b7280; font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap;
+            padding: 10px 0; color: #6b7280; font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; flex-shrink: 0;
           }
           .settings-tab:hover { color: #374151; }
-          .settings-tab.active { color: #534ab7; border-bottom-color: #534ab7; }
+          .settings-tab.active { color: #534ab7; border-bottom-color: #534ab7; font-weight: 600; }
           
-          .form-section { margin-bottom: 40px; }
-          .form-title { font-size: 16px; font-weight: 600; margin: 0 0 8px 0; color: #111827; }
-          .form-desc { font-size: 13px; color: #6b7280; margin: 0 0 24px 0; }
+          .form-section { margin-bottom: 36px; }
+          .form-title { font-size: 16px; font-weight: 600; margin: 0 0 6px 0; color: #111827; }
+          .form-desc { font-size: 13px; color: #6b7280; margin: 0 0 20px 0; }
           
-          .form-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
-          @media (min-width: 768px) { .form-grid { grid-template-columns: 1fr 1fr; } }
+          .form-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+          @media (min-width: 768px) { .form-grid { grid-template-columns: 1fr 1fr; gap: 24px; } }
           
-          .form-label { font-size: 13px; font-weight: 500; display: block; margin-bottom: 8px; color: #374151; }
-          .form-input-group { display: flex; align-items: center; gap: 8px; }
-          .form-prefix { font-size: 13px; color: #6b7280; }
-          .form-input { flex: 1; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px; width: 100%; box-sizing: border-box; }
-          .form-select { width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px; background: white; box-sizing: border-box; }
+          .form-label { font-size: 13px; font-weight: 500; display: block; margin-bottom: 6px; color: #374151; }
+          .form-input-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+          .form-prefix { font-size: 13px; color: #6b7280; white-space: nowrap; }
+          .form-input { flex: 1; min-width: 160px; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px; width: 100%; box-sizing: border-box; font-size: 14px; }
+          .form-select { width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px; background: white; box-sizing: border-box; font-size: 14px; }
+          
+          @media (max-width: 640px) {
+            .settings-tabs { gap: 16px; margin-bottom: 24px; }
+            .settings-tab { font-size: 13px; }
+            .form-section { margin-bottom: 28px; }
+            .btn-save-wrap { width: 100%; }
+            .btn-save-wrap button { width: 100% !important; }
+          }
         `}
       </style>
 
@@ -130,7 +142,7 @@ const SettingsPage = () => {
               </div>
             </div>
 
-            <div>
+            <div className="btn-save-wrap">
               <Button variant="primary" size="md" onClick={() => form.handleSubmit({ preventDefault: () => {} })} style={{ backgroundColor: apiSuccess ? '#10b981' : undefined }}>
                 {apiSuccess ? '✓ Saved' : 'Save changes'}
               </Button>

@@ -98,13 +98,17 @@ const CompanyDocumentsPage = () => {
           .filter-pill { padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid #e5e7eb; background: white; color: #4b5563; transition: all 0.2s; }
           .filter-pill:hover { background: #f9fafb; color: #111827; }
           .filter-pill.active { background: #534ab7; color: white; border-color: #534ab7; }
-          .doc-table-card { background: white; border-radius: 16px; border: 1px solid #f3f4f6; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
-          .doc-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
-          .doc-table th { padding: 14px 20px; color: #6b7280; font-weight: 600; border-bottom: 1px solid #e5e7eb; background: #fafafa; }
-          .doc-table td { padding: 16px 20px; border-bottom: 1px solid #f9fafb; vertical-align: middle; }
+          .doc-table-card { background: white; border-radius: 16px; border: 1px solid #f3f4f6; overflow-x: auto; -webkit-overflow-scrolling: touch; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+          .doc-table { width: 100%; min-width: 650px; border-collapse: collapse; text-align: left; font-size: 14px; }
+          .doc-table th { padding: 14px 20px; color: #6b7280; font-weight: 600; border-bottom: 1px solid #e5e7eb; background: #fafafa; white-space: nowrap; }
+          .doc-table td { padding: 16px 20px; border-bottom: 1px solid #f9fafb; vertical-align: middle; white-space: nowrap; }
           .doc-table tr:hover td { background: #fafafa; }
           .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
-          .modal-box { background: white; border-radius: 16px; width: 100%; max-width: 520px; padding: 32px; max-height: 90vh; overflow-y: auto; }
+          .modal-box { background: white; border-radius: 16px; width: 100%; max-width: 520px; padding: 32px; max-height: 90vh; overflow-y: auto; box-sizing: border-box; }
+          @media (max-width: 640px) {
+            .modal-box { padding: 20px 16px; }
+            .filter-pill { font-size: 12px; padding: 6px 12px; }
+          }
           .form-input { width: 100%; padding: 10px 14px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; outline: none; margin-top: 4px; box-sizing: border-box; }
         `}
       </style>

@@ -98,9 +98,15 @@ const DepartmentsPage = () => {
           .dept-card { background: white; border: 1px solid #f3f4f6; border-radius: 16px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; gap: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); transition: transform 0.2s, box-shadow 0.2s; }
           .dept-card:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(0,0,0,0.06); }
           .dept-badge { padding: 4px 8px; background: #eef2ff; color: #4338ca; border-radius: 6px; font-size: 12px; font-weight: 700; }
-          .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
+          .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 16px; }
           .modal-box { background: white; border-radius: 16px; width: 100%; max-width: 500px; padding: 32px; max-height: 90vh; overflow-y: auto; }
           .form-input { width: 100%; padding: 10px 14px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; outline: none; margin-top: 4px; box-sizing: border-box; }
+          .dept-search-box { position: relative; flex: 1; max-width: 360px; min-width: 240px; }
+          @media (max-width: 640px) {
+            .modal-box { padding: 20px 16px; }
+            .dept-card { padding: 18px 16px; }
+            .dept-search-box { max-width: 100%; width: 100%; }
+          }
         `}
       </style>
 
@@ -134,7 +140,7 @@ const DepartmentsPage = () => {
 
         {/* Action & Filter Bar */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
-          <div style={{ position: 'relative', width: '320px' }}>
+          <div className="dept-search-box">
             <Search size={16} color="#9ca3af" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
             <input 
               type="text"

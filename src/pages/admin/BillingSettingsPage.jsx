@@ -28,18 +28,25 @@ const BillingSettingsPage = () => {
     <AdminLayout title="Settings">
       <style>
         {`
-          .settings-container { max-width: 960px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
-          .settings-tabs { display: flex; gap: 24px; border-bottom: 1px solid #e5e7eb; overflow-x: auto; }
-          .settings-tab { padding: 12px 0; color: #6b7280; font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
+          .settings-container { max-width: 960px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; width: 100%; box-sizing: border-box; }
+          .settings-tabs { display: flex; gap: 20px; border-bottom: 1px solid #e5e7eb; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 4px; }
+          .settings-tabs::-webkit-scrollbar { height: 4px; }
+          .settings-tabs::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }
+          .settings-tab { padding: 10px 0; color: #6b7280; font-size: 14px; font-weight: 500; text-decoration: none; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; flex-shrink: 0; }
           .settings-tab:hover { color: #374151; }
-          .settings-tab.active { color: #534ab7; border-bottom-color: #534ab7; }
-          .card-section { background: white; padding: 24px; border-radius: 12px; border: 1px solid #f3f4f6; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+          .settings-tab.active { color: #534ab7; border-bottom-color: #534ab7; font-weight: 600; }
+          .card-section { background: white; padding: 24px; border-radius: 12px; border: 1px solid #f3f4f6; box-shadow: 0 1px 3px rgba(0,0,0,0.05); box-sizing: border-box; }
+          @media (max-width: 640px) {
+            .card-section { padding: 16px; }
+            .settings-tabs { gap: 16px; margin-bottom: 16px; }
+            .settings-tab { font-size: 13px; }
+          }
           .card-title { font-size: 16px; font-weight: 600; margin: 0 0 6px 0; color: #111827; }
           .card-desc { font-size: 13px; color: #6b7280; margin: 0 0 20px 0; }
           .plan-badge { background: #e0e7ff; color: #4338ca; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; }
-          .inv-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
-          .inv-table th { padding: 10px 12px; border-bottom: 1px solid #e5e7eb; color: #6b7280; font-weight: 600; }
-          .inv-table td { padding: 14px 12px; border-bottom: 1px solid #f9fafb; color: #374151; }
+          .inv-table { width: 100%; min-width: 520px; border-collapse: collapse; font-size: 13px; text-align: left; }
+          .inv-table th { padding: 10px 12px; border-bottom: 1px solid #e5e7eb; color: #6b7280; font-weight: 600; white-space: nowrap; }
+          .inv-table td { padding: 14px 12px; border-bottom: 1px solid #f9fafb; color: #374151; white-space: nowrap; }
         `}
       </style>
 
@@ -151,41 +158,43 @@ const BillingSettingsPage = () => {
               <h2 className="card-title">Billing & Invoice History</h2>
               <p className="card-desc">Download past receipts and invoices for your accounting records.</p>
 
-              <table className="inv-table">
-                <thead>
-                  <tr>
-                    <th>Invoice Number</th>
-                    <th>Date</th>
-                    <th>Plan Description</th>
-                    <th>Amount</th>
-                    <th>Status</th>
-                    <th style={{ textAlign: 'right' }}>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {invoices.map((inv) => (
-                    <tr key={inv.id}>
-                      <td style={{ fontWeight: '600', color: '#111827' }}>{inv.id}</td>
-                      <td>{inv.date}</td>
-                      <td>{inv.plan}</td>
-                      <td style={{ fontWeight: '600' }}>{inv.amount}</td>
-                      <td>
-                        <span style={{ background: '#d1fae5', color: '#047857', padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: '600' }}>
-                          {inv.status}
-                        </span>
-                      </td>
-                      <td style={{ textAlign: 'right' }}>
-                        <button 
-                          onClick={() => handleDownloadInvoice(inv.id)}
-                          style={{ background: 'none', border: 'none', color: '#534ab7', cursor: 'pointer', fontWeight: '600', fontSize: '12px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
-                        >
-                          <Download size={13} /> PDF
-                        </button>
-                      </td>
+              <div style={{ width: '100%', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+                <table className="inv-table">
+                  <thead>
+                    <tr>
+                      <th>Invoice Number</th>
+                      <th>Date</th>
+                      <th>Plan Description</th>
+                      <th>Amount</th>
+                      <th>Status</th>
+                      <th style={{ textAlign: 'right' }}>Action</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {invoices.map((inv) => (
+                      <tr key={inv.id}>
+                        <td style={{ fontWeight: '600', color: '#111827' }}>{inv.id}</td>
+                        <td>{inv.date}</td>
+                        <td>{inv.plan}</td>
+                        <td style={{ fontWeight: '600' }}>{inv.amount}</td>
+                        <td>
+                          <span style={{ background: '#d1fae5', color: '#047857', padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: '600' }}>
+                            {inv.status}
+                          </span>
+                        </td>
+                        <td style={{ textAlign: 'right' }}>
+                          <button 
+                            onClick={() => handleDownloadInvoice(inv.id)}
+                            style={{ background: 'none', border: 'none', color: '#534ab7', cursor: 'pointer', fontWeight: '600', fontSize: '12px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                          >
+                            <Download size={13} /> PDF
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
 
           </div>

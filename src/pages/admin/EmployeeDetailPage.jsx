@@ -88,31 +88,38 @@ const EmployeeDetailPage = () => {
     <AdminLayout>
       <style>
         {`
-          .detail-container { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+          .detail-container { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; width: 100%; box-sizing: border-box; }
           .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #6b7280; margin-bottom: 8px; }
           .breadcrumb a { color: #534ab7; text-decoration: none; font-weight: 500; }
           .breadcrumb a:hover { text-decoration: underline; }
-          .profile-card { background: white; border-radius: 16px; border: 1px solid #f3f4f6; box-shadow: 0 1px 3px rgba(0,0,0,0.05); padding: 32px; display: flex; flex-direction: column; gap: 24px; }
+          .profile-card { background: white; border-radius: 16px; border: 1px solid #f3f4f6; box-shadow: 0 1px 3px rgba(0,0,0,0.05); padding: 32px; display: flex; flex-direction: column; gap: 24px; box-sizing: border-box; }
+          @media (max-width: 640px) {
+            .profile-card { padding: 20px 16px; }
+            .profile-name { font-size: 20px !important; }
+            .info-panel { padding: 18px 16px !important; }
+          }
           .profile-header { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
           .profile-avatar { width: 80px; height: 80px; border-radius: 20px; background: #e0e7ff; color: #534ab7; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; flex-shrink: 0; }
           .profile-title-group { display: flex; flex-direction: column; gap: 4px; }
-          .profile-name { font-size: 24px; font-weight: 700; color: #111827; margin: 0; display: flex; align-items: center; gap: 12px; }
-          .profile-meta-row { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; color: #6b7280; font-size: 14px; margin-top: 8px; }
+          .profile-name { font-size: 24px; font-weight: 700; color: #111827; margin: 0; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+          .profile-meta-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; color: #6b7280; font-size: 13px; margin-top: 8px; }
           .profile-meta-item { display: flex; align-items: center; gap: 6px; }
-          .tab-nav { display: flex; gap: 24px; border-bottom: 1px solid #e5e7eb; overflow-x: auto; }
-          .tab-btn { padding: 14px 4px; font-size: 14px; font-weight: 600; color: #6b7280; background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+          .tab-nav { display: flex; gap: 20px; border-bottom: 1px solid #e5e7eb; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 4px; }
+          .tab-nav::-webkit-scrollbar { height: 4px; }
+          .tab-nav::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }
+          .tab-btn { padding: 12px 4px; font-size: 14px; font-weight: 600; color: #6b7280; background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap; transition: all 0.2s; flex-shrink: 0; }
           .tab-btn:hover { color: #111827; }
           .tab-btn.active { color: #534ab7; border-bottom-color: #534ab7; }
           .card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
-          @media (max-width: 900px) { .card-grid { grid-template-columns: 1fr; } }
-          .info-panel { background: white; border-radius: 16px; border: 1px solid #f3f4f6; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+          @media (max-width: 900px) { .card-grid { grid-template-columns: 1fr; gap: 16px; } }
+          .info-panel { background: white; border-radius: 16px; border: 1px solid #f3f4f6; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); box-sizing: border-box; }
           .panel-title { font-size: 16px; font-weight: 700; color: #111827; margin: 0 0 20px 0; display: flex; align-items: center; justify-content: space-between; }
-          .field-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f9fafb; font-size: 14px; }
+          .field-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f9fafb; font-size: 14px; gap: 12px; }
           .field-label { color: #6b7280; font-weight: 500; }
           .field-val { color: #111827; font-weight: 600; text-align: right; }
           .balance-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; }
-          .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
-          .modal-box { background: white; border-radius: 16px; width: 100%; max-width: 540px; padding: 32px; max-height: 90vh; overflow-y: auto; }
+          .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 16px; }
+          .modal-box { background: white; border-radius: 16px; width: 100%; max-width: 540px; padding: 28px; max-height: 90vh; overflow-y: auto; box-sizing: border-box; }
           .form-input { width: 100%; padding: 10px 14px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; outline: none; margin-top: 4px; box-sizing: border-box; }
           .form-input:focus { border-color: #534ab7; ring: 2px solid #534ab7; }
         `}
@@ -286,52 +293,54 @@ const EmployeeDetailPage = () => {
 
             <div className="info-panel">
               <h2 className="panel-title">Recent Leave Requests</h2>
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}>
-                <thead>
-                  <tr style={{ borderBottom: '1px solid #e5e7eb', color: '#6b7280' }}>
-                    <th style={{ padding: '12px 8px' }}>Leave Type</th>
-                    <th style={{ padding: '12px 8px' }}>Period</th>
-                    <th style={{ padding: '12px 8px' }}>Duration</th>
-                    <th style={{ padding: '12px 8px' }}>Reason</th>
-                    <th style={{ padding: '12px 8px' }}>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr style={{ borderBottom: '1px solid #f9fafb' }}>
-                    <td style={{ padding: '14px 8px', fontWeight: '600', color: '#111827' }}>Annual leave</td>
-                    <td style={{ padding: '14px 8px', color: '#4b5563' }}>26 May 2026 – 30 May 2026</td>
-                    <td style={{ padding: '14px 8px' }}>5 working days</td>
-                    <td style={{ padding: '14px 8px', color: '#6b7280' }}>Family vacation & recharge</td>
-                    <td style={{ padding: '14px 8px' }}>
-                      <span style={{ background: '#fef3c7', color: '#b45309', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '600' }}>
-                        Pending Approval
-                      </span>
-                    </td>
-                  </tr>
-                  <tr style={{ borderBottom: '1px solid #f9fafb' }}>
-                    <td style={{ padding: '14px 8px', fontWeight: '600', color: '#111827' }}>Sick leave</td>
-                    <td style={{ padding: '14px 8px', color: '#4b5563' }}>03 Feb 2026</td>
-                    <td style={{ padding: '14px 8px' }}>1 day</td>
-                    <td style={{ padding: '14px 8px', color: '#6b7280' }}>Flu & doctors checkup</td>
-                    <td style={{ padding: '14px 8px' }}>
-                      <span style={{ background: '#d1fae5', color: '#047857', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '600' }}>
-                        Approved
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ padding: '14px 8px', fontWeight: '600', color: '#111827' }}>Annual leave</td>
-                    <td style={{ padding: '14px 8px', color: '#4b5563' }}>23 Dec 2025 – 02 Jan 2026</td>
-                    <td style={{ padding: '14px 8px' }}>8 working days</td>
-                    <td style={{ padding: '14px 8px', color: '#6b7280' }}>End of year holidays</td>
-                    <td style={{ padding: '14px 8px' }}>
-                      <span style={{ background: '#d1fae5', color: '#047857', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '600' }}>
-                        Approved
-                      </span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <div style={{ width: '100%', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+                <table style={{ width: '100%', minWidth: '550px', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}>
+                  <thead>
+                    <tr style={{ borderBottom: '1px solid #e5e7eb', color: '#6b7280', whiteSpace: 'nowrap' }}>
+                      <th style={{ padding: '12px 8px' }}>Leave Type</th>
+                      <th style={{ padding: '12px 8px' }}>Period</th>
+                      <th style={{ padding: '12px 8px' }}>Duration</th>
+                      <th style={{ padding: '12px 8px' }}>Reason</th>
+                      <th style={{ padding: '12px 8px' }}>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr style={{ borderBottom: '1px solid #f9fafb' }}>
+                      <td style={{ padding: '14px 8px', fontWeight: '600', color: '#111827' }}>Annual leave</td>
+                      <td style={{ padding: '14px 8px', color: '#4b5563' }}>26 May 2026 – 30 May 2026</td>
+                      <td style={{ padding: '14px 8px' }}>5 working days</td>
+                      <td style={{ padding: '14px 8px', color: '#6b7280' }}>Family vacation & recharge</td>
+                      <td style={{ padding: '14px 8px' }}>
+                        <span style={{ background: '#fef3c7', color: '#b45309', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '600' }}>
+                          Pending Approval
+                        </span>
+                      </td>
+                    </tr>
+                    <tr style={{ borderBottom: '1px solid #f9fafb' }}>
+                      <td style={{ padding: '14px 8px', fontWeight: '600', color: '#111827' }}>Sick leave</td>
+                      <td style={{ padding: '14px 8px', color: '#4b5563' }}>03 Feb 2026</td>
+                      <td style={{ padding: '14px 8px' }}>1 day</td>
+                      <td style={{ padding: '14px 8px', color: '#6b7280' }}>Flu & doctors checkup</td>
+                      <td style={{ padding: '14px 8px' }}>
+                        <span style={{ background: '#d1fae5', color: '#047857', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '600' }}>
+                          Approved
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style={{ padding: '14px 8px', fontWeight: '600', color: '#111827' }}>Annual leave</td>
+                      <td style={{ padding: '14px 8px', color: '#4b5563' }}>23 Dec 2025 – 02 Jan 2026</td>
+                      <td style={{ padding: '14px 8px' }}>8 working days</td>
+                      <td style={{ padding: '14px 8px', color: '#6b7280' }}>End of year holidays</td>
+                      <td style={{ padding: '14px 8px' }}>
+                        <span style={{ background: '#d1fae5', color: '#047857', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '600' }}>
+                          Approved
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         )}
