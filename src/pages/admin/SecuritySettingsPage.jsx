@@ -54,6 +54,8 @@ const SecuritySettingsPage = () => {
         <div className="settings-tabs">
           <Link to="/admin/settings" className="settings-tab">General settings</Link>
           <Link to="/admin/settings/security" className="settings-tab active">Security</Link>
+          <Link to="/admin/settings/billing" className="settings-tab">Billing & Plan</Link>
+          <Link to="/admin/settings/notifications" className="settings-tab">Notifications</Link>
         </div>
 
         <div>

@@ -1,22 +1,36 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import AdminLayout from '../../components/layout/AdminLayout';
-import { Lock } from 'lucide-react';
+import { Lock, X, Plus, Check } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const SurveysPage = () => {
   const [npsScore, setNpsScore] = useState(8);
   const [likertChoice, setLikertChoice] = useState('Agree');
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isCreating, setIsCreating] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newSurvey, setNewSurvey] = useState({
+    title: '',
+    type: 'eNPS & Pulse',
+    audience: 'All Staff',
+    closesOn: '30 Jun 2026'
+  });
 
   const handleSubmit = () => {
     setIsSubmitted(true);
+    toast.success('Your anonymous feedback was submitted!');
     setTimeout(() => setIsSubmitted(false), 3000);
   };
 
-  const handleNewSurvey = () => {
-    setIsCreating(true);
-    setTimeout(() => setIsCreating(false), 2000);
+  const handleCreateSurvey = (e) => {
+    e.preventDefault();
+    if (!newSurvey.title) {
+      toast.error('Please enter a survey title');
+      return;
+    }
+    toast.success(`Survey "${newSurvey.title}" launched and distributed!`);
+    setIsModalOpen(false);
+    setNewSurvey({ title: '', type: 'eNPS & Pulse', audience: 'All Staff', closesOn: '30 Jun 2026' });
   };
 
   return (
@@ -71,9 +85,12 @@ const SurveysPage = () => {
         
         {/* Header */}
         <div className="header-row">
-          <h1 className="header-title">Surveys</h1>
-          <button className="btn-new" onClick={handleNewSurvey} disabled={isCreating}>
-            {isCreating ? 'Creating...' : '+ New survey'}
+          <div>
+            <h1 className="header-title">Surveys & Sentiment</h1>
+            <p style={{ fontSize: '13px', color: '#6b7280', margin: '4px 0 0 0' }}>Collect anonymous feedback and measure employee Net Promoter Score (eNPS).</p>
+          </div>
+          <button className="btn-new" onClick={() => setIsModalOpen(true)}>
+            + New survey
           </button>
         </div>
 
@@ -219,6 +236,89 @@ const SurveysPage = () => {
           </div>
 
         </div>
+
+        {/* Create Survey Modal */}
+        <AnimatePresence>
+          {isModalOpen && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: '20px' }}>
+              <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} style={{ background: 'white', borderRadius: '16px', width: '100%', maxWidth: '480px', padding: '28px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                  <h2 style={{ fontSize: '18px', fontWeight: '700', color: '#111827', margin: 0 }}>Launch New Pulse Survey</h2>
+                  <button onClick={() => setIsModalOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#6b7280' }}>
+                    <X size={20} />
+                  </button>
+                </div>
+
+                <form onSubmit={handleCreateSurvey} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                  <div>
+                    <label style={{ fontSize: '13px', fontWeight: '600', color: '#374151' }}>Survey Name</label>
+                    <input 
+                      type="text" 
+                      placeholder="e.g. Q3 Company Health & Culture Pulse" 
+                      value={newSurvey.title} 
+                      onChange={(e) => setNewSurvey({ ...newSurvey, title: e.target.value })} 
+                      style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', outline: 'none', boxSizing: 'border-box', marginTop: '4px' }}
+                      required 
+                    />
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                    <div>
+                      <label style={{ fontSize: '13px', fontWeight: '600', color: '#374151' }}>Survey Type</label>
+                      <select 
+                        value={newSurvey.type} 
+                        onChange={(e) => setNewSurvey({ ...newSurvey, type: e.target.value })} 
+                        style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', boxSizing: 'border-box', marginTop: '4px' }}
+                      >
+                        <option value="eNPS & Pulse">eNPS & Pulse</option>
+                        <option value="Culture & Values">Culture & Values</option>
+                        <option value="Onboarding 30-Day">Onboarding 30-Day</option>
+                        <option value="Manager Feedback">Manager Feedback</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label style={{ fontSize: '13px', fontWeight: '600', color: '#374151' }}>Audience</label>
+                      <select 
+                        value={newSurvey.audience} 
+                        onChange={(e) => setNewSurvey({ ...newSurvey, audience: e.target.value })} 
+                        style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '14px', boxSizing: 'border-box', marginTop: '4px' }}
+                      >
+                        <option value="All Staff">All Staff</option>
+                        <option value="Engineering">Engineering</option>
+                        <option value="Sales">Sales</option>
+                        <option value="Product">Product</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
+                    <Lock size={14} color="#047857" />
+                    <span style={{ fontSize: '12px', color: '#047857', fontWeight: '500' }}>
+                      Responses will be strictly anonymized
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '10px', marginTop: '16px', justifyContent: 'flex-end' }}>
+                    <button 
+                      type="button" 
+                      onClick={() => setIsModalOpen(false)}
+                      style={{ padding: '8px 14px', background: 'white', border: '1px solid #d1d5db', borderRadius: '6px', cursor: 'pointer', fontWeight: '600' }}
+                    >
+                      Cancel
+                    </button>
+                    <button 
+                      type="submit" 
+                      style={{ padding: '8px 16px', background: '#4f46e5', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600' }}
+                    >
+                      Launch Survey
+                    </button>
+                  </div>
+                </form>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </AdminLayout>
   );

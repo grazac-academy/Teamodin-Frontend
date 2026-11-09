@@ -20,28 +20,49 @@ This repository contains the **Frontend Application**, built entirely with React
 
 ---
 
-## ✨ Core Modules & Features
+## ✨ Core Modules & Architecture
 
-1. 👥 **Employee Directory**
-   - **Rich Profiles**: Searchable profiles with role, department, and manager reporting lines.
-   - **Bulk Onboarding**: One-click **CSV Import** to rapidly load employee data. Includes instant visual feedback via toast notifications.
-   - **Data Export**: Export your directory back to CSV anytime.
-   - **Pagination & Filtering**: Easily navigate large teams without overwhelming the UI.
+1. 👥 **Employee Directory & Full Profiles (`/admin/employees`, `/admin/employees/:id`)**
+   - **Search & Filter**: Real-time filtering by department, status (Active, New hire, Inactive), and text search.
+   - **Full Profile View**: Comprehensive view with tabs for Employment Details, Leave Balances, Performance History, and Hardware Assets.
+   - **Bulk Onboarding**: One-click **CSV Import & Export** (via PapaParse) with toast feedback.
+   - **Status Management**: Activate or deactivate employees with immediate global state reflection.
 
-2. 🏖️ **Leave Management**
-   - **Live Balances**: Track Annual, Sick, and Casual leave with clear progress bars.
-   - **Approvals**: One-click approvals for managers with team-calendar context.
+2. 🏢 **Departments & Org Structure (`/admin/departments`)**
+   - **Department Cards**: View department leads, headcount progress, open hiring roles, and monthly budgets.
+   - **Interactive Team Viewer**: Slide-out/modal view listing all members in a given department.
+   - **Department CRUD**: Create, edit, and delete company divisions.
 
-3. 🚀 **Onboarding Workflows**
-   - **Role-based Invites**: Admins invite teammates directly to their specific role.
-   - **Track Invites**: View pending invites, resend, or revoke them as needed.
+3. 🏖️ **Leave & Time Off Management (`/admin/leave`)**
+   - **Company Approvals**: Admin & manager queue for pending employee leave requests with one-click Approve or Decline (with reason note).
+   - **Request Leave**: Personal leave application with live balance deduction for Annual, Sick, and Casual leave.
+   - **Team Leave Calendar**: Out-of-office team schedule showing who is on leave and upcoming absences.
+   - **Leave Policy Rules**: Documented statutory leave allocations (Annual 20d, Sick 14d, Maternity 90d, Paternity 14d).
 
-4. 🔄 **Performance Check-ins**
-   - Structured quarterly cycles featuring both self-assessments and manager reviews.
+4. 🚀 **Onboarding & Offboarding Lifecycle (`/admin/onboarding`, `/admin/offboarding`)**
+   - **Onboarding Checklist**: Step-by-step progress tracker for new hires with one-click reminder nudges.
+   - **Offboarding & Exit Workflow**: Departure tracking, exit interviews, asset recovery (laptops, keycards), access revocation, and settlement calculations.
+   - **Role-based Invites**: Admin invite generator with department and role assignment.
 
-5. 📊 **Analytics & Pulse Surveys**
-   - **Dashboard**: High-level overview of headcount, pending leave requests, and recent hires.
-   - **Dynamic Greeting**: Time-aware dashboard greetings that adjust to the user's local timezone.
+5. 📁 **Company Documents & Policies (`/admin/documents`)**
+   - **Compliance Vault**: Central repository for Employee Handbooks, NDA agreements, and Health Insurance benefits.
+   - **Acknowledgement Tracking**: Live progress bars tracking signed acknowledgements per document.
+   - **Document Uploader**: Upload policies, set mandatory status, and target specific departments or countries.
+
+6. 🔄 **Performance Check-ins & Review Cycles (`/admin/check-ins`)**
+   - **Cycle Management**: Admin overview tracking overall submission rate (e.g. 84% completed) and department completion progress.
+   - **Self-Assessment**: Questionnaire with rating scales, achievements, roadblocks, and manager sync guidelines.
+   - **Cycle Launcher**: Create and launch new quarterly review cycles.
+
+7. 📊 **Analytics & Pulse Surveys (`/admin/analytics`, `/admin/surveys`)**
+   - **Workforce Analytics**: Attrition rates, tenure distribution, department ratios, and eNPS trends over time.
+   - **Pulse Surveys**: Launch anonymous eNPS & culture pulse surveys with anonymized aggregated results.
+
+8. ⚙️ **Workspace Settings & Billing (`/admin/settings/*`)**
+   - **General Settings (`/admin/settings`)**: Company branding, workspace subdomain, primary country, timezone.
+   - **Security (`/admin/settings/security`)**: 2FA toggle, active session audit, and password changes.
+   - **Billing & Plan (`/admin/settings/billing`)**: Plan management, seats utilization, card updates, and PDF invoice downloads.
+   - **Notifications (`/admin/settings/notifications`)**: Email triggers, Slack workspace channel sync, and urgent SMS toggles.
 
 ---
 

@@ -444,9 +444,14 @@ const EmployeeDirectoryPage = () => {
                 )}
                 
                 {/* Bottom Actions */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', paddingTop: '32px', borderTop: '1px solid #f3f4f6' }}>
-                  <div style={{ display: 'flex', gap: '12px' }}>
-                    <button style={{ padding: '8px 16px', backgroundColor: 'white', color: '#534ab7', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}>View in org chart</button>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto', paddingTop: '32px', borderTop: '1px solid #f3f4f6', flexWrap: 'wrap', gap: '12px' }}>
+                  <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                    <Link 
+                      to={`/admin/employees/${selectedEmp.id}`}
+                      style={{ padding: '8px 16px', backgroundColor: '#534ab7', color: 'white', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '600', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}
+                    >
+                      Full Profile →
+                    </Link>
                     <button style={{ padding: '8px 16px', backgroundColor: 'white', color: '#534ab7', border: '1px solid #d1d5db', borderRadius: '8px', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}>Leave history</button>
                   </div>
                   <button 

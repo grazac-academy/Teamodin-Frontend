@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import AdminLayout from '../../components/layout/AdminLayout';
 import { useStore } from '../../store/useStore';
@@ -160,7 +161,7 @@ const AdminDashboard = () => {
           <motion.div variants={itemVariants} className="panel-card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
               <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', margin: 0 }}>Pending leave requests</h3>
-              <a href="#" style={{ fontSize: '13px', color: '#534ab7', fontWeight: '500', textDecoration: 'none' }}>View all</a>
+              <Link to="/admin/leave" style={{ fontSize: '13px', color: '#534ab7', fontWeight: '500', textDecoration: 'none' }}>View all</Link>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <AnimatePresence>
@@ -195,7 +196,10 @@ const AdminDashboard = () => {
 
           {/* Department Headcount */}
           <motion.div variants={itemVariants} className="panel-card">
-            <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', margin: '0 0 24px 0' }}>Department headcount</h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', margin: 0 }}>Department headcount</h3>
+              <Link to="/admin/departments" style={{ fontSize: '13px', color: '#534ab7', fontWeight: '500', textDecoration: 'none' }}>View all</Link>
+            </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {headcount.map((dept, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -216,7 +220,10 @@ const AdminDashboard = () => {
 
           {/* New Hire Onboarding */}
           <motion.div variants={itemVariants} className="panel-card">
-            <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', margin: '0 0 24px 0' }}>New hire onboarding</h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+              <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', margin: 0 }}>New hire onboarding</h3>
+              <Link to="/admin/onboarding" style={{ fontSize: '13px', color: '#534ab7', fontWeight: '500', textDecoration: 'none' }}>View all</Link>
+            </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {onboarding.map((hire, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: i !== onboarding.length - 1 ? '16px' : '0', borderBottom: i !== onboarding.length - 1 ? '1px solid #f3f4f6' : 'none' }}>
@@ -241,7 +248,7 @@ const AdminDashboard = () => {
           <motion.div variants={itemVariants} className="panel-card" style={{ display: 'flex', flexDirection: 'column' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
               <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', margin: 0 }}>Who's out today</h3>
-              <a href="#" style={{ fontSize: '13px', color: '#534ab7', fontWeight: '500', textDecoration: 'none' }}>Team calendar</a>
+              <Link to="/admin/leave" style={{ fontSize: '13px', color: '#534ab7', fontWeight: '500', textDecoration: 'none' }}>Team calendar</Link>
             </div>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', flex: 1 }}>

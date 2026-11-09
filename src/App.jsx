@@ -18,14 +18,20 @@ import InviteOnboardingPage from './pages/auth/InviteOnboardingPage';
 // Admin Pages
 import AdminDashboard from './pages/admin/AdminDashboard';
 import EmployeeDirectoryPage from './pages/admin/EmployeeDirectoryPage';
+import EmployeeDetailPage from './pages/admin/EmployeeDetailPage';
+import DepartmentsPage from './pages/admin/DepartmentsPage';
 import LeaveRequestPage from './pages/admin/LeaveRequestPage';
 import OnboardingPage from './pages/admin/OnboardingPage';
+import OffboardingPage from './pages/admin/OffboardingPage';
+import CompanyDocumentsPage from './pages/admin/CompanyDocumentsPage';
 import InviteEmployeePage from './pages/admin/InviteEmployeePage';
 import AnalyticsPage from './pages/admin/AnalyticsPage';
 import CheckInsPage from './pages/admin/CheckInsPage';
 import SurveysPage from './pages/admin/SurveysPage';
 import SettingsPage from './pages/admin/SettingsPage';
 import SecuritySettingsPage from './pages/admin/SecuritySettingsPage';
+import BillingSettingsPage from './pages/admin/BillingSettingsPage';
+import NotificationsSettingsPage from './pages/admin/NotificationsSettingsPage';
 
 import { useAuth } from './hooks/useAuth';
 
@@ -93,6 +99,24 @@ function App() {
           />
 
           <Route
+            path="/admin/employees/:id"
+            element={
+              <ProtectedRoute isAuthenticated={true} requiredRole="admin">
+                <EmployeeDetailPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/departments"
+            element={
+              <ProtectedRoute isAuthenticated={true} requiredRole="admin">
+                <DepartmentsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
             path="/admin/leave"
             element={
               <ProtectedRoute isAuthenticated={true} requiredRole="admin">
@@ -106,6 +130,24 @@ function App() {
             element={
               <ProtectedRoute isAuthenticated={true} requiredRole="admin">
                 <OnboardingPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/offboarding"
+            element={
+              <ProtectedRoute isAuthenticated={true} requiredRole="admin">
+                <OffboardingPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/documents"
+            element={
+              <ProtectedRoute isAuthenticated={true} requiredRole="admin">
+                <CompanyDocumentsPage />
               </ProtectedRoute>
             }
           />
@@ -160,6 +202,24 @@ function App() {
             element={
               <ProtectedRoute isAuthenticated={true} requiredRole="admin">
                 <SecuritySettingsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/settings/billing"
+            element={
+              <ProtectedRoute isAuthenticated={true} requiredRole="admin">
+                <BillingSettingsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/settings/notifications"
+            element={
+              <ProtectedRoute isAuthenticated={true} requiredRole="admin">
+                <NotificationsSettingsPage />
               </ProtectedRoute>
             }
           />

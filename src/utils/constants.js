@@ -26,10 +26,62 @@ export const USER_ENDPOINTS = {
 export const ADMIN_ENDPOINTS = {
   INVITE_EMPLOYEE: `${API_BASE_URL}/admin/employees/invite`,
   GET_EMPLOYEES: `${API_BASE_URL}/admin/employees`,
+  GET_EMPLOYEE: (id) => `${API_BASE_URL}/admin/employees/${id}`,
+  UPDATE_EMPLOYEE: (id) => `${API_BASE_URL}/admin/employees/${id}`,
+  DELETE_EMPLOYEE: (id) => `${API_BASE_URL}/admin/employees/${id}`,
+  IMPORT_EMPLOYEES_CSV: `${API_BASE_URL}/admin/employees/import-csv`,
+  EXPORT_EMPLOYEES_CSV: `${API_BASE_URL}/admin/employees/export-csv`,
+  
+  // Departments
+  GET_DEPARTMENTS: `${API_BASE_URL}/admin/departments`,
+  CREATE_DEPARTMENT: `${API_BASE_URL}/admin/departments`,
+  UPDATE_DEPARTMENT: (id) => `${API_BASE_URL}/admin/departments/${id}`,
+  DELETE_DEPARTMENT: (id) => `${API_BASE_URL}/admin/departments/${id}`,
+
+  // Leave Management
+  GET_LEAVE_REQUESTS: `${API_BASE_URL}/admin/leaves`,
+  GET_LEAVE_BALANCES: `${API_BASE_URL}/admin/leaves/balances`,
+  SUBMIT_LEAVE_REQUEST: `${API_BASE_URL}/admin/leaves/request`,
+  APPROVE_LEAVE: (id) => `${API_BASE_URL}/admin/leaves/${id}/approve`,
+  REJECT_LEAVE: (id) => `${API_BASE_URL}/admin/leaves/${id}/reject`,
+  GET_LEAVE_CALENDAR: `${API_BASE_URL}/admin/leaves/calendar`,
+  GET_LEAVE_POLICIES: `${API_BASE_URL}/admin/leaves/policies`,
+
+  // Onboarding & Offboarding
+  GET_ONBOARDING_LIST: `${API_BASE_URL}/admin/onboarding`,
+  UPDATE_ONBOARDING_TASK: (id) => `${API_BASE_URL}/admin/onboarding/tasks/${id}`,
+  SEND_ONBOARDING_NUDGE: (id) => `${API_BASE_URL}/admin/onboarding/${id}/nudge`,
+  GET_OFFBOARDING_LIST: `${API_BASE_URL}/admin/offboarding`,
+  INITIATE_OFFBOARDING: `${API_BASE_URL}/admin/offboarding/initiate`,
+  UPDATE_OFFBOARDING_TASK: (id) => `${API_BASE_URL}/admin/offboarding/tasks/${id}`,
+
+  // Check-ins & Performance
+  GET_CHECKIN_CYCLES: `${API_BASE_URL}/admin/check-ins/cycles`,
+  CREATE_CHECKIN_CYCLE: `${API_BASE_URL}/admin/check-ins/cycles`,
+  SUBMIT_CHECKIN: `${API_BASE_URL}/admin/check-ins/submit`,
+  GET_CHECKIN_RESPONSES: (cycleId) => `${API_BASE_URL}/admin/check-ins/cycles/${cycleId}/responses`,
+
+  // Surveys
+  GET_SURVEYS: `${API_BASE_URL}/admin/surveys`,
+  CREATE_SURVEY: `${API_BASE_URL}/admin/surveys`,
+  GET_SURVEY_RESULTS: (id) => `${API_BASE_URL}/admin/surveys/${id}/results`,
+  SUBMIT_SURVEY_RESPONSE: (id) => `${API_BASE_URL}/admin/surveys/${id}/respond`,
+
+  // Documents
+  GET_DOCUMENTS: `${API_BASE_URL}/admin/documents`,
+  UPLOAD_DOCUMENT: `${API_BASE_URL}/admin/documents/upload`,
+  DELETE_DOCUMENT: (id) => `${API_BASE_URL}/admin/documents/${id}`,
+  ACKNOWLEDGE_DOCUMENT: (id) => `${API_BASE_URL}/admin/documents/${id}/acknowledge`,
+
+  // Settings
   GET_SETTINGS: `${API_BASE_URL}/admin/settings/general`,
   UPDATE_SETTINGS: `${API_BASE_URL}/admin/settings/general/update`,
   GET_SECURITY_SETTINGS: `${API_BASE_URL}/admin/settings/security`,
   UPDATE_SECURITY_SETTINGS: `${API_BASE_URL}/admin/settings/security/update`,
+  GET_BILLING_SETTINGS: `${API_BASE_URL}/admin/settings/billing`,
+  UPDATE_BILLING_SETTINGS: `${API_BASE_URL}/admin/settings/billing/update`,
+  GET_NOTIFICATION_SETTINGS: `${API_BASE_URL}/admin/settings/notifications`,
+  UPDATE_NOTIFICATION_SETTINGS: `${API_BASE_URL}/admin/settings/notifications/update`,
 };
 
 // Validation Rules

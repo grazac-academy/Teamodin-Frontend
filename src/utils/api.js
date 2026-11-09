@@ -208,12 +208,122 @@ export const userAPI = {
 
 // Admin API calls
 export const adminAPI = {
+  // Employees
   inviteEmployee: (inviteData) =>
     apiClient.post('/admin/employees/invite', inviteData),
 
   getEmployees: (filters = {}) =>
     apiClient.get('/admin/employees', { params: filters }),
 
+  getEmployeeById: (id) =>
+    apiClient.get(`/admin/employees/${id}`),
+
+  updateEmployee: (id, employeeData) =>
+    apiClient.put(`/admin/employees/${id}`, employeeData),
+
+  deleteEmployee: (id) =>
+    apiClient.delete(`/admin/employees/${id}`),
+
+  importEmployeesCSV: (file) =>
+    apiClient.uploadFile('/admin/employees/import-csv', file),
+
+  exportEmployeesCSV: (filters = {}) =>
+    apiClient.get('/admin/employees/export-csv', { params: filters }),
+
+  // Departments
+  getDepartments: () =>
+    apiClient.get('/admin/departments'),
+
+  createDepartment: (deptData) =>
+    apiClient.post('/admin/departments', deptData),
+
+  updateDepartment: (id, deptData) =>
+    apiClient.put(`/admin/departments/${id}`, deptData),
+
+  deleteDepartment: (id) =>
+    apiClient.delete(`/admin/departments/${id}`),
+
+  // Leave Management
+  getLeaveRequests: (filters = {}) =>
+    apiClient.get('/admin/leaves', { params: filters }),
+
+  getLeaveBalances: () =>
+    apiClient.get('/admin/leaves/balances'),
+
+  submitLeaveRequest: (leaveData) =>
+    apiClient.post('/admin/leaves/request', leaveData),
+
+  approveLeave: (id, notes = '') =>
+    apiClient.post(`/admin/leaves/${id}/approve`, { notes }),
+
+  rejectLeave: (id, reason) =>
+    apiClient.post(`/admin/leaves/${id}/reject`, { reason }),
+
+  getLeaveCalendar: (month, year) =>
+    apiClient.get('/admin/leaves/calendar', { params: { month, year } }),
+
+  getLeavePolicies: () =>
+    apiClient.get('/admin/leaves/policies'),
+
+  // Onboarding & Offboarding
+  getOnboardingList: () =>
+    apiClient.get('/admin/onboarding'),
+
+  updateOnboardingTask: (id, status) =>
+    apiClient.patch(`/admin/onboarding/tasks/${id}`, { status }),
+
+  sendOnboardingNudge: (id) =>
+    apiClient.post(`/admin/onboarding/${id}/nudge`),
+
+  getOffboardingList: () =>
+    apiClient.get('/admin/offboarding'),
+
+  initiateOffboarding: (offboardingData) =>
+    apiClient.post('/admin/offboarding/initiate', offboardingData),
+
+  updateOffboardingTask: (id, status) =>
+    apiClient.patch(`/admin/offboarding/tasks/${id}`, { status }),
+
+  // Check-ins & Reviews
+  getCheckInCycles: () =>
+    apiClient.get('/admin/check-ins/cycles'),
+
+  createCheckInCycle: (cycleData) =>
+    apiClient.post('/admin/check-ins/cycles', cycleData),
+
+  submitCheckIn: (responseData) =>
+    apiClient.post('/admin/check-ins/submit', responseData),
+
+  getCheckInResponses: (cycleId) =>
+    apiClient.get(`/admin/check-ins/cycles/${cycleId}/responses`),
+
+  // Surveys
+  getSurveys: () =>
+    apiClient.get('/admin/surveys'),
+
+  createSurvey: (surveyData) =>
+    apiClient.post('/admin/surveys', surveyData),
+
+  getSurveyResults: (id) =>
+    apiClient.get(`/admin/surveys/${id}/results`),
+
+  submitSurveyResponse: (id, responseData) =>
+    apiClient.post(`/admin/surveys/${id}/respond`, responseData),
+
+  // Documents
+  getDocuments: (category = 'all') =>
+    apiClient.get('/admin/documents', { params: { category } }),
+
+  uploadDocument: (file, metadata) =>
+    apiClient.uploadFile('/admin/documents/upload', file, metadata),
+
+  deleteDocument: (id) =>
+    apiClient.delete(`/admin/documents/${id}`),
+
+  acknowledgeDocument: (id) =>
+    apiClient.post(`/admin/documents/${id}/acknowledge`),
+
+  // Settings
   getSettings: () =>
     apiClient.get('/admin/settings/general'),
 
@@ -225,4 +335,16 @@ export const adminAPI = {
 
   updateSecuritySettings: (securityData) =>
     apiClient.put('/admin/settings/security/update', securityData),
+
+  getBillingSettings: () =>
+    apiClient.get('/admin/settings/billing'),
+
+  updateBillingSettings: (billingData) =>
+    apiClient.put('/admin/settings/billing/update', billingData),
+
+  getNotificationSettings: () =>
+    apiClient.get('/admin/settings/notifications'),
+
+  updateNotificationSettings: (notificationData) =>
+    apiClient.put('/admin/settings/notifications/update', notificationData),
 };
