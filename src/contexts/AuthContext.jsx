@@ -11,6 +11,29 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentRole, setCurrentRole] = useState(() => {
+    return localStorage.getItem('hrstack_active_role') || 'admin';
+  });
+
+  const switchRole = useCallback((newRole) => {
+    setCurrentRole(newRole);
+    localStorage.setItem('hrstack_active_role', newRole);
+    
+    // Provide realistic demo personas when testing different roles
+    const demoProfiles = {
+      admin: { name: 'Amaka Okafor', first_name: 'Amaka', last_name: 'Okafor', role: 'admin', title: 'Head of People', dept: 'People Ops', email: 'amaka@acme.com' },
+      manager: { name: 'David Babatunde', first_name: 'David', last_name: 'Babatunde', role: 'manager', title: 'Engineering Lead', dept: 'Engineering', email: 'david@acme.com' },
+      employee: { name: 'Sade Afolabi', first_name: 'Sade', last_name: 'Afolabi', role: 'employee', title: 'Product Designer', dept: 'Product', email: 'sade@acme.com' }
+    };
+
+    if (demoProfiles[newRole]) {
+      setUser((prev) => {
+        const updated = { ...(prev || {}), ...demoProfiles[newRole] };
+        localStorage.setItem(STORAGE_KEYS.USER_DATA, JSON.stringify(updated));
+        return updated;
+      });
+    }
+  }, []);
 
 
 
@@ -224,6 +247,8 @@ export const AuthProvider = ({ children }) => {
     loading,
     error,
     isAuthenticated,
+    currentRole,
+    switchRole,
 
     // Methods
     signIn,

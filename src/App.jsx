@@ -32,6 +32,24 @@ import SettingsPage from './pages/admin/SettingsPage';
 import SecuritySettingsPage from './pages/admin/SecuritySettingsPage';
 import BillingSettingsPage from './pages/admin/BillingSettingsPage';
 import NotificationsSettingsPage from './pages/admin/NotificationsSettingsPage';
+import AdminPayrollPage from './pages/admin/AdminPayrollPage';
+
+// Manager Pages
+import ManagerDashboard from './pages/manager/ManagerDashboard';
+import ManagerTeamPage from './pages/manager/ManagerTeamPage';
+import ManagerLeaveApprovalsPage from './pages/manager/ManagerLeaveApprovalsPage';
+import ManagerReviewsPage from './pages/manager/ManagerReviewsPage';
+import ManagerOnboardingPage from './pages/manager/ManagerOnboardingPage';
+
+// Employee Portal Pages
+import EmployeeDashboard from './pages/employee/EmployeeDashboard';
+import EmployeeLeavePage from './pages/employee/EmployeeLeavePage';
+import EmployeeTasksPage from './pages/employee/EmployeeTasksPage';
+import EmployeePayslipsPage from './pages/employee/EmployeePayslipsPage';
+import EmployeeDocumentsPage from './pages/employee/EmployeeDocumentsPage';
+import EmployeeReviewsPage from './pages/employee/EmployeeReviewsPage';
+import EmployeeDirectoryPortalPage from './pages/employee/EmployeeDirectoryPortalPage';
+import EmployeeProfilePage from './pages/employee/EmployeeProfilePage';
 
 import { useAuth } from './hooks/useAuth';
 
@@ -220,6 +238,134 @@ function App() {
             element={
               <ProtectedRoute isAuthenticated={true} requiredRole="admin">
                 <NotificationsSettingsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/payroll"
+            element={
+              <ProtectedRoute isAuthenticated={true} requiredRole="admin">
+                <AdminPayrollPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Manager Routes */}
+          <Route
+            path="/manager/dashboard"
+            element={
+              <ProtectedRoute isAuthenticated={true}>
+                <ManagerDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/manager/team"
+            element={
+              <ProtectedRoute isAuthenticated={true}>
+                <ManagerTeamPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/manager/leave"
+            element={
+              <ProtectedRoute isAuthenticated={true}>
+                <ManagerLeaveApprovalsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/manager/reviews"
+            element={
+              <ProtectedRoute isAuthenticated={true}>
+                <ManagerReviewsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/manager/onboarding"
+            element={
+              <ProtectedRoute isAuthenticated={true}>
+                <ManagerOnboardingPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Employee Self-Service Routes */}
+          <Route
+            path="/employee/dashboard"
+            element={
+              <ProtectedRoute isAuthenticated={true}>
+                <EmployeeDashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/employee/leave"
+            element={
+              <ProtectedRoute isAuthenticated={true}>
+                <EmployeeLeavePage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/employee/tasks"
+            element={
+              <ProtectedRoute isAuthenticated={true}>
+                <EmployeeTasksPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/employee/payslips"
+            element={
+              <ProtectedRoute isAuthenticated={true}>
+                <EmployeePayslipsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/employee/documents"
+            element={
+              <ProtectedRoute isAuthenticated={true}>
+                <EmployeeDocumentsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/employee/reviews"
+            element={
+              <ProtectedRoute isAuthenticated={true}>
+                <EmployeeReviewsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/employee/directory"
+            element={
+              <ProtectedRoute isAuthenticated={true}>
+                <EmployeeDirectoryPortalPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/employee/profile"
+            element={
+              <ProtectedRoute isAuthenticated={true}>
+                <EmployeeProfilePage />
               </ProtectedRoute>
             }
           />

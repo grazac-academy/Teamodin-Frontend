@@ -60,7 +60,15 @@ const InviteOnboardingPage = () => {
           email: inviteData.email
         });
         localStorage.setItem('hrstack_auth_token', 'mock_token_for_ui_testing');
-        navigate('/admin/dashboard', { replace: true });
+        const role = (inviteData.role || 'employee').toLowerCase();
+        localStorage.setItem('hrstack_active_role', role);
+        if (role === 'manager') {
+          navigate('/manager/dashboard', { replace: true });
+        } else if (role === 'admin') {
+          navigate('/admin/dashboard', { replace: true });
+        } else {
+          navigate('/employee/dashboard', { replace: true });
+        }
       }, 1000);
     } catch {
       setIsLoading(false);

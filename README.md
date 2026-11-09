@@ -66,13 +66,31 @@ This repository contains the **Frontend Application**, built entirely with React
 
 ---
 
-## 🔐 Access Model (Roles)
+## 🔐 Access Model (The 3 Core Roles & Portals)
 
-HRStack is strictly **invite-only**. There is no open sign-up. One workspace, three simple roles:
+HRStack features dedicated workspaces tailored to each persona, with an in-app **Role Switcher** in the top navigation header for live testing across all roles:
 
-- **Admin** (Head of People / Founder): Sets up the workspace, manages billing/integrations, and invites teammates.
-- **Manager**: Approves leave for their direct reports, runs check-ins, and views team availability.
-- **Employee**: Requests leave, completes onboarding tasks, and submits self check-ins.
+### 👑 1. Admin Workspace (`/admin/*`)
+* Full workspace control: Employee directory, departments, offboarding, policy vault, check-ins, surveys, and billing.
+* **Payroll & Compensation (`/admin/payroll`)**: View monthly payroll runs, PAYE tax, pension deductions, and batch export.
+* **Executive Analytics (`/admin/analytics`)**: Responsive SVG line charts for headcount and eNPS trends.
+
+### 👔 2. Manager Portal (`/manager/*`)
+* **Team Dashboard (`/manager/dashboard`)**: Direct reports overview, department leave requests, and scheduled 1-on-1s.
+* **Direct Reports Roster (`/manager/team`)**: Individual employee files, start dates, and 1-on-1 notes modal.
+* **Team Leave Approvals (`/manager/leave`)**: One-click approve/reject queue specifically for direct reports with reason notes.
+* **Team Check-ins (`/manager/reviews`)**: Conduct quarterly reviews, rate performance (1–5), and provide manager feedback.
+* **Team Onboarding (`/manager/onboarding`)**: Track new hires joining the manager's department and manager checklist items.
+
+### 👤 3. Employee Self-Service Portal (`/employee/*`)
+* **Employee Workspace (`/employee/dashboard`)**: Daily presence clock-in / clock-out widget with timer and work location (Remote / Office / Site), time-off balances, and teammates out today.
+* **My Time Off (`/employee/leave`)**: Submit vacation requests, view balance countdowns (Annual, Sick, Casual, Parental), and track request status.
+* **My Onboarding Checklist (`/employee/tasks`)**: First 30 days checklist for new hires to mark off tasks.
+* **My Payslips (`/employee/payslips`)**: Monthly salary statements, PAYE tax deductions, pension contributions, and PDF downloads.
+* **Company Documents (`/employee/documents`)**: Handbook & compliance policy vault with 1-click **"Acknowledge & Sign"**.
+* **My Reviews (`/employee/reviews`)**: Fill out quarterly self-evaluations and read feedback from team leads.
+* **Team Directory (`/employee/directory`)**: Search and contact colleagues via email or Slack.
+* **My Profile (`/employee/profile`)**: Manage personal emergency contacts, direct deposit bank details, and address.
 
 ---
 

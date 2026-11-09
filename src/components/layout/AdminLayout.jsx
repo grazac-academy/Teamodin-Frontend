@@ -1,19 +1,23 @@
-import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutDashboard, Users, Calendar, UserPlus, 
   CheckSquare, BarChart2, PieChart, Settings, 
-  Menu, X, Bell, Search, Building2, FileText, UserMinus 
+  Menu, X, Bell, Search, Building2, FileText, UserMinus,
+  CreditCard, CheckCircle2, ChevronDown, Shield, User, Briefcase
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 
 const AdminLayout = ({ children, title, subtitle }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
   const [isTablet, setIsTablet] = useState(window.innerWidth < 768);
-  const { user } = useAuth();
+  const [isRoleDropdownOpen, setIsRoleDropdownOpen] = useState(false);
+  const roleDropdownRef = useRef(null);
+  const { user, currentRole, switchRole } = useAuth();
 
   useEffect(() => {
     const handleResize = () => {
@@ -24,23 +28,85 @@ const AdminLayout = ({ children, title, subtitle }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const navItems = [
-    { name: 'Dashboard', path: '/admin/dashboard', icon: <LayoutDashboard size={20} /> },
-    { name: 'Employee Directory', path: '/admin/employees', icon: <Users size={20} /> },
-    { name: 'Departments', path: '/admin/departments', icon: <Building2 size={20} /> },
-    { name: 'Leave & Time Off', path: '/admin/leave', icon: <Calendar size={20} /> },
-    { name: 'Onboarding', path: '/admin/onboarding', icon: <UserPlus size={20} /> },
-    { name: 'Offboarding', path: '/admin/offboarding', icon: <UserMinus size={20} /> },
-    { name: 'Company Documents', path: '/admin/documents', icon: <FileText size={20} /> },
-    { name: 'Check-ins', path: '/admin/check-ins', icon: <CheckSquare size={20} /> },
-    { name: 'Surveys', path: '/admin/surveys', icon: <BarChart2 size={20} /> },
-    { name: 'Analytics', path: '/admin/analytics', icon: <PieChart size={20} /> },
-  ];
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (roleDropdownRef.current && !roleDropdownRef.current.contains(e.target)) {
+        setIsRoleDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Role-specific navigation items
+  const getNavItems = () => {
+    if (currentRole === 'employee') {
+      return [
+        { name: 'My Workspace', path: '/employee/dashboard', icon: <LayoutDashboard size={20} /> },
+        { name: 'My Time Off', path: '/employee/leave', icon: <Calendar size={20} /> },
+        { name: 'My Onboarding & Tasks', path: '/employee/tasks', icon: <CheckCircle2 size={20} /> },
+        { name: 'My Payslips', path: '/employee/payslips', icon: <CreditCard size={20} /> },
+        { name: 'Company Documents', path: '/employee/documents', icon: <FileText size={20} /> },
+        { name: 'My Reviews', path: '/employee/reviews', icon: <CheckSquare size={20} /> },
+        { name: 'Team Directory', path: '/employee/directory', icon: <Users size={20} /> },
+      ];
+    }
+
+    if (currentRole === 'manager') {
+      return [
+        { name: 'Team Dashboard', path: '/manager/dashboard', icon: <LayoutDashboard size={20} /> },
+        { name: 'Direct Reports', path: '/manager/team', icon: <Users size={20} /> },
+        { name: 'Team Leave Approvals', path: '/manager/leave', icon: <Calendar size={20} /> },
+        { name: 'Team Check-ins', path: '/manager/reviews', icon: <CheckSquare size={20} /> },
+        { name: 'Team Onboarding', path: '/manager/onboarding', icon: <UserPlus size={20} /> },
+        { name: 'Company Directory', path: '/employee/directory', icon: <Building2 size={20} /> },
+        { name: 'My Self-Service', path: '/employee/dashboard', icon: <User size={20} /> },
+      ];
+    }
+
+    // Default: Admin
+    return [
+      { name: 'Dashboard', path: '/admin/dashboard', icon: <LayoutDashboard size={20} /> },
+      { name: 'Employee Directory', path: '/admin/employees', icon: <Users size={20} /> },
+      { name: 'Departments', path: '/admin/departments', icon: <Building2 size={20} /> },
+      { name: 'Leave & Time Off', path: '/admin/leave', icon: <Calendar size={20} /> },
+      { name: 'Onboarding', path: '/admin/onboarding', icon: <UserPlus size={20} /> },
+      { name: 'Offboarding', path: '/admin/offboarding', icon: <UserMinus size={20} /> },
+      { name: 'Company Documents', path: '/admin/documents', icon: <FileText size={20} /> },
+      { name: 'Check-ins', path: '/admin/check-ins', icon: <CheckSquare size={20} /> },
+      { name: 'Surveys', path: '/admin/surveys', icon: <BarChart2 size={20} /> },
+      { name: 'Analytics', path: '/admin/analytics', icon: <PieChart size={20} /> },
+      { name: 'Payroll Summary', path: '/admin/payroll', icon: <CreditCard size={20} /> },
+    ];
+  };
+
+  const navItems = getNavItems();
+
+  const handleRoleSelect = (newRole) => {
+    switchRole(newRole);
+    setIsRoleDropdownOpen(false);
+    if (newRole === 'employee') {
+      navigate('/employee/dashboard');
+    } else if (newRole === 'manager') {
+      navigate('/manager/dashboard');
+    } else {
+      navigate('/admin/dashboard');
+    }
+  };
+
+  const roleMeta = {
+    admin: { label: 'Admin', color: '#534ab7', bg: '#f3f0ff', border: '#e0e7ff', icon: Shield },
+    manager: { label: 'Manager', color: '#047857', bg: '#d1fae5', border: '#a7f3d0', icon: Briefcase },
+    employee: { label: 'Employee', color: '#b45309', bg: '#fef3c7', border: '#fde68a', icon: User }
+  };
+
+  const currentRoleInfo = roleMeta[currentRole] || roleMeta.admin;
+  const RoleIcon = currentRoleInfo.icon;
 
   const isActive = (path) => {
-    // Basic exact match or starts with for nested routes
-    if (path === '/admin/dashboard' && location.pathname === '/admin/dashboard') return true;
-    if (path !== '/admin/dashboard' && location.pathname.startsWith(path)) return true;
+    if (location.pathname === path) return true;
+    if (path !== '/admin/dashboard' && path !== '/employee/dashboard' && path !== '/manager/dashboard' && location.pathname.startsWith(path)) return true;
     return false;
   };
 
@@ -119,19 +185,19 @@ const AdminLayout = ({ children, title, subtitle }) => {
         {/* Settings */}
         <div style={{ padding: '16px' }}>
           <Link
-            to="/admin/settings"
+            to={currentRole === 'employee' ? '/employee/profile' : '/admin/settings'}
             onClick={() => isMobile && setIsSidebarOpen(false)}
             style={{
               display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 12px',
               borderRadius: '8px', textDecoration: 'none',
-              backgroundColor: isActive('/admin/settings') ? '#f3f0ff' : 'transparent',
-              color: isActive('/admin/settings') ? '#534ab7' : '#4b5563',
-              fontWeight: isActive('/admin/settings') ? '600' : '500',
+              backgroundColor: isActive(currentRole === 'employee' ? '/employee/profile' : '/admin/settings') ? '#f3f0ff' : 'transparent',
+              color: isActive(currentRole === 'employee' ? '/employee/profile' : '/admin/settings') ? '#534ab7' : '#4b5563',
+              fontWeight: isActive(currentRole === 'employee' ? '/employee/profile' : '/admin/settings') ? '600' : '500',
               fontSize: '14px',
             }}
           >
-            <Settings size={20} color={isActive('/admin/settings') ? '#534ab7' : '#9ca3af'} />
-            Settings
+            <Settings size={20} color={isActive(currentRole === 'employee' ? '/employee/profile' : '/admin/settings') ? '#534ab7' : '#9ca3af'} />
+            {currentRole === 'employee' ? 'My Profile & Settings' : 'Settings'}
           </Link>
         </div>
       </motion.aside>
@@ -160,7 +226,88 @@ const AdminLayout = ({ children, title, subtitle }) => {
             </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
+            
+            {/* Role Switcher Pill */}
+            <div ref={roleDropdownRef} style={{ position: 'relative' }}>
+              <button
+                onClick={() => setIsRoleDropdownOpen(!isRoleDropdownOpen)}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 12px',
+                  background: currentRoleInfo.bg, border: `1px solid ${currentRoleInfo.border}`,
+                  borderRadius: '20px', color: currentRoleInfo.color, fontWeight: '600',
+                  fontSize: '13px', cursor: 'pointer', transition: 'all 0.2s',
+                  boxShadow: '0 1px 2px rgba(0,0,0,0.04)'
+                }}
+              >
+                <RoleIcon size={14} />
+                <span>Role: <strong>{currentRoleInfo.label}</strong></span>
+                <ChevronDown size={14} style={{ transform: isRoleDropdownOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+              </button>
+
+              <AnimatePresence>
+                {isRoleDropdownOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                    style={{
+                      position: 'absolute', top: 'calc(100% + 8px)', right: 0, width: '260px',
+                      background: 'white', borderRadius: '12px', border: '1px solid #e5e7eb',
+                      boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)',
+                      padding: '8px', zIndex: 60
+                    }}
+                  >
+                    <div style={{ padding: '6px 10px 10px 10px', borderBottom: '1px solid #f3f4f6', marginBottom: '6px' }}>
+                      <p style={{ margin: 0, fontSize: '11px', fontWeight: '700', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                        Switch Active Workspace Role
+                      </p>
+                    </div>
+
+                    {[
+                      { id: 'admin', label: 'Admin Workspace', desc: 'Full HR ops, hiring, billing & analytics', icon: Shield, color: '#534ab7' },
+                      { id: 'manager', label: 'Manager Portal', desc: 'Team approvals, reviews & reports', icon: Briefcase, color: '#047857' },
+                      { id: 'employee', label: 'Employee Self-Service', desc: 'My leave, checklist, docs & payslips', icon: User, color: '#b45309' }
+                    ].map((r) => {
+                      const Icon = r.icon;
+                      const isSelected = currentRole === r.id;
+                      return (
+                        <div
+                          key={r.id}
+                          onClick={() => handleRoleSelect(r.id)}
+                          style={{
+                            display: 'flex', alignItems: 'flex-start', gap: '10px', padding: '10px',
+                            borderRadius: '8px', cursor: 'pointer', transition: 'background 0.15s',
+                            background: isSelected ? '#f8fafc' : 'transparent',
+                            border: isSelected ? '1px solid #e2e8f0' : '1px solid transparent'
+                          }}
+                          onMouseEnter={(e) => !isSelected && (e.currentTarget.style.background = '#f9fafb')}
+                          onMouseLeave={(e) => !isSelected && (e.currentTarget.style.background = 'transparent')}
+                        >
+                          <div style={{
+                            width: '28px', height: '28px', borderRadius: '6px', background: `${r.color}15`,
+                            color: r.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0
+                          }}>
+                            <Icon size={16} />
+                          </div>
+                          <div style={{ flex: 1 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                              <span style={{ fontSize: '13px', fontWeight: isSelected ? '700' : '600', color: isSelected ? r.color : '#111827' }}>
+                                {r.label}
+                              </span>
+                              {isSelected && <span style={{ fontSize: '10px', fontWeight: '700', color: r.color, background: `${r.color}15`, padding: '1px 6px', borderRadius: '10px' }}>Active</span>}
+                            </div>
+                            <p style={{ margin: '2px 0 0 0', fontSize: '11px', color: '#6b7280' }}>
+                              {r.desc}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
             
             {/* Search */}
             <div style={{ position: 'relative', display: isTablet ? 'none' : 'block' }}>

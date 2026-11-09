@@ -82,6 +82,34 @@ export const ADMIN_ENDPOINTS = {
   UPDATE_BILLING_SETTINGS: `${API_BASE_URL}/admin/settings/billing/update`,
   GET_NOTIFICATION_SETTINGS: `${API_BASE_URL}/admin/settings/notifications`,
   UPDATE_NOTIFICATION_SETTINGS: `${API_BASE_URL}/admin/settings/notifications/update`,
+
+  // Payroll
+  GET_PAYROLL_SUMMARY: `${API_BASE_URL}/payroll/summary`,
+  RUN_PAYROLL: `${API_BASE_URL}/payroll/run`,
+  EXPORT_PAYROLL_BATCH: `${API_BASE_URL}/payroll/export`,
+
+  // Manager Portal Endpoints
+  GET_DIRECT_REPORTS: `${API_BASE_URL}/manager/reports`,
+  SAVE_1ON1_NOTES: (id) => `${API_BASE_URL}/manager/reports/${id}/1on1-notes`,
+  GET_TEAM_LEAVES: `${API_BASE_URL}/manager/leaves`,
+  APPROVE_TEAM_LEAVE: (id) => `${API_BASE_URL}/manager/leaves/${id}/approve`,
+  REJECT_TEAM_LEAVE: (id) => `${API_BASE_URL}/manager/leaves/${id}/reject`,
+  SUBMIT_MANAGER_EVALUATION: (id) => `${API_BASE_URL}/manager/reviews/${id}/evaluate`,
+
+  // Employee Portal Endpoints
+  CLOCK_IN: `${API_BASE_URL}/employee/attendance/clock-in`,
+  CLOCK_OUT: `${API_BASE_URL}/employee/attendance/clock-out`,
+  GET_MY_LEAVE_BALANCES: `${API_BASE_URL}/employee/leaves/balances`,
+  GET_MY_LEAVES: `${API_BASE_URL}/employee/leaves`,
+  APPLY_MY_LEAVE: `${API_BASE_URL}/employee/leaves/apply`,
+  CANCEL_MY_LEAVE: (id) => `${API_BASE_URL}/employee/leaves/${id}/cancel`,
+  GET_MY_TASKS: `${API_BASE_URL}/employee/tasks`,
+  TOGGLE_MY_TASK: (id) => `${API_BASE_URL}/employee/tasks/${id}/toggle`,
+  GET_MY_PAYSLIPS: `${API_BASE_URL}/employee/payslips`,
+  DOWNLOAD_PAYSLIP_PDF: (id) => `${API_BASE_URL}/employee/payslips/${id}/pdf`,
+  ACKNOWLEDGE_POLICY_DOC: (id) => `${API_BASE_URL}/employee/documents/${id}/acknowledge`,
+  SUBMIT_MY_REVIEW: `${API_BASE_URL}/employee/reviews/self-assessment`,
+  UPDATE_MY_PROFILE: `${API_BASE_URL}/employee/profile/update`,
 };
 
 // Validation Rules
