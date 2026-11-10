@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import AdminLayout from '../../components/layout/AdminLayout';
 import { useStore } from '../../store/useStore';
 import { useAuth } from '../../hooks/useAuth';
+import toast from 'react-hot-toast';
 
 // Mock Data
 const stats = [
@@ -54,10 +55,15 @@ const itemVariants = {
 const AdminDashboard = () => {
   const [leaves, setLeaves] = useState(initialPendingLeaves);
   const { employees, pendingInvites } = useStore();
-  const { user } = useAuth();
+  const { user, isEmployer } = useAuth();
 
   const handleApprove = (id) => {
+    if (!isEmployer) {
+      toast.error('Only the Employer has permission to approve company leave.');
+      return;
+    }
     setLeaves(leaves.filter(l => l.id !== id));
+    toast.success('Leave request authorized and approved by Employer!');
   };
 
   const currentHour = new Date().getHours();
@@ -196,7 +202,27 @@ const AdminDashboard = () => {
                         <p style={{ fontSize: '13px', color: '#6b7280', margin: 0 }}>{leave.type}</p>
                       </div>
                     </div>
-                    <button className="btn-approve" onClick={() => handleApprove(leave.id)}>Approve</button>
+                    {isEmployer ? (
+                      <button className="btn-approve" onClick={() => handleApprove(leave.id)}>Approve</button>
+                    ) : (
+                      <span 
+                        title="Only the Employer has permission to approve leave requests"
+                        style={{
+                          fontSize: '12px',
+                          fontWeight: '500',
+                          color: '#6b7280',
+                          backgroundColor: '#f3f4f6',
+                          border: '1px solid #e5e7eb',
+                          padding: '4px 10px',
+                          borderRadius: '6px',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px'
+                        }}
+                      >
+                        🔒 Employer Only
+                      </span>
+                    )}
                   </motion.div>
                 ))}
               </AnimatePresence>

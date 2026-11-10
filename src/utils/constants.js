@@ -112,6 +112,23 @@ export const ADMIN_ENDPOINTS = {
   UPDATE_MY_PROFILE: `${API_BASE_URL}/employee/profile/update`,
 };
 
+// Employer-Exclusive Endpoints (Sole Authority)
+export const EMPLOYER_ENDPOINTS = {
+  // Admin Appointment & Management (Only Employer can add/remove Admins)
+  GET_ADMINS: `${API_BASE_URL}/employer/admins`,
+  APPOINT_ADMIN: (employeeId) => `${API_BASE_URL}/employer/admins/${employeeId}/appoint`,
+  REVOKE_ADMIN: (employeeId) => `${API_BASE_URL}/employer/admins/${employeeId}/revoke`,
+
+  // Sole Authority Leave Decisions
+  APPROVE_LEAVE: (id) => `${API_BASE_URL}/employer/leaves/${id}/approve`,
+  REJECT_LEAVE: (id) => `${API_BASE_URL}/employer/leaves/${id}/reject`,
+
+  // Workspace Ownership & Billing Management
+  GET_WORKSPACE_BILLING: `${API_BASE_URL}/employer/workspace/billing`,
+  UPDATE_WORKSPACE_PLAN: `${API_BASE_URL}/employer/workspace/plan`,
+  TRANSFER_OWNERSHIP: `${API_BASE_URL}/employer/workspace/transfer-ownership`,
+};
+
 // Validation Rules
 export const PASSWORD_REQUIREMENTS = {
   MIN_LENGTH: 8,
@@ -127,11 +144,11 @@ export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+[\]{};':"\\|,.<>/?]).{8,128}$/;
 
-// User Roles
+// User Roles (Employer, Admin, Employee)
 export const USER_ROLES = {
-  ADMIN: 'admin',
-  MANAGER: 'manager',
-  EMPLOYEE: 'employee',
+  EMPLOYER: 'employer', // Workspace owner & admin by default; sole authority to approve leaves & appoint admins
+  ADMIN: 'admin',       // Shares the Admin Dashboard with employer; manages operations, people & docs
+  EMPLOYEE: 'employee', // Has own distinct personal self-service portal
 };
 
 // Invite Status

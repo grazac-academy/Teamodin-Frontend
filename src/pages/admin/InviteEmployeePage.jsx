@@ -68,16 +68,18 @@ const InviteEmployeePage = () => {
 
   const roles = [
     {
-      id: 'admin', title: 'Admin', description: 'Full workspace access — can invite others, manage settings and data',
-      color: '#faf5ff', borderColor: '#e9d5ff', activeBorder: '#9333ea', icon: ShieldAlert
+      id: 'admin', 
+      title: 'Admin (Workspace Co-Administrator)', 
+      description: 'Shares the Admin Dashboard with the Employer. Can invite teammates, manage departments, onboarding, and documents.',
+      color: '#faf5ff', borderColor: '#e9d5ff', activeBorder: '#9333ea', icon: ShieldAlert,
+      badge: 'Shared Admin Dashboard'
     },
     {
-      id: 'manager', title: 'Manager', description: 'Approves leave, views direct reports, runs check-ins',
-      color: '#f0fdf4', borderColor: '#bbf7d0', activeBorder: '#16a34a', icon: Briefcase
-    },
-    {
-      id: 'employee', title: 'Employee', description: 'Submits leave, completes tasks, views their own profile',
-      color: '#fff7ed', borderColor: '#fed7aa', activeBorder: '#f97316', icon: User
+      id: 'employee', 
+      title: 'Employee (Self-Service Portal)', 
+      description: 'Gets their own distinct personal workspace to clock in/out, submit leave, complete onboarding tasks, and download payslips.',
+      color: '#fff7ed', borderColor: '#fed7aa', activeBorder: '#f97316', icon: User,
+      badge: 'Self-Service Only'
     }
   ];
 
@@ -116,7 +118,7 @@ const InviteEmployeePage = () => {
         <div className="info-banner">
           <Info size={20} color="#3b82f6" style={{ flexShrink: 0, marginTop: '2px' }} />
           <p style={{ fontSize: '14px', color: '#1d4ed8', margin: 0, lineHeight: '1.5' }}>
-            Only Admins can create new accounts. Invitees receive an email link, set a password, and land directly in the role and department you assign — no self sign-up, no role picker on their end.
+            <strong>Employer Privilege:</strong> Employers are Admins by default and can add other people as Admins to share the workspace dashboard. Employees receive an invitation link and land directly in their self-service workspace.
           </p>
         </div>
 

@@ -55,10 +55,18 @@ import { useAuth } from './hooks/useAuth';
 
 // Protected Route Component
 const ProtectedRoute = ({ children, requiredRole }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, currentRole, isEmployer, isAdmin } = useAuth();
   
   if (!isAuthenticated) {
     return <Navigate to="/sign-in" replace />;
+  }
+
+  // Employer & Admin share the admin dashboard and administration routes
+  if (requiredRole === 'admin') {
+    const hasAdminAccess = isEmployer || isAdmin || currentRole === 'employer' || currentRole === 'admin';
+    if (!hasAdminAccess) {
+      return <Navigate to="/employee/dashboard" replace />;
+    }
   }
 
   return children;

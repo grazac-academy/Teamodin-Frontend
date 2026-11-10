@@ -423,3 +423,33 @@ export const employeeAPI = {
   updateProfile: (profileData) =>
     apiClient.put('/employee/profile/update', profileData),
 };
+
+// Employer API calls (Sole authority: Leave decisions & Admin appointments)
+export const employerAPI = {
+  // Admin Management (Only Employer can appoint or revoke Admins)
+  getAdmins: () =>
+    apiClient.get('/employer/admins'),
+
+  appointAdmin: (employeeId, rolePayload = {}) =>
+    apiClient.post(`/employer/admins/${employeeId}/appoint`, rolePayload),
+
+  revokeAdmin: (employeeId) =>
+    apiClient.post(`/employer/admins/${employeeId}/revoke`),
+
+  // Sole Authority Leave Approvals
+  approveLeave: (id, notes = '') =>
+    apiClient.post(`/employer/leaves/${id}/approve`, { notes }),
+
+  rejectLeave: (id, reason) =>
+    apiClient.post(`/employer/leaves/${id}/reject`, { reason }),
+
+  // Workspace Ownership & Billing
+  getWorkspaceBilling: () =>
+    apiClient.get('/employer/workspace/billing'),
+
+  updateWorkspacePlan: (planId, billingCycle) =>
+    apiClient.post('/employer/workspace/plan', { planId, billingCycle }),
+
+  transferOwnership: (newOwnerEmail, passwordConfirmation) =>
+    apiClient.post('/employer/workspace/transfer-ownership', { newOwnerEmail, passwordConfirmation }),
+};

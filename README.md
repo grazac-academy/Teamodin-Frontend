@@ -16,9 +16,10 @@ Most enterprise HR software (like BambooHR or Workday) is prohibitively expensiv
 
 **HRStack solves this by delivering an all-in-one, role-based platform covering:**
 
-- **Admin Workspace**: Employee records, company departments, policy vault, leave approvals, offboarding, pulse surveys, analytics, and payroll disbursements.
-- **Manager Portal**: Direct reports overview, fast team leave approvals, 1-on-1 notes logging, and quarterly review evaluations.
-- **Employee Self-Service**: Attendance clock-in/out, time-off balances, onboarding checklist, monthly payslips, and policy signing.
+- **Shared Admin Workspace (Employer & Admin)**: Employee records, company departments, policy vault, offboarding, pulse surveys, analytics, and payroll disbursements.
+  - **Employer (Admin by default)**: Workspace owner with sole authority to authorize/approve leave requests and appoint team members as Admins.
+  - **Admin (Appointed)**: Shares the exact same Admin Dashboard to streamline day-to-day people operations, directory management, and onboarding.
+- **Employee Self-Service**: Dedicated personal dashboard for daily attendance clock-in/out, time-off submissions, onboarding milestones, monthly payslips, and company policy signing.
 
 ---
 
@@ -28,8 +29,8 @@ The frontend is architected to give backend engineers a direct, 1-to-1 blueprint
 
 | Area                             | File Path                                                                                                                  | Description                                                                                                                                                                                                     |
 | :------------------------------- | :------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **API Endpoints Dictionary**     | [`src/utils/constants.js`](file:///Users/mac/Documents/Github/GitHub/Teamodin-Frontend/src/utils/constants.js)             | Centralized URL constants (`AUTH_ENDPOINTS`, `USER_ENDPOINTS`, `ADMIN_ENDPOINTS`, `API_ENDPOINTS`, `STORAGE_KEYS`, `USER_ROLES`).                                                                               |
-| **API Client & Request Methods** | [`src/utils/api.js`](file:///Users/mac/Documents/Github/GitHub/Teamodin-Frontend/src/utils/api.js)                         | `APIClient` class with automatic JWT `Bearer` token attachment, error interceptors, timeout handling, and pre-built API wrappers (`authAPI`, `adminAPI`, `userAPI`, `payrollAPI`, `managerAPI`, `employeeAPI`). |
+| **API Endpoints Dictionary**     | [`src/utils/constants.js`](file:///Users/mac/Documents/Github/GitHub/Teamodin-Frontend/src/utils/constants.js)             | Centralized URL constants (`AUTH_ENDPOINTS`, `USER_ENDPOINTS`, `ADMIN_ENDPOINTS`, `EMPLOYER_ENDPOINTS`, `STORAGE_KEYS`, `USER_ROLES`).                                                                          |
+| **API Client & Request Methods** | [`src/utils/api.js`](file:///Users/mac/Documents/Github/GitHub/Teamodin-Frontend/src/utils/api.js)                         | `APIClient` class with automatic JWT `Bearer` token attachment, error interceptors, timeout handling, and pre-built API wrappers (`authAPI`, `adminAPI`, `employerAPI`, `userAPI`, `payrollAPI`, `employeeAPI`). |
 | **Global State Store**           | [`src/store/useStore.js`](file:///Users/mac/Documents/Github/GitHub/Teamodin-Frontend/src/store/useStore.js)               | Lightweight [Zustand](https://github.com/pmndrs/zustand) store managing employees, departments, leave requests, documents, offboarding list, and pending invites.                                               |
 | **Auth & Active Role Context**   | [`src/contexts/AuthContext.jsx`](file:///Users/mac/Documents/Github/GitHub/Teamodin-Frontend/src/contexts/AuthContext.jsx) | Handles JWT session tokens, user profile, workspace metadata, and instant in-app role switching (`switchRole`).                                                                                                 |
 | **Route Definitions**            | [`src/App.jsx`](file:///Users/mac/Documents/Github/GitHub/Teamodin-Frontend/src/App.jsx)                                   | Protected route tree with authentication gates for Admin, Manager, and Employee pages.                                                                                                                          |
@@ -104,15 +105,18 @@ Defined in [`src/utils/constants.js`](file:///Users/mac/Documents/Github/GitHub/
 
 Defined in [`src/utils/constants.js`](file:///Users/mac/Documents/Github/GitHub/Teamodin-Frontend/src/utils/constants.js#L42-L49) and consumed by `adminAPI`:
 
-| Method | Endpoint                    | Description                                                            |
-| :----- | :-------------------------- | :--------------------------------------------------------------------- |
-| `GET`  | `/admin/leaves`             | List all company leave requests (Pending, Approved, Rejected).         |
-| `GET`  | `/admin/leaves/balances`    | Company-wide leave balance utilization metrics.                        |
-| `POST` | `/admin/leaves/request`     | Submit leave request on behalf of an employee.                         |
-| `POST` | `/admin/leaves/:id/approve` | Approve leave request and notify employee.                             |
-| `POST` | `/admin/leaves/:id/reject`  | Decline leave request with mandatory rejection reason note.            |
-| `GET`  | `/admin/leaves/calendar`    | Out-of-office team calendar feed by month and year.                    |
-| `GET`  | `/admin/leaves/policies`    | Company statutory leave policies (Annual 20d, Sick 14d, Parental 60d). |
+> [!IMPORTANT]
+> **Employer Authorization Gate**: While both Employer and appointed Admins can review pending leaves and track calendar schedules, the backend MUST verify `req.user.role === 'employer'` (or `isEmployer: true`) on approval and rejection endpoints. If an appointed Admin attempts to finalize, return `403 Forbidden`.
+
+| Method | Endpoint                    | Permission   | Description                                                            |
+| :----- | :-------------------------- | :----------- | :--------------------------------------------------------------------- |
+| `GET`  | `/admin/leaves`             | Admin/Emplr  | List all company leave requests (Pending, Approved, Rejected).         |
+| `GET`  | `/admin/leaves/balances`    | Admin/Emplr  | Company-wide leave balance utilization metrics.                        |
+| `POST` | `/admin/leaves/request`     | Admin/Emplr  | Submit leave request on behalf of an employee.                         |
+| `POST` | `/admin/leaves/:id/approve` | **Employer** | Authorize and approve leave request (notifies employee).               |
+| `POST` | `/admin/leaves/:id/reject`  | **Employer** | Decline leave request with mandatory rejection reason note.            |
+| `GET`  | `/admin/leaves/calendar`    | Admin/Emplr  | Out-of-office team calendar feed by month and year.                    |
+| `GET`  | `/admin/leaves/policies`    | Admin/Emplr  | Company statutory leave policies (Annual 20d, Sick 14d, Parental 60d). |
 
 ---
 
@@ -161,18 +165,23 @@ Defined in [`src/utils/constants.js`](file:///Users/mac/Documents/Github/GitHub/
 
 ---
 
-### 9. Manager Portal (`/manager/*`)
+### 9. Employer Authority & Governance (`/employer/*`)
 
-Defined in [`src/utils/constants.js`](file:///Users/mac/Documents/Github/GitHub/Teamodin-Frontend/src/utils/constants.js#L92-L97) and consumed by `managerAPI`:
+Defined in [`src/utils/constants.js`](file:///Users/mac/Documents/Github/GitHub/Teamodin-Frontend/src/utils/constants.js#L115-L130) and consumed by `employerAPI`:
 
-| Method | Endpoint                          | Description                                                     |
-| :----- | :-------------------------------- | :-------------------------------------------------------------- |
-| `GET`  | `/manager/reports`                | List direct reports assigned to authenticated manager.          |
-| `POST` | `/manager/reports/:id/1on1-notes` | Save private discussion points, feedback, and action items.     |
-| `GET`  | `/manager/leaves`                 | List pending and historical leave requests from direct reports. |
-| `POST` | `/manager/leaves/:id/approve`     | Fast 1-click approve team leave.                                |
-| `POST` | `/manager/leaves/:id/reject`      | Decline team leave with feedback note.                          |
-| `POST` | `/manager/reviews/:id/evaluate`   | Submit manager evaluation rating (1–5) and written feedback.    |
+> [!NOTE]
+> **Exclusive Employer Capabilities**: Only the Employer (workspace founder/owner) can invoke these endpoints. Appointed Admins do not have access to manage other Admins or finalize leave requests.
+
+| Method | Endpoint                                      | Description                                                                     |
+| :----- | :-------------------------------------------- | :------------------------------------------------------------------------------ |
+| `GET`  | `/employer/admins`                            | List all appointed Admins in the workspace.                                     |
+| `POST` | `/employer/admins/:id/appoint`                | Appoint/promote an employee into an Admin role with shared dashboard access.    |
+| `POST` | `/employer/admins/:id/revoke`                 | Revoke Admin privileges and return teammate to standard Employee role.         |
+| `POST` | `/employer/leaves/:id/approve`                | Authorize and approve company-wide leave request (exclusive to Employer).       |
+| `POST` | `/employer/leaves/:id/reject`                 | Decline company-wide leave request with mandatory reason note.                  |
+| `GET`  | `/employer/workspace/billing`                 | Get subscription plan, billing invoices, and payment method details.           |
+| `POST` | `/employer/workspace/plan`                    | Upgrade, downgrade, or update workspace subscription tier.                      |
+| `POST` | `/employer/workspace/transfer-ownership`      | Transfer Employer super-admin ownership to another email address.               |
 
 ---
 
@@ -198,27 +207,50 @@ Defined in [`src/utils/constants.js`](file:///Users/mac/Documents/Github/GitHub/
 
 ---
 
-## 🔐 The 3 Roles & In-App Role Switcher
+## 🔐 Role Architecture: Employer, Admin & Employee
 
-HRStack implements a 3-tier access model. A **Role Switcher** is embedded directly into the top navigation header (`Viewing as: 👑 Admin ▾`, `👔 Manager ▾`, `👤 Employee ▾`) so developers and stakeholders can test all three perspectives without multiple test accounts:
+HRStack implements a clear, business-aligned 3-role governance structure with **two primary dashboard experiences**:
 
 ```
-                      ┌────────────────────────────┐
-                      │    ACTIVE WORKSPACE ROLE   │
-                      └─────────────┬──────────────┘
-            ┌───────────────────────┼───────────────────────┐
-            ▼                       ▼                       ▼
-      👑 ADMIN               👔 MANAGER              👤 EMPLOYEE
-  Full Workspace Ops       Team Oversight &        Self-Service Workspace
-  • Directory & Org        • Direct Reports        • Clock-In / Attendance
-  • Offboarding Vault      • Leave Approvals       • Time-Off Balances
-  • Company Approvals      • 1-on-1 Notes Logs     • Onboarding Tasks
-  • Reviews & Surveys      • Team Reviews          • Monthly Payslips
-  • Payroll Disbursements  • Team Onboarding       • Policy Signing
-  • Settings & Billing     • Shared Directory      • Profile & Banking
+                      ┌───────────────────────────────────────────────┐
+                      │             WORKSPACE ACCESS MODEL            │
+                      └───────────────────────┬───────────────────────┘
+                                              │
+                     ┌────────────────────────┴────────────────────────┐
+                     ▼                                                 ▼
+     ┌────────────────────────────────┐                ┌────────────────────────────────┐
+     │     SHARED ADMIN DASHBOARD     │                │   EMPLOYEE SELF-SERVICE PORTAL │
+     │       `/admin/dashboard`       │                │      `/employee/dashboard`     │
+     └────────────────┬───────────────┘                └────────────────┬───────────────┘
+                      │                                                 │
+          ┌───────────┴───────────┐                                     │
+          ▼                       ▼                                     ▼
+    🏢 EMPLOYER             👑 ADMIN                              👤 EMPLOYEE
+ • Workspace Owner       • Appointed by Employer             • Personal Self-Service
+ • Admin by default      • Shares the Admin Dashboard        • Clock In / Out & Attendance
+ • Sole authority to     • Manages Directory, Onboarding,    • Leave Application & Balances
+   add/appoint Admins      Departments, and Documents        • Onboarding Checklist Tasks
+ • SOLE authority to     • Cannot finalize leave approvals   • Monthly Payslip Downloads
+   APPROVE/DECLINE leaves  (requires Employer authorization) • Company Policy Digital Signing
 ```
 
-Role state is automatically saved in `localStorage.getItem('hrstack_active_role')` (`'admin' | 'manager' | 'employee'`).
+### Core Role Rules:
+1. **Employer & Admin share the exact same Dashboard (`/admin/dashboard`)**:
+   - Both the Employer and appointed Admins access the centralized administrative workspace to manage employees, departments, onboarding, documents, check-ins, surveys, and analytics.
+2. **Only the Employee dashboard is different (`/employee/dashboard`)**:
+   - Employees receive a focused self-service portal strictly built for daily personal tasks: attendance clock-in/out, time-off requests, task checklists, payslips, and company directory lookup.
+3. **Employer is Admin by default & Appoints Other Admins**:
+   - The Employer (company founder/creator) has full super-admin privileges by default.
+   - When inviting teammates via `InviteEmployeePage`, the Employer can appoint team members directly to the **Admin** role or standard **Employee** role.
+4. **Leave Approval Authority is Reserved for Employer**:
+   - Leave requests directly impact company payroll and operational capacity. Therefore, only the **Employer** possesses permission to approve or decline leaves in both the pending leave panel on `/admin/dashboard` and the dedicated `/admin/leave` page.
+   - Appointed Admins can view leave requests and monitor status, but authorization buttons are restricted with clear indicators (`🔒 Employer Only` / `Awaiting Employer Authorization`).
+
+### In-App Role Switcher:
+A **Role Switcher** is embedded directly into the top navigation header (`🏢 Employer (Admin by default) ▾`, `👑 Admin (Appointed) ▾`, `👤 Employee (Self-Service) ▾`) so developers and reviewers can seamlessly experience each role:
+- Switching between **Employer** and **Admin** immediately demonstrates the shared dashboard and the granular leave approval permission check.
+- Switching to **Employee** navigates straight to the personal self-service portal.
+- State is preserved in `localStorage.getItem('hrstack_active_role')`.
 
 ---
 

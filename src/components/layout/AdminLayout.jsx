@@ -41,6 +41,7 @@ const AdminLayout = ({ children, title, subtitle }) => {
 
   // Role-specific navigation items
   const getNavItems = () => {
+    // Only employee dashboard is different
     if (currentRole === 'employee') {
       return [
         { name: 'My Workspace', path: '/employee/dashboard', icon: <LayoutDashboard size={20} /> },
@@ -53,19 +54,7 @@ const AdminLayout = ({ children, title, subtitle }) => {
       ];
     }
 
-    if (currentRole === 'manager') {
-      return [
-        { name: 'Team Dashboard', path: '/manager/dashboard', icon: <LayoutDashboard size={20} /> },
-        { name: 'Direct Reports', path: '/manager/team', icon: <Users size={20} /> },
-        { name: 'Team Leave Approvals', path: '/manager/leave', icon: <Calendar size={20} /> },
-        { name: 'Team Check-ins', path: '/manager/reviews', icon: <CheckSquare size={20} /> },
-        { name: 'Team Onboarding', path: '/manager/onboarding', icon: <UserPlus size={20} /> },
-        { name: 'Company Directory', path: '/employee/directory', icon: <Building2 size={20} /> },
-        { name: 'My Self-Service', path: '/employee/dashboard', icon: <User size={20} /> },
-      ];
-    }
-
-    // Default: Admin
+    // Employer and Admin share the exact same dashboard and navigation!
     return [
       { name: 'Dashboard', path: '/admin/dashboard', icon: <LayoutDashboard size={20} /> },
       { name: 'Employee Directory', path: '/admin/employees', icon: <Users size={20} /> },
@@ -88,25 +77,24 @@ const AdminLayout = ({ children, title, subtitle }) => {
     setIsRoleDropdownOpen(false);
     if (newRole === 'employee') {
       navigate('/employee/dashboard');
-    } else if (newRole === 'manager') {
-      navigate('/manager/dashboard');
     } else {
+      // Employer and Admin both share /admin/dashboard!
       navigate('/admin/dashboard');
     }
   };
 
   const roleMeta = {
-    admin: { label: 'Admin', color: '#534ab7', bg: '#f3f0ff', border: '#e0e7ff', icon: Shield },
-    manager: { label: 'Manager', color: '#047857', bg: '#d1fae5', border: '#a7f3d0', icon: Briefcase },
+    employer: { label: 'Employer (Admin)', color: '#534ab7', bg: '#f3f0ff', border: '#e0e7ff', icon: Building2 },
+    admin: { label: 'Admin', color: '#047857', bg: '#d1fae5', border: '#a7f3d0', icon: Shield },
     employee: { label: 'Employee', color: '#b45309', bg: '#fef3c7', border: '#fde68a', icon: User }
   };
 
-  const currentRoleInfo = roleMeta[currentRole] || roleMeta.admin;
+  const currentRoleInfo = roleMeta[currentRole] || roleMeta.employer;
   const RoleIcon = currentRoleInfo.icon;
 
   const isActive = (path) => {
     if (location.pathname === path) return true;
-    if (path !== '/admin/dashboard' && path !== '/employee/dashboard' && path !== '/manager/dashboard' && location.pathname.startsWith(path)) return true;
+    if (path !== '/admin/dashboard' && path !== '/employee/dashboard' && location.pathname.startsWith(path)) return true;
     return false;
   };
 
@@ -265,9 +253,27 @@ const AdminLayout = ({ children, title, subtitle }) => {
                     </div>
 
                     {[
-                      { id: 'admin', label: 'Admin Workspace', desc: 'Full HR ops, hiring, billing & analytics', icon: Shield, color: '#534ab7' },
-                      { id: 'manager', label: 'Manager Portal', desc: 'Team approvals, reviews & reports', icon: Briefcase, color: '#047857' },
-                      { id: 'employee', label: 'Employee Self-Service', desc: 'My leave, checklist, docs & payslips', icon: User, color: '#b45309' }
+                      { 
+                        id: 'employer', 
+                        label: 'Employer (Admin by default)', 
+                        desc: 'Workspace Owner & Admin. Has primary authority to approve leaves and add other admins.', 
+                        icon: Building2, 
+                        color: '#534ab7' 
+                      },
+                      { 
+                        id: 'admin', 
+                        label: 'Admin (Appointed by Employer)', 
+                        desc: 'Shares the Admin Dashboard. Manages people, departments, onboarding, and docs.', 
+                        icon: Shield, 
+                        color: '#047857' 
+                      },
+                      { 
+                        id: 'employee', 
+                        label: 'Employee (Self-Service)', 
+                        desc: 'Personal employee dashboard: clock in/out, view balance, apply for leave, payslips.', 
+                        icon: User, 
+                        color: '#b45309' 
+                      }
                     ].map((r) => {
                       const Icon = r.icon;
                       const isSelected = currentRole === r.id;

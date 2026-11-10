@@ -7,6 +7,7 @@ import {
   Users, Shield, Filter 
 } from 'lucide-react';
 import { useStore } from '../../store/useStore';
+import { useAuth } from '../../hooks/useAuth';
 import toast from 'react-hot-toast';
 
 const initialRequests = [
@@ -17,6 +18,7 @@ const initialRequests = [
 
 const LeaveRequestPage = () => {
   const { leaveRequests, approveLeaveRequest, rejectLeaveRequest, addLeaveRequest } = useStore();
+  const { user, isEmployer } = useAuth();
   const [activeTab, setActiveTab] = useState('approvals'); // approvals, request, calendar, policies
   const [requests, setRequests] = useState(initialRequests);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -35,11 +37,19 @@ const LeaveRequestPage = () => {
   });
 
   const handleApprove = (id, name) => {
+    if (!isEmployer) {
+      toast.error('Only the Employer has permission to approve leave requests.');
+      return;
+    }
     approveLeaveRequest(id);
-    toast.success(`Leave request for ${name} approved!`);
+    toast.success(`Leave request for ${name} authorized and approved by Employer!`);
   };
 
   const handleOpenReject = (id) => {
+    if (!isEmployer) {
+      toast.error('Only the Employer has permission to decline leave requests.');
+      return;
+    }
     setRejectingId(id);
     setRejectionReason('');
   };
@@ -165,12 +175,26 @@ const LeaveRequestPage = () => {
                 <p style={{ fontSize: '13px', color: '#6b7280', margin: '4px 0 0 0' }}>Review and take action on incoming team time-off applications.</p>
               </div>
 
-              <div style={{ display: 'flex', gap: '8px' }}>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+                <span style={{ fontSize: '12px', fontWeight: '700', color: isEmployer ? '#534ab7' : '#b45309', background: isEmployer ? '#f3f0ff' : '#fef3c7', padding: '6px 12px', borderRadius: '8px' }}>
+                  {isEmployer ? '👑 Employer Authority: Approvals Enabled' : '🔒 Approvals Restricted to Employer'}
+                </span>
                 <span style={{ fontSize: '12px', fontWeight: '600', color: '#047857', background: '#d1fae5', padding: '6px 12px', borderRadius: '8px' }}>
                   {leaveRequests.filter(r => r.status === 'Approved').length} Approved this month
                 </span>
               </div>
             </div>
+
+            {/* Role Notice Banner */}
+            {isEmployer ? (
+              <div style={{ background: '#f3f0ff', border: '1px solid #e0e7ff', padding: '12px 16px', borderRadius: '8px', fontSize: '13px', color: '#4338ca', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Shield size={16} /> <span><strong>Employer Access:</strong> As the company Employer (Admin by default), you hold primary authorization to approve or reject employee leave requests.</span>
+              </div>
+            ) : (
+              <div style={{ background: '#fffbeb', border: '1px solid #fef3c7', padding: '12px 16px', borderRadius: '8px', fontSize: '13px', color: '#b45309', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <AlertCircle size={16} /> <span><strong>Shared Admin Mode:</strong> You share the Admin Dashboard with the Employer. However, authorizing and declining leave requests is restricted to the Employer.</span>
+              </div>
+            )}
 
             {/* Approvals Table Card */}
             <div className="card" style={{ padding: 0, overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
@@ -225,20 +249,29 @@ const LeaveRequestPage = () => {
 
                       <td style={{ padding: '16px 20px', textAlign: 'right' }}>
                         {req.status === 'Pending' ? (
-                          <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
-                            <button
-                              onClick={() => handleApprove(req.id, req.employeeName)}
-                              style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '6px 12px', background: '#10b981', color: 'white', border: 'none', borderRadius: '6px', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}
-                            >
-                              <Check size={14} /> Approve
-                            </button>
-                            <button
-                              onClick={() => handleOpenReject(req.id)}
-                              style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '6px 12px', background: 'white', color: '#dc2626', border: '1px solid #fca5a5', borderRadius: '6px', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}
-                            >
-                              <X size={14} /> Reject
-                            </button>
-                          </div>
+                          isEmployer ? (
+                            <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+                              <button
+                                onClick={() => handleApprove(req.id, req.employeeName)}
+                                style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '6px 12px', background: '#10b981', color: 'white', border: 'none', borderRadius: '6px', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}
+                              >
+                                <Check size={14} /> Approve
+                              </button>
+                              <button
+                                onClick={() => handleOpenReject(req.id)}
+                                style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '6px 12px', background: 'white', color: '#dc2626', border: '1px solid #fca5a5', borderRadius: '6px', fontSize: '12px', fontWeight: '600', cursor: 'pointer' }}
+                              >
+                                <X size={14} /> Reject
+                              </button>
+                            </div>
+                          ) : (
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '2px' }}>
+                              <span style={{ fontSize: '12px', fontWeight: '600', color: '#b45309', background: '#fef3c7', padding: '4px 8px', borderRadius: '6px' }}>
+                                Awaiting Employer
+                              </span>
+                              <span style={{ fontSize: '11px', color: '#9ca3af' }}>Employer authorization required</span>
+                            </div>
+                          )
                         ) : (
                           <span style={{ fontSize: '12px', color: '#9ca3af' }}>Resolved</span>
                         )}

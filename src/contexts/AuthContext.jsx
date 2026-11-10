@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentRole, setCurrentRole] = useState(() => {
-    return localStorage.getItem('hrstack_active_role') || 'admin';
+    return localStorage.getItem('hrstack_active_role') || 'employer';
   });
 
   const switchRole = useCallback((newRole) => {
@@ -21,9 +21,36 @@ export const AuthProvider = ({ children }) => {
     
     // Provide realistic demo personas when testing different roles
     const demoProfiles = {
-      admin: { name: 'Amaka Okafor', first_name: 'Amaka', last_name: 'Okafor', role: 'admin', title: 'Head of People', dept: 'People Ops', email: 'amaka@acme.com' },
-      manager: { name: 'David Babatunde', first_name: 'David', last_name: 'Babatunde', role: 'manager', title: 'Engineering Lead', dept: 'Engineering', email: 'david@acme.com' },
-      employee: { name: 'Sade Afolabi', first_name: 'Sade', last_name: 'Afolabi', role: 'employee', title: 'Product Designer', dept: 'Product', email: 'sade@acme.com' }
+      employer: { 
+        name: 'Amaka Okafor', 
+        first_name: 'Amaka', 
+        last_name: 'Okafor', 
+        role: 'employer', 
+        isEmployer: true,
+        title: 'Employer & Founder (Admin by default)', 
+        dept: 'Executive / Leadership', 
+        email: 'amaka@acme.com' 
+      },
+      admin: { 
+        name: 'David Babatunde', 
+        first_name: 'David', 
+        last_name: 'Babatunde', 
+        role: 'admin', 
+        isEmployer: false,
+        title: 'Operations Admin (Appointed by Employer)', 
+        dept: 'People Ops', 
+        email: 'david@acme.com' 
+      },
+      employee: { 
+        name: 'Sade Afolabi', 
+        first_name: 'Sade', 
+        last_name: 'Afolabi', 
+        role: 'employee', 
+        isEmployer: false,
+        title: 'Product Designer', 
+        dept: 'Product & Design', 
+        email: 'sade@acme.com' 
+      }
     };
 
     if (demoProfiles[newRole]) {
@@ -240,6 +267,9 @@ export const AuthProvider = ({ children }) => {
     });
   }, []);
 
+  const isEmployer = currentRole === 'employer' || user?.role === 'employer' || user?.isEmployer === true;
+  const isAdmin = isEmployer || currentRole === 'admin' || user?.role === 'admin';
+
   const value = {
     // State
     user,
@@ -248,6 +278,8 @@ export const AuthProvider = ({ children }) => {
     error,
     isAuthenticated,
     currentRole,
+    isEmployer,
+    isAdmin,
     switchRole,
 
     // Methods
