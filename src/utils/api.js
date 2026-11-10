@@ -348,3 +348,78 @@ export const adminAPI = {
   updateNotificationSettings: (notificationData) =>
     apiClient.put('/admin/settings/notifications/update', notificationData),
 };
+
+// Payroll API calls
+export const payrollAPI = {
+  getSummary: () =>
+    apiClient.get('/payroll/summary'),
+
+  runPayroll: (payrollData) =>
+    apiClient.post('/payroll/run', payrollData),
+
+  exportBatchCSV: () =>
+    apiClient.get('/payroll/export'),
+};
+
+// Manager API calls
+export const managerAPI = {
+  getDirectReports: () =>
+    apiClient.get('/manager/reports'),
+
+  save1on1Notes: (id, notes) =>
+    apiClient.post(`/manager/reports/${id}/1on1-notes`, { notes }),
+
+  getTeamLeaves: (filters = {}) =>
+    apiClient.get('/manager/leaves', { params: filters }),
+
+  approveTeamLeave: (id, notes = '') =>
+    apiClient.post(`/manager/leaves/${id}/approve`, { notes }),
+
+  rejectTeamLeave: (id, reason) =>
+    apiClient.post(`/manager/leaves/${id}/reject`, { reason }),
+
+  submitEvaluation: (id, evaluationData) =>
+    apiClient.post(`/manager/reviews/${id}/evaluate`, evaluationData),
+};
+
+// Employee Self-Service API calls
+export const employeeAPI = {
+  clockIn: (location) =>
+    apiClient.post('/employee/attendance/clock-in', { location }),
+
+  clockOut: () =>
+    apiClient.post('/employee/attendance/clock-out'),
+
+  getMyLeaveBalances: () =>
+    apiClient.get('/employee/leaves/balances'),
+
+  getMyLeaves: () =>
+    apiClient.get('/employee/leaves'),
+
+  applyLeave: (leaveData) =>
+    apiClient.post('/employee/leaves/apply', leaveData),
+
+  cancelLeave: (id) =>
+    apiClient.delete(`/employee/leaves/${id}/cancel`),
+
+  getMyTasks: () =>
+    apiClient.get('/employee/tasks'),
+
+  toggleTask: (id, status) =>
+    apiClient.patch(`/employee/tasks/${id}/toggle`, { status }),
+
+  getMyPayslips: () =>
+    apiClient.get('/employee/payslips'),
+
+  downloadPayslipPDF: (id) =>
+    apiClient.get(`/employee/payslips/${id}/pdf`),
+
+  acknowledgeDocument: (id) =>
+    apiClient.post(`/employee/documents/${id}/acknowledge`),
+
+  submitSelfAssessment: (reviewData) =>
+    apiClient.post('/employee/reviews/self-assessment', reviewData),
+
+  updateProfile: (profileData) =>
+    apiClient.put('/employee/profile/update', profileData),
+};
