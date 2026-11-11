@@ -52,6 +52,7 @@ import EmployeeDirectoryPortalPage from './pages/employee/EmployeeDirectoryPorta
 import EmployeeProfilePage from './pages/employee/EmployeeProfilePage';
 
 import { useAuth } from './hooks/useAuth';
+import RouteSEO from './components/common/RouteSEO';
 
 // Protected Route Component
 const ProtectedRoute = ({ children, requiredRole }) => {
@@ -76,6 +77,7 @@ function App() {
   return (
     <Router>
       <AuthProvider>
+        <RouteSEO />
         <Toaster position="top-right" />
         <Routes>
           {/* Public Routes */}

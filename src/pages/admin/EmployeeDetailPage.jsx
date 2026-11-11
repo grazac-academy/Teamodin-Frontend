@@ -8,6 +8,7 @@ import {
   CheckCircle2, XCircle, AlertCircle, Plus, ChevronRight
 } from 'lucide-react';
 import { useStore } from '../../store/useStore';
+import { useSEO } from '../../hooks/useSEO';
 import toast from 'react-hot-toast';
 
 const EmployeeDetailPage = () => {
@@ -18,6 +19,12 @@ const EmployeeDetailPage = () => {
   const employee = useMemo(() => {
     return employees.find((emp) => String(emp.id) === String(id)) || employees[0];
   }, [employees, id]);
+
+  useSEO({
+    title: employee ? `${employee.name} (${employee.title})` : 'Employee File',
+    description: employee ? `View complete employee file, leave balance history, reviews, and asset allocations for ${employee.name} (${employee.dept}).` : 'Employee profile details.',
+    noindex: true,
+  });
 
   const [activeTab, setActiveTab] = useState('overview'); // overview, leave, performance, assets
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import '../pages.css';
 import { useNavigate, Link } from 'react-router-dom';
 import { Check, EyeOff, Eye, Users, CalendarCheck, BarChart3 } from 'lucide-react';
+import SEO from '../../components/common/SEO';
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -46,6 +47,11 @@ const SignUpPage = () => {
       padding: '40px 20px',
       fontFamily: 'system-ui, -apple-system, sans-serif'
     }}>
+      <SEO
+        title="Create Your Company Workspace — Start Free"
+        description="Launch your modern African SMB People Operations workspace in under 2 minutes. Free automated onboarding, employee directories, and leave approvals."
+        canonical="/sign-up"
+      />
       <div style={{
         display: 'flex',
         width: '100%',

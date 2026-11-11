@@ -262,6 +262,7 @@ Teamodin-Frontend/
 ├── src/
 │   ├── components/         # Reusable presentation components
 │   │   ├── auth/           # Auth form cards and OTP input widgets
+│   │   ├── common/         # Common SEO, RouteSEO, Button, Modal components
 │   │   ├── layout/
 │   │   │   └── AdminLayout.jsx   # Universal responsive layout with role-aware sidebar & Role Switcher
 │   │   └── ui/             # Buttons, modals, input elements
@@ -269,7 +270,8 @@ Teamodin-Frontend/
 │   │   └── AuthContext.jsx # Authentication state, JWT tokens, and switchRole logic
 │   ├── hooks/
 │   │   ├── useAuth.js      # useAuth() consumer hook
-│   │   └── useDebounce.js  # Debounce hook for search inputs
+│   │   ├── useDebounce.js  # Debounce hook for search inputs
+│   │   └── useSEO.js       # Dynamic React 19 SEO & meta tag hook
 │   ├── pages/
 │   │   ├── admin/          # Admin Suite (12 pages: Employees, Detail, Depts, Leave,
 │   │   │                   #   Onboarding, Offboarding, Docs, Check-ins, Surveys,
@@ -287,7 +289,9 @@ Teamodin-Frontend/
 │   ├── utils/
 │   │   ├── api.js          # API client & modular HTTP methods
 │   │   ├── constants.js    # Endpoint constants, storage keys, and regex validators
-│   │   └── helpers.js      # Formatters for currency (₦), dates, initials, and percentages
+│   │   ├── helpers.js      # Formatters for currency (₦), dates, initials, and percentages
+│   │   ├── seoConfig.js    # Comprehensive SEO metadata registry for all routes
+│   │   └── validation.js   # Input validation rules
 │   ├── App.jsx             # React Router routing tree & ProtectedRoute
 │   ├── index.css           # Global resets and CSS variables
 │   └── main.jsx            # Application entrypoint
@@ -307,7 +311,28 @@ Teamodin-Frontend/
 - **Micro-Animations**: [Framer Motion](https://www.framer-motion.com/)
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **CSV Import & Export Engine**: [PapaParse](https://www.papaparse.com/)
+- **Dynamic SEO Engine**: Zero-dependency `useSEO` React 19 hook, `<SEO />` component, and centralized `RouteSEO` route-level metadata sync.
 - **Styling Paradigm**: **Strictly Pure CSS (NO Tailwind CSS)**. Uses modular component styles, flexbox/grid layout systems, and CSS variables defined in `theme.css`.
+
+---
+
+## 🔍 SEO & Metadata Architecture
+
+HRStack features a complete, enterprise-grade SEO and meta tag system that dynamically synchronizes document metadata on every single page navigation:
+
+| File Path | Purpose |
+| :--- | :--- |
+| [`src/hooks/useSEO.js`](file:///Users/mac/Documents/Github/GitHub/Teamodin-Frontend/src/hooks/useSEO.js) | React 19 hook updating `document.title`, `<meta name="description">`, keywords, OpenGraph, Twitter Cards, canonical tags, robots directives, and JSON-LD structured data. |
+| [`src/components/common/SEO.jsx`](file:///Users/mac/Documents/Github/GitHub/Teamodin-Frontend/src/components/common/SEO.jsx) | Declarative JSX component wrapper for page-level metadata overrides. |
+| [`src/utils/seoConfig.js`](file:///Users/mac/Documents/Github/GitHub/Teamodin-Frontend/src/utils/seoConfig.js) | Centralized metadata registry containing human-crafted titles, descriptions, and keywords for **every** public and private route. |
+| [`src/components/common/RouteSEO.jsx`](file:///Users/mac/Documents/Github/GitHub/Teamodin-Frontend/src/components/common/RouteSEO.jsx) | Router-level observer that automatically syncs metadata whenever the browser URL changes. |
+| [`public/robots.txt`](file:///Users/mac/Documents/Github/GitHub/Teamodin-Frontend/public/robots.txt) | Search engine crawler rules: indexes public marketing routes (`/`, `/sign-in`, `/sign-up`) while blocking private app routes (`/admin/`, `/employee/`, `/manager/`). |
+| [`public/sitemap.xml`](file:///Users/mac/Documents/Github/GitHub/Teamodin-Frontend/public/sitemap.xml) | Clean XML sitemap specifying priorities, change frequencies, and canonical URLs. |
+
+### Privacy & Indexing Rules:
+- **Public Marketing Pages (`/`, `/sign-in`, `/sign-up`)**: Set to `index, follow` with full OpenGraph social cards, canonical URLs, and Schema.org `SoftwareApplication` JSON-LD for maximum discoverability.
+- **Authenticated Portals (`/admin/*`, `/manager/*`, `/employee/*`)**: Set to `noindex, nofollow` to guarantee strict privacy and prevent search engines from indexing employee dossiers, leave records, or financial information.
+
 
 ---
 

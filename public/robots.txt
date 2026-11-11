@@ -1,5 +1,18 @@
+# https://www.robotstxt.org/robotstxt.html
 User-agent: *
 Allow: /
+Allow: /sign-in
+Allow: /sign-up
 
+# Disallow crawling of internal application suites and private personal records
+Disallow: /admin/
+Disallow: /manager/
+Disallow: /employee/
+Disallow: /profile/
+Disallow: /auth/
+Disallow: /verify-otp
+Disallow: /forgot-password
+Disallow: /invite/
+
+# Sitemap Location
 Sitemap: https://hrstack.example.com/sitemap.xml
-

@@ -3,6 +3,7 @@ import '../pages.css';
 import { useNavigate, Link } from 'react-router-dom';
 import { Check, EyeOff, Eye, LogIn } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
+import SEO from '../../components/common/SEO';
 
 const SignInPage = () => {
   const navigate = useNavigate();
@@ -51,6 +52,11 @@ const SignInPage = () => {
       padding: '40px 20px',
       fontFamily: 'system-ui, -apple-system, sans-serif'
     }}>
+      <SEO
+        title="Sign In to Your Workspace"
+        description="Access your company's HRStack portal to manage staff, view leave balances, review payroll slips, and track attendance."
+        canonical="/sign-in"
+      />
       <div style={{
         display: 'flex',
         width: '100%',

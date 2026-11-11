@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../pages.css';
 import { Eye, EyeOff, Check, CheckCircle2 } from 'lucide-react';
+import { useAuth } from '../../hooks/useAuth';
+import { useSEO } from '../../hooks/useSEO';
 
 const InviteOnboardingPage = () => {
   const navigate = useNavigate();
@@ -30,6 +32,12 @@ const InviteOnboardingPage = () => {
   };
 
   const { setIsAuthenticated, updateUser } = useAuth();
+
+  useSEO({
+    title: `Join ${inviteData.department || 'Team'} — Welcome ${inviteData.fullName || 'Teammate'}`,
+    description: `Accept invitation to join HRStack workspace as ${inviteData.role} in ${inviteData.department}. Complete profile setup and set your password.`,
+    noindex: true,
+  });
 
   const handleStep1Continue = (e) => {
     e.preventDefault();
